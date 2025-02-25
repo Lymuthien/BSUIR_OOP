@@ -1,1 +1,0 @@
-# BSUIR_OOP
