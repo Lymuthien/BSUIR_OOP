@@ -23,7 +23,7 @@ class DrawableFigure(Drawable):
             raise ValueError('Background must be a single character')
 
     @abstractmethod
-    def render(self):
+    def render(self) -> list[list[str]]:
         pass
 
 
