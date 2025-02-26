@@ -32,3 +32,18 @@ class IDrawable(ABC):
     @abstractmethod
     def render(self) -> list[list[str]]:
         pass
+
+
+class INavigator(ABC):
+    @abstractmethod
+    def next(self):
+        pass
+
+    @abstractmethod
+    def prev(self):
+        pass
+
+    @property
+    @abstractmethod
+    def current(self):
+        pass

@@ -55,8 +55,11 @@ class CanvasModel(ISearchingCanvasModel):
         for figure_id, layout in self.__figures.items():
             yield figure_id, layout
 
-    def search(self, obj: IDrawable) -> str:
+    def search(self, obj: IDrawable, start: int = 0) -> str:
         for figure_id, layout in self.__figures.items():
+            if start > 0:
+                start = start - 1
+                continue
             if layout.figure == obj:
                 return figure_id
 

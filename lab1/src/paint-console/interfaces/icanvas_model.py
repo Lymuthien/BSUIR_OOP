@@ -45,7 +45,7 @@ class ICanvasModel(ABC):
 
 class ISearching(ABC):
     @abstractmethod
-    def search(self, obj):
+    def search(self, obj, start: int = 0):
         pass
 
 

@@ -93,3 +93,4 @@ class ChangeFigureBgCommand(ICommand):
         self.__model.get_figure_layout(self.__figure_id).figure.background = self.__new_bg
         self.__view.update()
 
+

@@ -5,4 +5,4 @@ from .icanvas_model import *
 from .imenu import *
 
 __all__ = ['IFigure', 'IDrawable', 'IRenderStrategy', 'ICommand', 'ICanvasModel', 'IFigureLayout',
-           'ICanvasView', 'IRenderer', 'IAddableMenu', 'IMenuItem', 'ISearchingCanvasModel']
+           'ICanvasView', 'IRenderer', 'IAddableMenu', 'IMenuItem', 'ISearchingCanvasModel', 'INavigator']
