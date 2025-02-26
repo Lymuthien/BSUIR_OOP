@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class EventBus(ABC):
+class IEventBus(ABC):
     @abstractmethod
     def on(self, event_type: str, callback: callable):
         pass

@@ -1,10 +1,10 @@
-from interfaces import Drawable
+from interfaces import IDrawable
 from mathematics import EllipseMath, RectangleMath, TriangleMath
 from renderers import EllipseRenderer, RectangleRenderer, TriangleRenderer
 from abc import abstractmethod
 
 
-class DrawableFigure(Drawable):
+class DrawableFigure(IDrawable):
     def __init__(self, background: str):
         self.background = background
 

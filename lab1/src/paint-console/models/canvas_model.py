@@ -1,18 +1,17 @@
 from copy import copy
 from uuid import uuid4
 from typing import Generator
+from ..interfaces import IFigure, ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable
 
-from ..interfaces import Figure
 
-
-class FigureLayout:
-    def __init__(self, figure: Figure, coordinates: tuple[float, float], layer: int):
+class FigureLayout(IFigureLayout):
+    def __init__(self, figure: IDrawable, coordinates: tuple[float, float], layer: int):
         self.__figure = figure
         self.coordinates = coordinates
         self.layer = layer
 
     @property
-    def figure(self) -> Figure:
+    def figure(self) -> IDrawable:
         return copy(self.__figure)
 
     @property
@@ -38,11 +37,11 @@ class FigureLayout:
             raise ValueError("Layer cannot be negative")
 
 
-class CanvasModel:
+class CanvasModel(ICanvasModel):
     def __init__(self):
         self.__figures: dict[str, FigureLayout] = {}
 
-    def add_figure(self, figure: Figure, x: float, y: float, layer: int = 0, figure_id: str = None) -> str:
+    def add_figure(self, figure: IDrawable, x: float, y: float, layer: int = 0, figure_id: str = None) -> str:
         if figure_id is None:
             figure_id = str(uuid4())
         self.__figures[figure_id] = FigureLayout(figure, (x, y), layer)
@@ -56,6 +55,31 @@ class CanvasModel:
             raise KeyError("No such figure")
         return self.__figures[figure_id]
 
-    def get_all_figures(self) -> Generator[tuple[Figure, tuple, int, str], None, None]:
+    def get_all_figures(self) -> Generator[tuple[str, FigureLayout]]:
         for figure_id, layout in self.__figures.items():
-            yield layout.figure, layout.coordinates, layout.layer, figure_id
+            yield figure_id, layout
+
+
+class CanvasView(ICanvasView):
+    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 100, height: int = 30
+    ):
+        self.__model = model
+        self.__renderer = renderer
+        self.__grid = [[''] * width for _ in range(height)]
+
+    def draw_figure(self, figure: IDrawable, x: int, y: int) -> None:
+        self.__renderer.render(figure, x, y, figure.background,self.__grid)
+
+    def clear(self) -> None:
+        for row in self.__grid:
+            for i in range(len(row)):
+                row[i] = ''
+
+    def update(self) -> None:
+        self.clear()
+        for figure, layout in self.__model.get_all_figures():
+            self.draw_figure(layout.figure, layout.coordinates[0], layout.coordinates[1])
+
+    @property
+    def grid(self) -> tuple[tuple[str, ...], ...]:
+        return tuple(tuple(row) for row in self.__grid)

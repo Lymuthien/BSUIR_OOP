@@ -1,14 +1,14 @@
-from interfaces import Command, EventBus
+from ..interfaces import ICommand, IEventBus
 
 
 class HistoryManager:
-    def __init__(self, event_bus: EventBus):
+    def __init__(self, event_bus: IEventBus):
         self.__event_bus = event_bus
-        self.__undo_stack: list[Command] = []
-        self.__redo_stack: list[Command] = []
+        self.__undo_stack: list[ICommand] = []
+        self.__redo_stack: list[ICommand] = []
         self.__is_running = False
 
-    def push_undo_command(self, command: Command):
+    def push_undo_command(self, command: ICommand):
         self.__undo_stack.append(command)
         self.__redo_stack.clear()
 
@@ -16,7 +16,7 @@ class HistoryManager:
         if self.__undo_stack and not self.__is_running:
             self.__is_running = True
             command = self.__undo_stack.pop()
-            command.undo(self.__event_bus)
+            command.undo()
             self.__redo_stack.append(command)
             self.__is_running = False
 
@@ -24,6 +24,6 @@ class HistoryManager:
         if self.__redo_stack and not self.__is_running:
             self.__is_running = True
             command = self.__redo_stack.pop()
-            command.redo(self.__event_bus)
+            command.redo()
             self.__undo_stack.append(command)
             self.__is_running = False

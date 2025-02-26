@@ -1,6 +1,8 @@
-from .figure import *
-from .renderer import *
+from .ifigure import *
+from .irenderer import *
 from .event_bus import *
-from .command import *
+from .icommand import *
+from .icanvas_model import *
 
-__all__ = ['Figure', 'Drawable', 'RenderStrategy', 'EventBus', 'Command']
+__all__ = ['IFigure', 'IDrawable', 'IRenderStrategy', 'IEventBus', 'ICommand', 'ICanvasModel', 'IFigureLayout',
+           'ICanvasView', 'IRenderer']

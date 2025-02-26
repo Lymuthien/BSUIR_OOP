@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class Figure(ABC):
+class IFigure(ABC):
     @property
     @abstractmethod
     def area(self) -> float:
@@ -18,7 +18,7 @@ class Figure(ABC):
         pass
 
 
-class Drawable(ABC):
+class IDrawable(ABC):
     @property
     @abstractmethod
     def background(self) -> str:

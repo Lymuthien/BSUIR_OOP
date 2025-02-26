@@ -1,7 +1,7 @@
-from interfaces import EventBus
+from ..interfaces import IEventBus
 
 
-class EventEmitter(EventBus):
+class EventEmitter(IEventBus):
     def __init__(self):
         self.__subscribers = {}
 

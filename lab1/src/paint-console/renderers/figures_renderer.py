@@ -1,8 +1,8 @@
-from interfaces import RenderStrategy
-from mathematics import *
+from ..interfaces import IRenderStrategy
+from ..mathematics import RectangleMath, EllipseMath, TriangleMath
 
 
-class EllipseRenderer(RenderStrategy):
+class EllipseRenderer(IRenderStrategy):
     def render(self, figure: EllipseMath, background: str) -> list[list[str]]:
         vr = int(figure.vertical_radius)
         hr = int(figure.horizontal_radius)
@@ -17,12 +17,12 @@ class EllipseRenderer(RenderStrategy):
         return image
 
 
-class RectangleRenderer(RenderStrategy):
+class RectangleRenderer(IRenderStrategy):
     def render(self, figure: RectangleMath, background: str) -> list[list[str]]:
         return [[background] * int(figure.width) for _ in range(int(figure.height))]
 
 
-class TriangleRenderer(RenderStrategy):
+class TriangleRenderer(IRenderStrategy):
     def render(self, figure: TriangleMath, background: str) -> list[list[str]]:
         max_x = int(max(x for x, y in figure.vertices))
         max_y = int(max(y for x, y in figure.vertices))

@@ -1,4 +1,4 @@
-from interfaces import Figure
+from interfaces import IFigure
 from math import pi, hypot, sqrt
 
 
