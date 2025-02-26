@@ -24,11 +24,6 @@ class IFigureLayout(ABC):
     def layer(self):
         pass
 
-    @layer.setter
-    @abstractmethod
-    def layer(self, layer: int):
-        pass
-
 
 class ICanvasModel(ABC):
     @abstractmethod
@@ -45,6 +40,12 @@ class ICanvasModel(ABC):
 
     @abstractmethod
     def get_all_figures(self) -> Generator[tuple[str, IFigureLayout], None, None]:
+        pass
+
+
+class ISearching(ABC):
+    @abstractmethod
+    def search(self, obj):
         pass
 
 
@@ -65,3 +66,7 @@ class ICanvasView(ABC):
     @abstractmethod
     def grid(self) -> tuple[tuple[str]]:
         pass
+
+
+class ISearchingCanvasModel(ICanvasModel, ISearching, ABC):
+    pass

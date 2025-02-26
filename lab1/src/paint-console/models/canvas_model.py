@@ -1,18 +1,18 @@
 from copy import copy
 from uuid import uuid4
 from typing import Generator
-from interfaces import IFigure, ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable
+from interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable, ISearchingCanvasModel
 
 
 class FigureLayout(IFigureLayout):
     def __init__(self, figure: IDrawable, coordinates: tuple[float, float], layer: int):
         self.__figure = figure
         self.coordinates = coordinates
-        self.layer = layer
+        self.__layer = layer
 
     @property
     def figure(self) -> IDrawable:
-        return copy(self.__figure)
+        return self.__figure
 
     @property
     def coordinates(self) -> tuple:
@@ -26,18 +26,13 @@ class FigureLayout(IFigureLayout):
     def layer(self):
         return self.__layer
 
-    @layer.setter
-    def layer(self, layer: int):
-        self._validate_layer(layer)
-        self.__layer = layer
-
     @staticmethod
     def _validate_layer(layer: int):
         if layer < 0:
             raise ValueError("Layer cannot be negative")
 
 
-class CanvasModel(ICanvasModel):
+class CanvasModel(ISearchingCanvasModel):
     def __init__(self):
         self.__figures: dict[str, FigureLayout] = {}
 
@@ -45,6 +40,7 @@ class CanvasModel(ICanvasModel):
         if figure_id is None:
             figure_id = str(uuid4())
         self.__figures[figure_id] = FigureLayout(figure, (x, y), layer)
+        self._filter()
         return figure_id
 
     def remove_figure(self, figure_id: str):
@@ -59,10 +55,18 @@ class CanvasModel(ICanvasModel):
         for figure_id, layout in self.__figures.items():
             yield figure_id, layout
 
+    def search(self, obj: IDrawable) -> str:
+        for figure_id, layout in self.__figures.items():
+            if layout.figure == obj:
+                return figure_id
+
+    def _filter(self):
+        self.__figures = dict(sorted(self.__figures.items(), key=lambda item: item[1].layer))
+
 
 class CanvasView(ICanvasView):
     def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 100, height: int = 30
-    ):
+                 ):
         self.__model = model
         self.__renderer = renderer
         self.__grid = [[' '] * width for _ in range(height)]
