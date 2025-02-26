@@ -1,7 +1,7 @@
 from copy import copy
 from uuid import uuid4
 from typing import Generator
-from ..interfaces import IFigure, ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable
+from interfaces import IFigure, ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable
 
 
 class FigureLayout(IFigureLayout):
@@ -55,7 +55,7 @@ class CanvasModel(ICanvasModel):
             raise KeyError("No such figure")
         return self.__figures[figure_id]
 
-    def get_all_figures(self) -> Generator[tuple[str, FigureLayout]]:
+    def get_all_figures(self) -> Generator[tuple[str, FigureLayout], None, None]:
         for figure_id, layout in self.__figures.items():
             yield figure_id, layout
 
@@ -65,10 +65,10 @@ class CanvasView(ICanvasView):
     ):
         self.__model = model
         self.__renderer = renderer
-        self.__grid = [[''] * width for _ in range(height)]
+        self.__grid = [[' '] * width for _ in range(height)]
 
     def draw_figure(self, figure: IDrawable, x: int, y: int) -> None:
-        self.__renderer.render(figure, x, y, figure.background,self.__grid)
+        self.__renderer.render(figure, x, y, self.__grid)
 
     def clear(self) -> None:
         for row in self.__grid:

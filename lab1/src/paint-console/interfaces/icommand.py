@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from . import IEventBus
 
 
 class ICommand(ABC):

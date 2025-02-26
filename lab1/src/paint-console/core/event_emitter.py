@@ -1,4 +1,4 @@
-from ..interfaces import IEventBus
+from interfaces import IEventBus
 
 
 class EventEmitter(IEventBus):

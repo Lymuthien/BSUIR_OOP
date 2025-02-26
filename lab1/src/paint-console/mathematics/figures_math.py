@@ -2,7 +2,7 @@ from interfaces import IFigure
 from math import pi, hypot, sqrt
 
 
-class EllipseMath(Figure):
+class EllipseMath(IFigure):
     def __init__(self, vertical_radius: float, horizontal_radius: float):
         self.__validate_input(vertical_radius, horizontal_radius)
         self._vertical_radius = vertical_radius
@@ -34,7 +34,7 @@ class EllipseMath(Figure):
         return 'ellipse'
 
 
-class RectangleMath(Figure):
+class RectangleMath(IFigure):
     def __init__(self, width: float, height: float):
         self.__validate_input(width, height)
         self._width = width
@@ -66,7 +66,7 @@ class RectangleMath(Figure):
         return 'rectangle'
 
 
-class TriangleMath(Figure):
+class TriangleMath(IFigure):
     def __init__(self, vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
         self.__validate_input(vertices)
         self._vertices = vertices
@@ -90,7 +90,7 @@ class TriangleMath(Figure):
                    zip(self._vertices, self._vertices[1:] + self._vertices[:1]))
 
     @property
-    def vertices(self) -> tuple[tuple[float, float], ...]:
+    def vertices(self) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
         return self._vertices
 
     @property

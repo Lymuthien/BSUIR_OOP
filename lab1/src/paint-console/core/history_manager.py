@@ -1,9 +1,8 @@
-from ..interfaces import ICommand, IEventBus
+from interfaces import ICommand
 
 
 class HistoryManager:
-    def __init__(self, event_bus: IEventBus):
-        self.__event_bus = event_bus
+    def __init__(self):
         self.__undo_stack: list[ICommand] = []
         self.__redo_stack: list[ICommand] = []
         self.__is_running = False
