@@ -9,6 +9,13 @@ class IRenderStrategy(ABC):
 
 
 class IRenderer(ABC):
+    @staticmethod
     @abstractmethod
-    def render(self, figure: IDrawable, x: int, y: int, background: str, grid: list[list[str]]):
+    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]):
+        pass
+
+class ICanvasRenderer(ABC):
+    @staticmethod
+    @abstractmethod
+    def render(width: int, grid: tuple[tuple[str, ...], ...]):
         pass
