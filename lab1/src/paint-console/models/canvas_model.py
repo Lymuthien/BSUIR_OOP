@@ -83,6 +83,8 @@ class CanvasModel(ISearchingCanvasModel):
 
     def load_data(self, data: dict):
         self.__figures = data
+        for layout in self.__figures.values():
+            self.__navigator.append(layout.figure)
 
     def remove_figure(self, figure_id: str):
         self.__navigator.remove(self.__figures[figure_id].figure)

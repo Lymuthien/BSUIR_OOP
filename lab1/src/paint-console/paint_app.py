@@ -20,6 +20,7 @@ class PaintApp(object):
 
     def load_file(self, filename: str):
         self.__canvas_model.load_data(FileManager.load(filename))
+        self.__canvas_view.update()
 
     def undo(self):
         self.__history_manager.undo()
