@@ -1,7 +1,40 @@
-from copy import copy
+from copy import copy, deepcopy
 from uuid import uuid4
 from typing import Generator
-from interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable, ISearchingCanvasModel
+from interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable, ISearchingCanvasModel, \
+    INavigator
+
+
+class Navigator(INavigator):
+    def __init__(self):
+        self.__objects = []
+        self.__current_index = -1
+
+    def append(self, item):
+        self.__objects.append(item)
+        self.__current_index = self.__objects.index(item)
+
+    def remove(self, item):
+        if item in self.__objects:
+            self.__objects.remove(item)
+            if len(self.__objects):
+                self.prev()
+            else:
+                self.__current_index = -1
+
+    def next(self):
+        if self.__current_index != -1:
+            self.__current_index = (self.__current_index + 1) % len(self.__objects)
+            return self.__objects[self.__current_index]
+
+    def prev(self):
+        if self.__current_index != -1:
+            self.__current_index = (self.__current_index - 1) % len(self.__objects)
+            return self.__objects[self.__current_index]
+
+    def current(self):
+        if self.__current_index != -1:
+            return self.__objects[self.__current_index]
 
 
 class FigureLayout(IFigureLayout):
@@ -26,24 +59,33 @@ class FigureLayout(IFigureLayout):
     def layer(self):
         return self.__layer
 
-    @staticmethod
-    def _validate_layer(layer: int):
-        if layer < 0:
-            raise ValueError("Layer cannot be negative")
-
 
 class CanvasModel(ISearchingCanvasModel):
     def __init__(self):
         self.__figures: dict[str, FigureLayout] = {}
+        self.__navigator = Navigator()
 
     def add_figure(self, figure: IDrawable, x: float, y: float, layer: int = 0, figure_id: str = None) -> str:
         if figure_id is None:
             figure_id = str(uuid4())
         self.__figures[figure_id] = FigureLayout(figure, (x, y), layer)
+        self.__navigator.append(figure)
         self._filter()
         return figure_id
 
+    @property
+    def navigator(self):
+        return self.__navigator
+
+    @property
+    def get_data(self):
+        return deepcopy(self.__figures)
+
+    def load_data(self, data: dict):
+        self.__figures = data
+
     def remove_figure(self, figure_id: str):
+        self.__navigator.remove(self.__figures[figure_id].figure)
         self.__figures.pop(figure_id)
 
     def get_figure_layout(self, figure_id: str) -> FigureLayout:
@@ -68,11 +110,16 @@ class CanvasModel(ISearchingCanvasModel):
 
 
 class CanvasView(ICanvasView):
-    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 100, height: int = 30
+    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 80, height: int = 30
                  ):
         self.__model = model
         self.__renderer = renderer
+        self.__width = width
         self.__grid = [[' '] * width for _ in range(height)]
+
+    @property
+    def width(self) -> int:
+        return self.__width
 
     def draw_figure(self, figure: IDrawable, x: int, y: int) -> None:
         self.__renderer.render(figure, x, y, self.__grid)
@@ -80,7 +127,7 @@ class CanvasView(ICanvasView):
     def clear(self) -> None:
         for row in self.__grid:
             for i in range(len(row)):
-                row[i] = ''
+                row[i] = ' '
 
     def update(self) -> None:
         self.clear()

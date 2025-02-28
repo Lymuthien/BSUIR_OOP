@@ -38,7 +38,7 @@ class RemoveFigureCommand(ICommand):
         self._execute()
 
     def _execute(self):
-        self.__figure_id = self.__model.remove_figure(self.__figure_id)
+        self.__model.remove_figure(self.__figure_id)
         self.__view.update()
 
     def undo(self):
@@ -92,5 +92,4 @@ class ChangeFigureBgCommand(ICommand):
     def redo(self):
         self.__model.get_figure_layout(self.__figure_id).figure.background = self.__new_bg
         self.__view.update()
-
 

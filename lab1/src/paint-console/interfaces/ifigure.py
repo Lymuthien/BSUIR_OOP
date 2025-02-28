@@ -1,5 +1,9 @@
 from abc import ABC, abstractmethod
 
+class IDictable(ABC):
+    @abstractmethod
+    def to_dict(self):
+        pass
 
 class IFigure(ABC):
     @property
@@ -46,4 +50,12 @@ class INavigator(ABC):
     @property
     @abstractmethod
     def current(self):
+        pass
+
+    @abstractmethod
+    def append(self, item):
+        pass
+
+    @abstractmethod
+    def remove(self, item):
         pass
