@@ -26,6 +26,12 @@ class DrawableFigure(IDrawable):
     def render(self) -> list[list[str]]:
         pass
 
+    @property
+    def info(self) -> dict:
+        return {
+            'background': self.background,
+        }
+
 
 class DrawableEllipse(EllipseMath, DrawableFigure):
     def __init__(self, vertical_radius: float, horizontal_radius: float, background: str):
@@ -36,6 +42,13 @@ class DrawableEllipse(EllipseMath, DrawableFigure):
 
     def render(self) -> list[list[str]]:
         return self._renderer.render(self, self._background)
+
+    @property
+    def info(self) -> dict:
+        return {
+            **super().info,
+            **super(EllipseMath, self).info
+        }
 
 
 class DrawableRectangle(RectangleMath, DrawableFigure):
@@ -48,6 +61,13 @@ class DrawableRectangle(RectangleMath, DrawableFigure):
     def render(self) -> list[list[str]]:
         return self._renderer.render(self, self._background)
 
+    @property
+    def info(self) -> dict:
+        return {
+            **super().info,
+            **super(RectangleMath, self).info,
+        }
+
 
 class DrawableTriangle(TriangleMath, DrawableFigure):
     def __init__(self, vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]],
@@ -59,3 +79,10 @@ class DrawableTriangle(TriangleMath, DrawableFigure):
 
     def render(self) -> list[list[str]]:
         return self._renderer.render(self, self._background)
+
+    @property
+    def info(self) -> dict:
+        return {
+            **super().info,
+            **super(TriangleMath, self).info
+        }

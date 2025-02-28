@@ -8,7 +8,7 @@ from interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDra
 class Navigator(INavigator):
     def __init__(self):
         self.__objects = []
-        self.__current_index = -1
+        self.__current_index = None
 
     def append(self, item):
         self.__objects.append(item)
@@ -20,21 +20,23 @@ class Navigator(INavigator):
             if len(self.__objects):
                 self.prev()
             else:
-                self.__current_index = -1
+                self.__current_index = None
 
     def next(self):
-        if self.__current_index != -1:
+        if not self.__current_index is None:
             self.__current_index = (self.__current_index + 1) % len(self.__objects)
             return self.__objects[self.__current_index]
 
     def prev(self):
-        if self.__current_index != -1:
+        if not self.__current_index is None:
             self.__current_index = (self.__current_index - 1) % len(self.__objects)
             return self.__objects[self.__current_index]
 
     def current(self):
-        if self.__current_index != -1:
+        if not self.__current_index is None:
             return self.__objects[self.__current_index]
+        else:
+            raise KeyError("List empty")
 
 
 class FigureLayout(IFigureLayout):
@@ -58,6 +60,14 @@ class FigureLayout(IFigureLayout):
     @property
     def layer(self):
         return self.__layer
+
+    @property
+    def info(self) -> dict:
+        return {
+            **self.__figure.info,
+            'coordinates': self.coordinates,
+            'layer': self.layer
+        }
 
 
 class CanvasModel(ISearchingCanvasModel):
@@ -110,10 +120,17 @@ class CanvasModel(ISearchingCanvasModel):
     def _filter(self):
         self.__figures = dict(sorted(self.__figures.items(), key=lambda item: item[1].layer))
 
+    def get_current_info(self) -> dict:
+        figure = self.__navigator.current()
+        figure_id = self.search(figure)
+        return self.__figures[figure_id].info
+
+    def new_layer(self) -> int:
+        return len(self.__figures)
+
 
 class CanvasView(ICanvasView):
-    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 80, height: int = 30
-                 ):
+    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 80, height: int = 30):
         self.__model = model
         self.__renderer = renderer
         self.__width = width

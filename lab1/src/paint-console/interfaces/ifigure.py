@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 
-class IDictable(ABC):
+
+class IInformative(ABC):
+    @property
     @abstractmethod
-    def to_dict(self):
+    def info(self) -> dict:
         pass
 
-class IFigure(ABC):
+
+class IFigure(IInformative):
     @property
     @abstractmethod
     def area(self) -> float:
@@ -22,7 +25,7 @@ class IFigure(ABC):
         pass
 
 
-class IDrawable(ABC):
+class IDrawable(IInformative):
     @property
     @abstractmethod
     def background(self) -> str:

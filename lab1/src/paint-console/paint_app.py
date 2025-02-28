@@ -1,5 +1,3 @@
-import os
-
 from core import AddFigureCommand, RemoveFigureCommand, MoveFigureCommand, ChangeFigureBgCommand, FileManager, \
     HistoryManager
 from models import CanvasModel, CanvasView, DrawableRectangle, DrawableEllipse, DrawableTriangle
@@ -69,3 +67,6 @@ class PaintApp(object):
         figure = self.__canvas_model.navigator.current()
         self.__history_manager.push_undo_command(
             ChangeFigureBgCommand(self.__canvas_model, self.__canvas_view, figure, bg))
+
+    def get_figure_info(self) -> dict:
+        return self.__canvas_model.get_current_info()

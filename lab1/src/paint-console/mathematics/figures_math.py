@@ -33,6 +33,16 @@ class EllipseMath(IFigure):
     def type(self) -> str:
         return 'ellipse'
 
+    @property
+    def info(self) -> dict:
+        return {
+            'type': self.type,
+            'vertical_radius': self.vertical_radius,
+            'horizontal_radius': self.horizontal_radius,
+            'area': self.area,
+            'perimeter': self.perimeter,
+        }
+
 
 class RectangleMath(IFigure):
     def __init__(self, width: float, height: float):
@@ -65,6 +75,16 @@ class RectangleMath(IFigure):
     def type(self) -> str:
         return 'rectangle'
 
+    @property
+    def info(self) -> dict:
+        return {
+            'type': self.type,
+            'width': self.width,
+            'height': self.height,
+            'area': self.area,
+            'perimeter': self.perimeter,
+        }
+
 
 class TriangleMath(IFigure):
     def __init__(self, vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
@@ -86,13 +106,26 @@ class TriangleMath(IFigure):
 
     @property
     def perimeter(self) -> float:
-        return sum(hypot(x2 - x1, y2 - y1) for (x1, y1), (x2, y2) in
-                   zip(self._vertices, self._vertices[1:] + self._vertices[:1]))
+        return sum(self.sides)
 
     @property
     def vertices(self) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
         return self._vertices
 
     @property
+    def sides(self):
+        return (hypot(x2 - x1, y2 - y1) for (x1, y1), (x2, y2) in
+                   zip(self._vertices, self._vertices[1:] + self._vertices[:1]))
+
+    @property
     def type(self) -> str:
         return 'triangle'
+
+    @property
+    def info(self) -> dict:
+        return {
+            'type': self.type,
+            'sides' : self.sides,
+            'area': self.area,
+            'perimeter': self.perimeter,
+        }

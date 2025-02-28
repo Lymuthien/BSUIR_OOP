@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Generator
-from .ifigure import IDrawable
+from .ifigure import IDrawable, IInformative
 
 
-class IFigureLayout(ABC):
+class IFigureLayout(IInformative):
     @property
     @abstractmethod
     def figure(self) -> IDrawable:
@@ -22,6 +22,11 @@ class IFigureLayout(ABC):
     @property
     @abstractmethod
     def layer(self):
+        pass
+
+    @property
+    @abstractmethod
+    def info(self) -> dict:
         pass
 
 
