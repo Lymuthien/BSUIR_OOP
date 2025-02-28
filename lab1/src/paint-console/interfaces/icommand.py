@@ -9,3 +9,7 @@ class ICommand(ABC):
     @abstractmethod
     def redo(self):
         pass
+
+    @abstractmethod
+    def _execute(self):
+        pass
