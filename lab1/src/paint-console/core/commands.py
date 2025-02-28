@@ -8,7 +8,7 @@ class AddFigureCommand(ICommand):
         self.__figure = figure
         self.__x = x
         self.__y = y
-        self.__layer = 0
+        self.__layer = self.__model.new_layer()
         self.__figure_id = None
         self._execute()
 
@@ -24,7 +24,6 @@ class AddFigureCommand(ICommand):
     def redo(self):
         self.__model.add_figure(self.__figure, self.__x, self.__y, layer=self.__layer, figure_id=self.__figure_id)
         self.__view.update()
-
 
 
 class RemoveFigureCommand(ICommand):
@@ -92,4 +91,3 @@ class ChangeFigureBgCommand(ICommand):
     def redo(self):
         self.__model.get_figure_layout(self.__figure_id).figure.background = self.__new_bg
         self.__view.update()
-
