@@ -20,6 +20,7 @@ peculiarities of console output._
   * _3_ - ellipse
   * _0_ - exit
 * _2_ - object selection menu
+  * _i_ - info
   * _p_ - previous object
   * _n_ - next object
   * _m_ - move
@@ -49,10 +50,16 @@ horizontal radius.
 
 ### Choosing existing objects
 
-To go for object selection menu, enter _1_. You will see current 
-object id. To see info about object enter _i_. To select other 
-object enter _n_ or _p_ (next, prev). To move enter _m_. To erase
-enter _e_. To change background enter _bg_.
+To go for object selection menu, enter _2_. To see info about object enter _i_. 
+To select other enter _n_ or _p_ (next, prev). To move enter _m_. To erase
+enter _e_. To change background enter _b_.
+
+### Information about objects
+
+For every object should be printed type of it, its background.
+* For rectangle - (x, y), width, height, square, perimeter.
+* For triangle - (x, y), square, perimeter, length of every side. (x, y) - left top corner
+* For ellipse - (x, y), r1, r2 (as soon), square, perimeter.
 
 ### Moving objects
 
@@ -66,7 +73,7 @@ enclosing rectangle
 
 ### Changing background
 
-After entering _b_ print RGB-format color (#xxxxxx).
+After entering _b_ print one symbol.
 
 ### Saving file 
 
