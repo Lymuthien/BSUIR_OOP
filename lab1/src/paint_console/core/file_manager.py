@@ -4,6 +4,7 @@ import pickle
 class FileManager:
     @staticmethod
     def save(data, filename: str) -> None:
+        """Save data to file"""
         try:
             serialized_data = pickle.dumps(data)
             with open(filename, 'wb') as f:
@@ -13,6 +14,7 @@ class FileManager:
 
     @staticmethod
     def load(filename: str):
+        """Load data from file"""
         try:
             with open(filename, 'rb') as f:
                 serialized_data = pickle.loads(f.read())

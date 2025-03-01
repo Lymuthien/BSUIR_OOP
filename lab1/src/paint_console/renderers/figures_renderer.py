@@ -1,10 +1,11 @@
-from interfaces import IRenderStrategy
-from mathematics import RectangleMath, EllipseMath, TriangleMath
+from ..interfaces import IRenderStrategy
+from ..utils import RectangleMath, EllipseMath, TriangleMath
 
 
 class EllipseRenderer(IRenderStrategy):
     @staticmethod
     def render(figure: EllipseMath, background: str) -> list[list[str]]:
+        """Return a list of strings representing the ellipse."""
         vr = int(figure.vertical_radius)
         hr = int(figure.horizontal_radius)
         image = [[''] * (2 * hr) for _ in range(2 * vr)]
@@ -21,11 +22,13 @@ class EllipseRenderer(IRenderStrategy):
 class RectangleRenderer(IRenderStrategy):
     @staticmethod
     def render(figure: RectangleMath, background: str) -> list[list[str]]:
+        """Return a list of strings representing the rectangle."""
         return [[background] * int(figure.width) for _ in range(int(figure.height))]
 
 
 class TriangleRenderer(IRenderStrategy):
     def render(self, figure: TriangleMath, background: str) -> list[list[str]]:
+        """Return a list of strings representing the triangle."""
         max_x = int(max(x for x, y in figure.vertices))
         max_y = int(max(y for x, y in figure.vertices))
         image = [[''] * (max_x + 1) for _ in range(max_y + 1)]
@@ -38,7 +41,7 @@ class TriangleRenderer(IRenderStrategy):
 
     @staticmethod
     def _is_point_inside(basic_area, vertices, x, y) -> bool:
-        """If areas of all triangles in sum gives basic area, point inside it."""
+        """Check if areas of all triangles in sum gives basic area."""
         try:
             a, b, c = vertices
             triangles = [TriangleMath((a, b, (x, y))),

@@ -1,8 +1,9 @@
-from interfaces import IDrawable, ICommand, ICanvasModel, ICanvasView, ISearchingCanvasModel
+from ..interfaces import IDrawable, ICommand, ICanvasModel, ICanvasView, ISearchingCanvasModel
 
 
 class AddFigureCommand(ICommand):
     def __init__(self, model: ICanvasModel, view: ICanvasView, figure: IDrawable, x: int, y: int):
+        """Command for adding a drawable figure to canvas."""
         self.__model = model
         self.__view = view
         self.__figure = figure
@@ -28,6 +29,7 @@ class AddFigureCommand(ICommand):
 
 class RemoveFigureCommand(ICommand):
     def __init__(self, model: ISearchingCanvasModel, view: ICanvasView, figure: IDrawable):
+        """Command for removing a drawable figure from canvas."""
         self.__model = model
         self.__view = view
         self.__figure = figure
@@ -51,6 +53,7 @@ class RemoveFigureCommand(ICommand):
 
 class MoveFigureCommand(ICommand):
     def __init__(self, model: ISearchingCanvasModel, view: ICanvasView, figure: IDrawable, x: int, y: int):
+        """Command for moving a drawable figure from canvas."""
         self.__model = model
         self.__view = view
         self.__figure_id = model.search(figure)
@@ -73,6 +76,7 @@ class MoveFigureCommand(ICommand):
 
 class ChangeFigureBgCommand(ICommand):
     def __init__(self, model: ISearchingCanvasModel, view: ICanvasView, figure: IDrawable, new_bg: str):
+        """Command for changing a drawable background image in the canvas."""
         self.__model = model
         self.__view = view
         self.__figure_id = model.search(figure)
