@@ -46,10 +46,10 @@ class TestRectangleMath(unittest.TestCase):
                 RectangleMath(width, height)
 
     def test_area_property_returns_correct_value(self):
-        self.assertEquals(self.rectangle.area, 38.5)
+        self.assertEqual(self.rectangle.area, 38.5)
 
     def test_perimeter_property_returns_correct_value(self):
-        self.assertEquals(self.rectangle.perimeter, 25)
+        self.assertEqual(self.rectangle.perimeter, 25)
 
 
 class TestTriangleMath(unittest.TestCase):
