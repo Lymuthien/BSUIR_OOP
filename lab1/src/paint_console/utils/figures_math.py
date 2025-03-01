@@ -11,8 +11,8 @@ class EllipseMath(IFigure):
 
     @staticmethod
     def __validate_input(vertical_radius: float, horizontal_radius: float):
-        if vertical_radius < 0 or horizontal_radius < 0:
-            raise ValueError("Vertical radius and horizontal radius cannot be negative")
+        if vertical_radius <= 0 or horizontal_radius <= 0:
+            raise ValueError("Vertical radius and horizontal radius must be positive")
 
     @property
     def area(self) -> float:
@@ -59,8 +59,8 @@ class RectangleMath(IFigure):
 
     @staticmethod
     def __validate_input(width: float, height: float):
-        if width < 0 or height < 0:
-            raise ValueError("Width and height cannot be negative")
+        if width <= 0 or height <= 0:
+            raise ValueError("Width and height must be positive")
 
     @property
     def area(self) -> float:
