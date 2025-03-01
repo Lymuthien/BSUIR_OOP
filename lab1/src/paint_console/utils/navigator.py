@@ -1,4 +1,3 @@
-from collections import deque
 from typing import Any
 
 from ..interfaces import INavigator
@@ -11,7 +10,7 @@ class Navigator(INavigator):
         :param args: default values for navigation
         """
         self.__objects = [*args]
-        self.__current_index = len(args) if args else None
+        self.__current_index = len(args) - 1 if args else None
 
     def append(self, item) -> None:
         """Append item to navigation list."""
@@ -22,9 +21,9 @@ class Navigator(INavigator):
         """Remove item from navigation list if it exists."""
         if item in self.__objects:
             self.__objects.remove(item)
-            if len(self.__objects):
+            if self.__current_index >= len(self.__objects) > 0:
                 self.prev()
-            else:
+            elif len(self.__objects) <= 0:
                 self.__current_index = None
         else:
             raise IndexError("No such object")
