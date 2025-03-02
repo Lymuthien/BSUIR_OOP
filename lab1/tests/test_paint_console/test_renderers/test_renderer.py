@@ -20,8 +20,8 @@ class TestBasicRenderer(unittest.TestCase):
             [' '] * 4
         ]
 
-        BasicRenderer.render(self.mock_figure, 1, 1, grid)
-        self.assertEqual(grid, expected_grid)
+        new_grid = BasicRenderer.render(self.mock_figure, 1, 1, grid)
+        self.assertEqual(new_grid, expected_grid)
 
     @parameterized.expand([
         ("x negative", -1, 0),
@@ -48,24 +48,11 @@ class TestBasicRenderer(unittest.TestCase):
                 BasicRenderer.render(self.mock_figure, x, y, grid)
         self.assertEqual(grid, [[' '] * 4 for _ in range(4)])
 
-    @parameterized.expand([
-        ("x out", 3, 0),
-        ("y out", 0, 3),
-        ("both x y out", 3, 3),
-    ])
-    def test_render_figure_partly_out_of_bounds_raises_error(self, test_name, x, y):
-        grid = [[' '] * 4 for _ in range(4)]
-
-        with self.subTest(msg=test_name, x=x, y=y):
-            with self.assertRaisesRegex(IndexError, "The given figure partly out of bounds of grid."):
-                BasicRenderer.render(self.mock_figure, x, y, grid)
-
     def test_render_figure_partly_out_of_bounds_changes_grid(self):
         grid = [[' '] * 4 for _ in range(4)]
 
-        with self.assertRaises(IndexError):
-            BasicRenderer.render(self.mock_figure, 3, 3, grid)
-        self.assertEqual(grid, [
+        new_grid = BasicRenderer.render(self.mock_figure, 3, 3, grid)
+        self.assertEqual(new_grid, [
             [' '] * 4,
             [' '] * 4,
             [' '] * 4,

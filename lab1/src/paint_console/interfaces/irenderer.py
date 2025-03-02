@@ -12,7 +12,7 @@ class IRenderStrategy(ABC):
 class IRenderer(ABC):
     @staticmethod
     @abstractmethod
-    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]):
+    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]) -> list[list[str]]:
         pass
 
 class ICanvasRenderer(ABC):

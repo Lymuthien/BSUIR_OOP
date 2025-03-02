@@ -8,6 +8,7 @@ from ..interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, ID
 class FigureLayout(IFigureLayout):
     def __init__(self, figure: IDrawable, coordinates: tuple[float, float], layer: int):
         """Layout consisting all information about a figure and its environment."""
+        self._validate_layer(layer)
         self.__figure = figure
         self.coordinates = coordinates
         self.__layer = layer
@@ -39,6 +40,11 @@ class FigureLayout(IFigureLayout):
             'coordinates': self.coordinates,
             'layer': self.layer
         }
+
+    @staticmethod
+    def _validate_layer(layer: int):
+        if layer < 0:
+            raise ValueError('Layer must be non-negative')
 
 
 class CanvasModel(ISearchingCanvasModel):
@@ -133,7 +139,7 @@ class CanvasView(ICanvasView):
 
     def draw_figure(self, figure: IDrawable, x: int, y: int) -> None:
         """Draw the figure."""
-        self.__renderer.render(figure, x, y, self.__grid)
+        self.__grid = self.__renderer.render(figure, x, y, self.__grid)
 
     def clear(self) -> None:
         """Clear the canvas."""

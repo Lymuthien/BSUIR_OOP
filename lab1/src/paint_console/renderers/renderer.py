@@ -1,10 +1,13 @@
+import copy
+
 from ..interfaces import IRenderer, IDrawable, ICanvasRenderer
 
 
 class BasicRenderer(IRenderer):
     @staticmethod
-    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]):
+    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]) -> list[list[str]]:
         """Render the given drawable figure in the grid by pos(x, y) coordinates."""
+        grid = copy.deepcopy(grid)
         BasicRenderer._validate_coordinates(x, y, grid)
 
         figure_render = figure.render()
@@ -13,7 +16,8 @@ class BasicRenderer(IRenderer):
                 if symbol and (0 <= y + r_idx < len(grid)) and (0 <= x + s_idx < len(grid[0])):
                     grid[y + r_idx][x + s_idx] = symbol
 
-        BasicRenderer._check_partial_out_of_bounds(figure_render, x, y, grid)
+        return grid
+        #BasicRenderer._check_partial_out_of_bounds(figure_render, x, y, grid)
 
     @staticmethod
     def _validate_coordinates(x: int, y: int, grid: list[list[str]]):
@@ -28,6 +32,7 @@ class BasicRenderer(IRenderer):
         """Check for partial out-of-bounds after rendering"""
         if len(figure_render) + y > len(grid) or \
                 (len(grid) > 0 and len(figure_render) > 0 and len(figure_render[0]) + x > len(grid[0])):
+
             raise IndexError("The given figure partly out of bounds of grid.")
 
 
