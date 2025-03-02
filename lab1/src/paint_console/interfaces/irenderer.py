@@ -3,8 +3,9 @@ from .ifigure import IFigure, IDrawable
 
 
 class IRenderStrategy(ABC):
+    @staticmethod
     @abstractmethod
-    def render(self, figure: IFigure, background: str) -> list[list[str]]:
+    def render(figure: IFigure, background: str) -> list[list[str]]:
         pass
 
 

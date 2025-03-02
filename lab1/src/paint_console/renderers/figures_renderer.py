@@ -1,3 +1,5 @@
+import math
+
 from ..interfaces import IRenderStrategy
 from ..utils import RectangleMath, EllipseMath, TriangleMath
 
@@ -6,8 +8,8 @@ class EllipseRenderer(IRenderStrategy):
     @staticmethod
     def render(figure: EllipseMath, background: str) -> list[list[str]]:
         """Return a list of strings representing the ellipse."""
-        vr = int(figure.vertical_radius)
-        hr = int(figure.horizontal_radius)
+        vr = math.ceil(figure.vertical_radius)
+        hr = math.ceil(figure.horizontal_radius)
         image = [[''] * (2 * hr) for _ in range(2 * vr)]
 
         for y in range(2 * vr):
@@ -27,7 +29,8 @@ class RectangleRenderer(IRenderStrategy):
 
 
 class TriangleRenderer(IRenderStrategy):
-    def render(self, figure: TriangleMath, background: str) -> list[list[str]]:
+    @staticmethod
+    def render(figure: TriangleMath, background: str) -> list[list[str]]:
         """Return a list of strings representing the triangle."""
         max_x = int(max(x for x, y in figure.vertices))
         max_y = int(max(y for x, y in figure.vertices))
@@ -35,22 +38,20 @@ class TriangleRenderer(IRenderStrategy):
 
         for y in range(max_y + 1):
             for x in range(max_x + 1):
-                if self._is_point_inside(figure.area, figure.vertices, x, y):
+                if TriangleRenderer._is_point_inside(figure.area, figure.vertices, x, y):
                     image[y][x] = background
         return image
 
     @staticmethod
     def _is_point_inside(basic_area, vertices, x, y) -> bool:
         """Check if areas of all triangles in sum gives basic area."""
-        try:
-            a, b, c = vertices
-            triangles = [TriangleMath((a, b, (x, y))),
-                         TriangleMath((a, c, (x, y))),
-                         TriangleMath((b, c, (x, y)))]
+        triangles_area = []
+        for a, b in zip(vertices, vertices[1:] + vertices[:1]):
+            try:
+                triangles_area.append(TriangleMath((a, b, (x, y))).area)
+            except ValueError:
+                triangles_area.append(0)
 
-            triangle_areas = map(lambda triangle: triangle.area, triangles)
-            if sum(triangle_areas) - basic_area < 1:
-                return True
-            return False
-        except ValueError:
-            return False
+        if sum(triangles_area) - basic_area < 1:
+            return True
+        return False
