@@ -1,8 +1,6 @@
 import unittest
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock
 
-# from ....src.paint_console.models import FigureLayout, CanvasModel, CanvasView
-# from ....src.paint_console.interfaces import IDrawable
 from src.paint_console.models import FigureLayout, CanvasModel, CanvasView
 from src.paint_console.interfaces import IDrawable, ICanvasModel, IRenderer, INavigator
 
