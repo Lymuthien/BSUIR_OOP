@@ -97,11 +97,9 @@ class CanvasModel(ISearchingCanvasModel):
 
     def get_figure_layout(self, figure_id: str) -> FigureLayout:
         """Return the figure layout by id."""
-        if figure_id not in self.__figures:
-            raise KeyError("No such figure")
         return self.__figures[figure_id]
 
-    def get_all_figures(self) -> Generator[FigureLayout, None, None]:
+    def get_all_figures_layout(self) -> Generator[FigureLayout, None, None]:
         """Return all figure layouts."""
         yield from self.__figures.values()
 
@@ -148,7 +146,7 @@ class CanvasView(ICanvasView):
     def update(self) -> None:
         """Update the canvas."""
         self.clear()
-        for layout in self.__model.get_all_figures():
+        for layout in self.__model.get_all_figures_layout():
             self.draw_figure(layout.figure, layout.coordinates[0], layout.coordinates[1])
 
     @property

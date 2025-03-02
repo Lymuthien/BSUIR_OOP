@@ -44,7 +44,7 @@ class ICanvasModel(ABC):
         pass
 
     @abstractmethod
-    def get_all_figures(self) -> Generator[IFigureLayout, None, None]:
+    def get_all_figures_layout(self) -> Generator[IFigureLayout, None, None]:
         pass
 
     @abstractmethod
