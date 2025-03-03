@@ -5,14 +5,25 @@ from .models import CanvasModel, CanvasView, DrawableRectangle, DrawableEllipse,
 from .renderers import BasicRenderer, ConsoleCanvasRenderer
 from .utils import Navigator
 
+# I doubt the need to test all functions because it only controls
+
 
 class PaintApp(object):
     def __init__(self):
-        width, height = int(os.get_terminal_size().columns / 2), os.get_terminal_size().lines
+        width, height = self._get_terminal_size()
         self.__canvas_model = CanvasModel(Navigator())
         self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer(), width=width, height=height - 8)
         self.__history_manager = HistoryManager()
         self.__navigator = Navigator()
+
+    @staticmethod
+    def _get_terminal_size() -> tuple:
+        try:
+            width, height = int(os.get_terminal_size().columns / 2), os.get_terminal_size().lines
+        except Exception as e:
+            width, height = 50, 28
+
+        return width, height
 
     @property
     def canvas_width(self):
@@ -87,8 +98,6 @@ class PaintApp(object):
 
     def change_figure_bg(self, bg: str):
         """Change current figure's background color"""
-        if len(bg) != 1:
-            raise Exception('bg must be 1 character long')
         figure = self.__canvas_model.navigator.current()
         self.__history_manager.add_command(
             ChangeFigureBgCommand(self.__canvas_model, self.__canvas_view, figure, bg))
