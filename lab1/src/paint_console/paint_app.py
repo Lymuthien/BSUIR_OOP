@@ -1,3 +1,4 @@
+import os
 from .core import AddFigureCommand, RemoveFigureCommand, MoveFigureCommand, ChangeFigureBgCommand, FileManager, \
     HistoryManager
 from .models import CanvasModel, CanvasView, DrawableRectangle, DrawableEllipse, DrawableTriangle
@@ -7,10 +8,19 @@ from .utils import Navigator
 
 class PaintApp(object):
     def __init__(self):
+        width, height = int(os.get_terminal_size().columns / 2), os.get_terminal_size().lines
         self.__canvas_model = CanvasModel(Navigator())
-        self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer())
+        self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer(), width=width, height=height - 8)
         self.__history_manager = HistoryManager()
         self.__navigator = Navigator()
+
+    @property
+    def canvas_width(self):
+        return self.__canvas_view.width
+
+    @property
+    def canvas_height(self):
+        return self.__canvas_view.height
 
     def render_canvas(self):
         """Render the canvas in console."""

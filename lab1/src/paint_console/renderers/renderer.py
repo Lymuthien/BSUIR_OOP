@@ -43,5 +43,5 @@ class ConsoleCanvasRenderer(ICanvasRenderer):
         """Render the canvas(grid) in the console."""
         print('-' * width * 2)
         for row in grid:
-            print(*row, end='|\n')
+            print(*row, sep=' ', end='|\n')
         print('-' * width * 2)
