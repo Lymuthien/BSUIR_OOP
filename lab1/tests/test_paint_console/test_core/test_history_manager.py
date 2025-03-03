@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from src.paint_console.core import HistoryManager
-from src.paint_console.interfaces import ICommand
+from paint_console.core import HistoryManager
+from paint_console.interfaces import ICommand
 
 
 class TestHistoryManager(unittest.TestCase):

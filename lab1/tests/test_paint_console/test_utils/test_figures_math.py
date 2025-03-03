@@ -1,7 +1,7 @@
 import math
 import unittest
 from parameterized import parameterized
-from src.paint_console.utils import EllipseMath, RectangleMath, TriangleMath
+from paint_console.utils import EllipseMath, RectangleMath, TriangleMath
 
 
 class TestEllipseMath(unittest.TestCase):

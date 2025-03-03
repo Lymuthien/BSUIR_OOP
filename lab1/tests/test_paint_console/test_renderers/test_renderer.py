@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock
 from parameterized import parameterized
 
-from src.paint_console.renderers import BasicRenderer, ConsoleCanvasRenderer
-from src.paint_console.interfaces import IDrawable
+from paint_console.renderers import BasicRenderer
+from paint_console.interfaces import IDrawable
 
 
 class TestBasicRenderer(unittest.TestCase):

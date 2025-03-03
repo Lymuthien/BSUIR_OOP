@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from src.paint_console.models import FigureLayout, CanvasModel, CanvasView
-from src.paint_console.interfaces import IDrawable, ICanvasModel, IRenderer, INavigator
+from paint_console.models import FigureLayout, CanvasModel, CanvasView
+from paint_console.interfaces import IDrawable, ICanvasModel, IRenderer, INavigator
 
 
 class TestFigureLayout(unittest.TestCase):

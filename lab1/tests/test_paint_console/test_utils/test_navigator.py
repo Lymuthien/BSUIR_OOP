@@ -1,5 +1,5 @@
 import unittest
-from src.paint_console.utils import Navigator
+from paint_console.utils import Navigator
 
 
 class TestNavigator(unittest.TestCase):

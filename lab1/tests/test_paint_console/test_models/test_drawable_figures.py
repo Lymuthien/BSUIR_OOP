@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock, PropertyMock
 from parameterized import parameterized
-from src.paint_console.models import DrawableFigure, DrawableEllipse, DrawableTriangle, DrawableRectangle
+from paint_console.models import DrawableFigure, DrawableEllipse, DrawableTriangle, DrawableRectangle
 
 
 class TestableDrawableFigure(DrawableFigure):
@@ -64,8 +64,8 @@ class TestDrawableEllipse(unittest.TestCase):
     def test_info_given_correctly(self):
         figure = DrawableEllipse(4, 5, 'e')
 
-        with (patch("src.paint_console.utils.EllipseMath.info", new_callable=PropertyMock) as mock_ellipse_info,
-              patch("src.paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
+        with (patch("paint_console.utils.EllipseMath.info", new_callable=PropertyMock) as mock_ellipse_info,
+              patch("paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
             mock_ellipse_info.return_value = {
                 "type": "ellipse",
                 "vertical_radius": 4,
@@ -119,8 +119,8 @@ class TestDrawableRectangle(unittest.TestCase):
     def test_info_given_correctly(self):
         figure = DrawableRectangle(10, 56, 'r')
 
-        with (patch("src.paint_console.utils.RectangleMath.info", new_callable=PropertyMock) as mock_rectangle_info,
-              patch("src.paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
+        with (patch("paint_console.utils.RectangleMath.info", new_callable=PropertyMock) as mock_rectangle_info,
+              patch("paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
             mock_rectangle_info.return_value = {
                 "type": "rectangle",
                 "width": 4,
@@ -164,8 +164,8 @@ class TestDrawableTriangle(unittest.TestCase):
     def test_info_given_correctly(self):
         figure = DrawableTriangle(((0, 0), (0, 4), (3, 0)), 't')
 
-        with (patch("src.paint_console.utils.TriangleMath.info", new_callable=PropertyMock) as mock_triangle_info,
-              patch("src.paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
+        with (patch("paint_console.utils.TriangleMath.info", new_callable=PropertyMock) as mock_triangle_info,
+              patch("paint_console.models.DrawableFigure.info", new_callable=PropertyMock) as mock_drawable_info):
             mock_triangle_info.return_value = {
                 "type": "triangle",
                 "sides": (4, 5, 6)

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from src.paint_console.renderers import EllipseRenderer, RectangleRenderer, TriangleRenderer
-from src.paint_console.utils import EllipseMath, RectangleMath, TriangleMath
+from paint_console.renderers import EllipseRenderer, RectangleRenderer, TriangleRenderer
+from paint_console.utils import EllipseMath, RectangleMath, TriangleMath
 
 
 class TestEllipseRenderer(unittest.TestCase):

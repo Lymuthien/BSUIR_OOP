@@ -2,7 +2,7 @@ import os
 import unittest
 from tempfile import NamedTemporaryFile
 
-from src.paint_console.core import FileManager
+from paint_console.core import FileManager
 
 
 class TestFileManager(unittest.TestCase):
