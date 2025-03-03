@@ -6,7 +6,8 @@ Completed by Kozlova Tatsiana, group 353504
 The program must be able to draw 3 types of figures:
 rectangle, triangle, ellipse; destroy, fill, move them.
 
-_Warning: all numeric input values must be integers._
+_Warning: all numeric input values must be integers. If something goes wrong
+error will be shown in the screen._
 
 _Objects may be displayed with altered proportions due to the 
 peculiarities of console output._
