@@ -14,7 +14,6 @@ class PaintApp(object):
         self.__canvas_model = CanvasModel(Navigator())
         self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer(), width=width, height=height - 8)
         self.__history_manager = HistoryManager()
-        self.__navigator = Navigator()
 
     @staticmethod
     def _get_terminal_size() -> tuple:

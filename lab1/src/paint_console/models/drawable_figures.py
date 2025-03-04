@@ -11,12 +11,12 @@ class DrawableFigure(IDrawable):
     @property
     def background(self) -> str:
         """Return the background symbol of the figure."""
-        return self._background
+        return self.__background
 
     @background.setter
     def background(self, background: str):
         self._validate_background(background)
-        self._background = background
+        self.__background = background
 
     @staticmethod
     def _validate_background(background: str):
@@ -39,12 +39,12 @@ class DrawableEllipse(EllipseMath, DrawableFigure):
         """Ellipse that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         EllipseMath.__init__(self, vertical_radius, horizontal_radius)
-        self._background = background
-        self._renderer = EllipseRenderer()
+        self.__background = background
+        self.__renderer = EllipseRenderer()
 
     def render(self) -> list[list[str]]:
         """Represent the ellipse as a list of lines."""
-        return self._renderer.render(self, self._background)
+        return self.__renderer.render(self, self.__background)
 
     @property
     def info(self) -> dict:
@@ -60,12 +60,12 @@ class DrawableRectangle(RectangleMath, DrawableFigure):
         """Rectangle that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         RectangleMath.__init__(self, width, height)
-        self._background = background
-        self._renderer = RectangleRenderer()
+        self.__background = background
+        self.__renderer = RectangleRenderer()
 
     def render(self) -> list[list[str]]:
         """Represent the rectangle as a list of lines."""
-        return self._renderer.render(self, self._background)
+        return self.__renderer.render(self, self.__background)
 
     @property
     def info(self) -> dict:
@@ -82,12 +82,12 @@ class DrawableTriangle(TriangleMath, DrawableFigure):
         """Triangle that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         TriangleMath.__init__(self, vertices)
-        self._background = background
-        self._renderer = TriangleRenderer()
+        self.__background = background
+        self.__renderer = TriangleRenderer()
 
     def render(self) -> list[list[str]]:
         """Represent the triangle as a list of lines."""
-        return self._renderer.render(self, self._background)
+        return self.__renderer.render(self, self.__background)
 
     @property
     def info(self) -> dict:
