@@ -28,3 +28,7 @@ class HistoryManager:
             self.__undo_stack.append(command)
         else:
             raise IndexError("Can't redo (no commands)")
+
+    def clear(self):
+        self.__undo_stack.clear()
+        self.__redo_stack.clear()
