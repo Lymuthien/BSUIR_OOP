@@ -40,7 +40,6 @@ class DrawableEllipse(EllipseMath, DrawableFigure):
         """Ellipse that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         EllipseMath.__init__(self, vertical_radius, horizontal_radius)
-        self.__background = background
 
     def render(self) -> list[list[str]]:
         """Represent the ellipse as a list of lines."""
@@ -70,11 +69,10 @@ class DrawableRectangle(RectangleMath, DrawableFigure):
         """Rectangle that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         RectangleMath.__init__(self, width, height)
-        self.__background = background
 
     def render(self) -> list[list[str]]:
         """Represent the rectangle as a list of lines."""
-        return [[self.__background] * int(self.width) for _ in range(int(self.height))]
+        return [[self.background] * int(self.width) for _ in range(int(self.height))]
 
     @property
     def info(self) -> dict:
@@ -91,7 +89,6 @@ class DrawableTriangle(TriangleMath, DrawableFigure):
         """Triangle that can be drawn and calculated"""
         DrawableFigure.__init__(self, background)
         TriangleMath.__init__(self, vertices)
-        self.__background = background
 
     def render(self) -> list[list[str]]:
         """Represent the triangle as a list of lines."""
