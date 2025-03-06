@@ -2,10 +2,7 @@ import os
 from .core import AddFigureCommand, RemoveFigureCommand, MoveFigureCommand, ChangeFigureBgCommand, FileManager, \
     HistoryManager
 from .models import CanvasModel, CanvasView, DrawableRectangle, DrawableEllipse, DrawableTriangle
-from .renderers import BasicRenderer, ConsoleCanvasRenderer
-from .utils import Navigator
-
-# I doubt the need to test all functions because it only controls
+from .utils import BasicRenderer, ConsoleCanvasRenderer, Navigator
 
 
 class PaintApp(object):
@@ -14,13 +11,13 @@ class PaintApp(object):
         self.__canvas_model = CanvasModel(Navigator())
         self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer(), width=width, height=height - 8)
         self.__history_manager = HistoryManager()
-        self.__navigator = Navigator()
+        self.__renderer = ConsoleCanvasRenderer()
 
     @staticmethod
     def _get_terminal_size() -> tuple:
         try:
             width, height = int(os.get_terminal_size().columns / 2), os.get_terminal_size().lines
-        except Exception as e:
+        except Exception:
             width, height = 50, 28
 
         return width, height
@@ -35,7 +32,7 @@ class PaintApp(object):
 
     def render_canvas(self):
         """Render the canvas in console."""
-        ConsoleCanvasRenderer().render(self.__canvas_view.width, self.__canvas_view.grid)
+        self.__renderer.render(self.__canvas_view.width, self.__canvas_view.grid)
 
     def save_file(self, filename: str):
         """Save file by name(path)"""

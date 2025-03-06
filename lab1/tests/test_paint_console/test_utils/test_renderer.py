@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 from parameterized import parameterized
 
-from paint_console.renderers import BasicRenderer
+from paint_console.utils import BasicRenderer
 from paint_console.interfaces import IDrawable
 
 
