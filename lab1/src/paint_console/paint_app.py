@@ -41,6 +41,7 @@ class PaintApp(object):
     def load_file(self, filename: str):
         """Load file by name(path)"""
         self.__canvas_model.load_data(FileManager.load(filename))
+        self.__history_manager.clear()
         self.__canvas_view.update()
 
     def undo(self):
