@@ -7,6 +7,14 @@ class App:
     def __init__(self):
         self._app = PaintApp()
 
+    @staticmethod
+    def _try_to_tuple_int(params):
+        try:
+            return tuple(map(int, params))
+        except ValueError:
+            raise Exception('Invalid parameters')
+
+
     def run(self):
         main_menu_flag = True
         drawing_menu_flag = False
@@ -54,7 +62,7 @@ class App:
                         pass
                     elif cmd == "1":
                         params = input(f"Enter parameters (x, y, width, height)" + coords_warning_msg).strip()
-                        params = tuple(map(int, params.split()))
+                        params = self._try_to_tuple_int(params.split())
                         if len(params) != 4:
                             raise ValueError("Invalid parameters")
                         self._app.draw_rectangle(*params)
@@ -62,13 +70,13 @@ class App:
                         params = input("Enter parameters (x0, y0, x1, y1, x2, y2)"
                                        f"(topmost y < {self._app.canvas_height}, "
                                        f"leftmost x < {self._app.canvas_width}): ").strip()
-                        params = tuple(map(int, params.split()))
+                        params = self._try_to_tuple_int(params.split())
                         if len(params) != 6:
                             raise ValueError("Invalid parameters")
                         self._app.draw_triangle(*params)
                     elif cmd == "3":
                         params = input("Enter parameters (x, y, vert.rad, hor.rad): " + coords_warning_msg).strip()
-                        params = tuple(map(int, params.split()))
+                        params = self._try_to_tuple_int(params.split())
                         if len(params) != 4:
                             raise ValueError("Invalid parameters")
                         self._app.draw_ellipse(*params)
@@ -92,7 +100,7 @@ class App:
                         self._app.select_next()
                     elif cmd == "m":
                         params = input("Enter parameters (new x, new y): " + coords_warning_msg).strip().split()
-                        params = tuple(map(int, params))
+                        params = self._try_to_tuple_int(params)
                         if len(params) != 2:
                             raise ValueError("Invalid parameters")
                         self._app.move_figure(*params)
