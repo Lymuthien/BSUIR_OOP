@@ -1,1 +1,1 @@
-from .core.history_manager import HistoryManager
+from .services.history_manager import HistoryManager
