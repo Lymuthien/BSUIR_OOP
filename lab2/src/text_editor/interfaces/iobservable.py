@@ -14,4 +14,4 @@ class IObservable(ABC):
 
 class IObserver(ABC):
     @abstractmethod
-    def update(self, document) -> None: pass
+    def update(self, data) -> None: ...
