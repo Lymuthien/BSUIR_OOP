@@ -1,8 +1,9 @@
 from ...interfaces.iobservable import IObservable, IObserver
+from ...interfaces.iserializer import IDictable
 from ..text_component import TextComponent
 
 
-class Document(IObservable):
+class Document(IObservable, IDictable):
     def __init__(self):
         self._components: list[TextComponent] = []
         self.__observers: list[IObserver] = []
@@ -29,12 +30,11 @@ class Document(IObservable):
         for observer in self.__observers:
             observer.update(self)
 
-    # def to_dict(self) -> dict:
-    #     return {
-    #         'type': self.__class__.__name__,
-    #         'components': [component.to_dict() for component in self._components]
-    #     }
-    #
-    # @classmethod
-    # def from_dict(cls, data: dict) -> 'Document':
-    #     raise NotImplementedError("Subclasses must implement from_dict")
+    def to_dict(self) -> dict:
+        return {
+            'type': self.__class__.__name__,
+            'components': [component.to_dict() for component in self._components]
+        }
+
+    def from_dict(self, data: dict) -> 'Document':
+        raise NotImplementedError("Subclasses must implement from_dict")

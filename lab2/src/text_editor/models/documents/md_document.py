@@ -24,3 +24,15 @@ class MarkdownDocument(Document):
 
         self._components = [component for component in (before, italic_part, after) if component]
         self.notify()
+
+    def from_dict(self, data: dict) -> 'MarkdownDocument':
+        self._components = []
+        for component in data['components']:
+            if component['type'] == 'TextComponent':
+                self._components.append(TextComponent(component['text']))
+            elif component['type'] == 'BoldTextComponent':
+                self._components.append(BoldTextComponent(component['text']))
+            elif component['type'] == 'ItalicTextComponent':
+                self._components.append(ItalicTextComponent(component['text']))
+
+        return self

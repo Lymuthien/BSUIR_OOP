@@ -2,11 +2,17 @@ import pypandoc
 
 from .document import Document
 from .md_document import MarkdownDocument
+from ..text_component import TextComponent
 
 
 class RichTextDocument(Document):
     def __init__(self):
         super().__init__()
+
+    def from_dict(self, data: dict) -> 'RichTextDocument':
+        self._components = [TextComponent(component['text']) for component in data['components']]
+
+        return self
 
 
 class MdToRichTextAdapter(RichTextDocument):
