@@ -5,7 +5,10 @@ from ..models.documents.md_document import MarkdownDocument
 
 
 class WriteCommand(ICommand):
-    def __init__(self, text: str, pos: int, doc: Document) -> None:
+    def __init__(self,
+                 text: str,
+                 pos: int,
+                 doc: Document) -> None:
         self.__text = text
         self.__pos = pos
         self.__doc = doc
@@ -21,7 +24,10 @@ class WriteCommand(ICommand):
 
 
 class EraseCommand(ICommand):
-    def __init__(self, start: int, end: int, doc: Document) -> None:
+    def __init__(self,
+                 start: int,
+                 end: int,
+                 doc: Document) -> None:
         self.__start = start
         self.__end = end
         self.__doc = doc
@@ -38,13 +44,18 @@ class EraseCommand(ICommand):
 
 
 class ChangeStyleCommand(ICommand):
-    def __init__(self, start: int, end: int, doc: MarkdownDocument, bold: bool = False, italic: bool = False) -> None:
+    def __init__(self,
+                 start: int,
+                 end: int,
+                 doc: MarkdownDocument,
+                 bold: bool = False,
+                 italic: bool = False) -> None:
         self.__start = start
         self.__end = end
         self.__doc = doc
         self.__bold = bold
         self.__italic = italic
-        self.__old_text = self.__doc.get_text()
+        self.__old_text = doc.get_text()
         self.__new_text = None
 
     def execute(self) -> None:
@@ -52,6 +63,26 @@ class ChangeStyleCommand(ICommand):
             self.__doc.apply_bold(self.__start, self.__end)
         if self.__italic:
             self.__doc.apply_italic(self.__start, self.__end)
+        self.__new_text = self.__doc.get_text()
+
+    def undo(self) -> None:
+        self.__doc.replace_text(self.__old_text, 0, len(self.__new_text) - 1)
+
+    def redo(self) -> None:
+        self.__doc.replace_text(self.__new_text, 0, len(self.__old_text) - 1)
+
+
+class ChangeThemeCommand(ICommand):
+    def __init__(self,
+                 doc: MarkdownDocument,
+                 theme: Theme) -> None:
+        self.__doc = doc
+        self.__theme = theme
+        self.__old_text = doc.get_text()
+        self.__new_text = None
+
+    def execute(self) -> None:
+        self.__doc.set_theme(self.__theme)
         self.__new_text = self.__doc.get_text()
 
     def undo(self) -> None:
