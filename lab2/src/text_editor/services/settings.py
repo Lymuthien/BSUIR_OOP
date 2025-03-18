@@ -6,7 +6,7 @@ from ..models.theme import Theme
 class Settings(object):
     def __init__(self):
         self.__font_size: int = 4
-        self.__all_bald: bool = False
+        self.__all_bold: bool = False
         self.__all_italic: bool = False
 
     @property
@@ -18,12 +18,12 @@ class Settings(object):
         self.__font_size = value
 
     @property
-    def all_bald(self):
-        return self.__all_bald
+    def all_bold(self):
+        return self.__all_bold
 
-    @all_bald.setter
-    def all_bald(self, value: bool):
-        self.__all_bald = value
+    @all_bold.setter
+    def all_bold(self, value: bool):
+        self.__all_bold = value
 
     @property
     def all_italic(self):
@@ -35,7 +35,7 @@ class Settings(object):
 
     def set_theme(self, theme: Theme):
         self.__font_size = theme.font_size
-        self.__all_bald = theme.bald
+        self.__all_bold = theme.bold
         self.__all_italic = theme.italic
 
 

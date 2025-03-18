@@ -14,11 +14,33 @@ class Document(IObservable, IDictable):
     def set_theme(self, theme: Theme):
         self._settings.theme = theme
 
+    @property
+    def settings(self):
+        return self._settings
+
     def insert_text(self, text: str, position: int) -> None:
         current_text = self.get_text()
         new_text = current_text[:position] + text + current_text[position:]
 
         self._components = [TextComponent(new_text)]
+        self.notify()
+
+    def replace_text(self, new_text: str, start: int, end: int) -> None:
+        current_text = self.get_text()
+        new_text = current_text[:start] + new_text + current_text[end + 1:]
+
+        self._components = [TextComponent(new_text)]
+        self.notify()
+
+    def delete_text(self, start: int, end: int) -> None:
+        current_text = self.get_text()
+        new_text = current_text[:start] + current_text[end + 1:]
+
+        self._components = [TextComponent(new_text)]
+        self.notify()
+
+    def clear(self) -> None:
+        self._components = []
         self.notify()
 
     def get_text(self) -> str:

@@ -12,12 +12,12 @@ class MarkdownDocument(Document):
         super().set_theme(theme)
         new_components = []
         font = '#' * self._settings.font_size
-        bald = self._settings.all_bald
+        bold = self._settings.all_bold
         italic = self._settings.all_italic
 
         for component in self._components:
             new_component = TextComponent(component.get_text())
-            if bald:
+            if bold:
                 new_component = BoldTextComponent(new_component)
             if italic:
                 new_component = ItalicTextComponent(new_component)
@@ -25,13 +25,13 @@ class MarkdownDocument(Document):
             new_components.append(new_component)
 
         self._components = new_components
-
+        self.notify()
 
     def apply_bold(self, start: int, end: int) -> None:
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
-        bold_part = BoldTextComponent(TextComponent(text[start:end]))
-        after = TextComponent(text[end:]) if end < len(text) else None
+        bold_part = BoldTextComponent(TextComponent(text[start:end + 1]))
+        after = TextComponent(text[end + 1:]) if end + 1 < len(text) else None
 
         self._components = [component for component in (before, bold_part, after) if component]
         self.notify()
@@ -39,8 +39,8 @@ class MarkdownDocument(Document):
     def apply_italic(self, start: int, end: int) -> None:
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
-        italic_part = ItalicTextComponent(TextComponent(text[start:end]))
-        after = TextComponent(text[end:]) if end < len(text) else None
+        italic_part = ItalicTextComponent(TextComponent(text[start:end + 1]))
+        after = TextComponent(text[end + 1:]) if end + 1 < len(text) else None
 
         self._components = [component for component in (before, italic_part, after) if component]
         self.notify()

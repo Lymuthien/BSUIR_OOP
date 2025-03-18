@@ -1,13 +1,61 @@
+from .theme import Theme
 from ..interfaces.icommand import ICommand
+from ..models.documents.document import Document
+from ..models.documents.md_document import MarkdownDocument
+
 
 class WriteCommand(ICommand):
-    pass
+    def __init__(self, text: str, pos: int, doc: Document) -> None:
+        self.__text = text
+        self.__pos = pos
+        self.__doc = doc
+
+    def execute(self) -> None:
+        self.__doc.insert_text(self.__text, self.__pos)
+
+    def undo(self) -> None:
+        self.__doc.delete_text(self.__pos, self.__pos + len(self.__text))
+
+    def redo(self) -> None:
+        self.execute()
+
 
 class EraseCommand(ICommand):
-    pass
+    def __init__(self, start: int, end: int, doc: Document) -> None:
+        self.__start = start
+        self.__end = end
+        self.__doc = doc
+        self.__deleted_text = self.__doc.get_text()[self.__start:self.__end + 1]
 
-class PasteCommand(ICommand):
-    pass
+    def execute(self) -> None:
+        self.__doc.delete_text(self.__start, self.__end)
+
+    def undo(self) -> None:
+        self.__doc.insert_text(self.__deleted_text, self.__start)
+
+    def redo(self) -> None:
+        self.execute()
+
 
 class ChangeStyle(ICommand):
-    pass
+    def __init__(self, start: int, end: int, doc: MarkdownDocument, bold: bool = False, italic: bool = False) -> None:
+        self.__start = start
+        self.__end = end
+        self.__doc = doc
+        self.__bold = bold
+        self.__italic = italic
+        self.__old_text = self.__doc.get_text()
+        self.__new_text = None
+
+    def execute(self) -> None:
+        if self.__bold:
+            self.__doc.apply_bold(self.__start, self.__end)
+        if self.__italic:
+            self.__doc.apply_italic(self.__start, self.__end)
+        self.__new_text = self.__doc.get_text()
+
+    def undo(self) -> None:
+        self.__doc.replace_text(self.__old_text, 0, len(self.__new_text) - 1)
+
+    def redo(self) -> None:
+        self.__doc.replace_text(self.__new_text, 0, len(self.__old_text) - 1)
