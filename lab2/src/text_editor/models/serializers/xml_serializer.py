@@ -1,5 +1,5 @@
 from xml.etree import ElementTree
-from ...interfaces.iserializer import ISerializer
+from ...interfaces import ISerializer
 from ...models.documents.document import Document
 from ...models.documents.md_document import MarkdownDocument
 

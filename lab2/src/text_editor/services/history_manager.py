@@ -1,4 +1,4 @@
-from ..interfaces.icommand import ICommand
+from ..interfaces import ICommand
 from ..utils.singleton import singleton
 
 

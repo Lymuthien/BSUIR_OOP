@@ -1,3 +1,4 @@
+from strip_markdown import strip_markdown
 from .document import Document
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent
 from ..theme import Theme
@@ -10,10 +11,13 @@ class MarkdownDocument(Document):
 
     def set_theme(self, theme: Theme):
         super().set_theme(theme)
+
         new_components = []
         font = '#' * self._settings.font_size
         bold = self._settings.all_bold
         italic = self._settings.all_italic
+
+        self._clear_from_style()
 
         for component in self._components:
             new_component = TextComponent(component.get_text())
@@ -26,6 +30,10 @@ class MarkdownDocument(Document):
 
         self._components = new_components
         self.notify()
+
+    def _clear_from_style(self):
+        text_without_style = strip_markdown(self.get_text())
+        self._components = [TextComponent(text_without_style)]
 
     def apply_bold(self, start: int, end: int) -> None:
         text = self.get_text()

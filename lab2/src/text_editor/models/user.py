@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from ..interfaces.iobservable import IObserver
+from ..interfaces import IObserver
 
 
 class User(IObserver):

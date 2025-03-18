@@ -1,6 +1,5 @@
-from ..interfaces.iserializer import ISerializer
-from ..interfaces.ifile_manager import IFileManager
 import sqlite3
+from ..interfaces import ISerializer, IFileManager
 
 
 class LocalFileManager(IFileManager):

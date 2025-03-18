@@ -1,5 +1,5 @@
+from .theme import Theme
 from ..utils.singleton import singleton
-from ..models.theme import Theme
 
 
 @singleton

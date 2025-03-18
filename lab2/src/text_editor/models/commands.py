@@ -1,5 +1,5 @@
 from .theme import Theme
-from ..interfaces.icommand import ICommand
+from ..interfaces import ICommand
 from ..models.documents.document import Document
 from ..models.documents.md_document import MarkdownDocument
 
@@ -37,7 +37,7 @@ class EraseCommand(ICommand):
         self.execute()
 
 
-class ChangeStyle(ICommand):
+class ChangeStyleCommand(ICommand):
     def __init__(self, start: int, end: int, doc: MarkdownDocument, bold: bool = False, italic: bool = False) -> None:
         self.__start = start
         self.__end = end

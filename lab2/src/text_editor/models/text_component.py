@@ -1,5 +1,4 @@
-from ..interfaces.itext_component import ITextComponent
-from ..interfaces.iserializer import IDictable
+from ..interfaces import ITextComponent, IDictable
 
 
 class TextComponent(ITextComponent, IDictable):

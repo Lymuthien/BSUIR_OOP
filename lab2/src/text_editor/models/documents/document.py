@@ -1,8 +1,7 @@
 from ..theme import Theme
-from ...interfaces.iobservable import IObservable, IObserver
-from ...interfaces.iserializer import IDictable
-from ...services.settings import Settings
+from ..settings import Settings
 from ..text_component import TextComponent
+from ...interfaces import IObserver, IObservable, IDictable
 
 
 class Document(IObservable, IDictable):

@@ -1,8 +1,7 @@
-from ...interfaces.iserializer import ISerializer
+import json
+from ...interfaces import ISerializer
 from ...models.documents.document import Document
 from ...models.documents.md_document import MarkdownDocument
-import json
-
 
 
 class JsonSerializer(ISerializer):
