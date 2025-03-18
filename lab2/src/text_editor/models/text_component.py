@@ -2,7 +2,8 @@ from ..interfaces import ITextComponent, IDictable
 
 
 class TextComponent(ITextComponent, IDictable):
-    def __init__(self, text: str):
+    def __init__(self,
+                 text: str):
         self.__text: str = text
 
     def get_text(self) -> str:
@@ -14,19 +15,23 @@ class TextComponent(ITextComponent, IDictable):
             'text': self.__text
         }
 
-    def from_dict(self, data: dict) -> 'TextComponent':
+    def from_dict(self,
+                  data: dict) -> 'TextComponent':
         self.__text = data['text']
         return self
 
 
 class TextDecorator(TextComponent):
-    def __init__(self, text, text_component: TextComponent):
+    def __init__(self,
+                 text: str,
+                 text_component: TextComponent):
         super().__init__(text)
         self._text_component: TextComponent = text_component
 
 
 class BoldTextComponent(TextDecorator):
-    def __init__(self, text_component: TextComponent):
+    def __init__(self,
+                 text_component: TextComponent):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:
@@ -34,7 +39,8 @@ class BoldTextComponent(TextDecorator):
 
 
 class ItalicTextComponent(TextDecorator):
-    def __init__(self, text_component: TextComponent):
+    def __init__(self,
+                 text_component: TextComponent):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:

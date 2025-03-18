@@ -8,7 +8,8 @@ class HistoryManager:
         self.__undo_stack: list[ICommand] = []
         self.__redo_stack: list[ICommand] = []
 
-    def add_command(self, command: ICommand):
+    def add_command(self,
+                    command: ICommand):
         """Add a command to the stack."""
         self.__undo_stack.append(command)
         self.__redo_stack.clear()

@@ -4,14 +4,17 @@ from ..interfaces import ISerializer, IFileManager
 
 class LocalFileManager(IFileManager):
     @staticmethod
-    def save(data, filename: str, serializer: ISerializer) -> None:
+    def save(data,
+             filename: str,
+             serializer: ISerializer) -> None:
         serialized_data = serializer.serialize(data)
         filename += serializer.extension
         with open(filename, 'w') as file:
             file.write(serialized_data)
 
     @staticmethod
-    def load(filename: str, serializer: ISerializer):
+    def load(filename: str,
+             serializer: ISerializer):
         with open(filename, 'r') as file:
             serialized_data = file.read()
 
@@ -19,7 +22,8 @@ class LocalFileManager(IFileManager):
 
 
 class DatabaseFileManager(IFileManager):
-    def __init__(self, db_name: str = 'documents.db'):
+    def __init__(self,
+                 db_name: str = 'documents.db'):
         self.__db_name = db_name
         self._create_table()
 
@@ -40,7 +44,9 @@ class DatabaseFileManager(IFileManager):
             conn.commit()
 
     @staticmethod
-    def save(data, document_id: str, serializer: ISerializer) -> None:
+    def save(data,
+             document_id: str,
+             serializer: ISerializer) -> None:
         db_manager = DatabaseFileManager()
         serialized_data = serializer.serialize(data)
         format_ = serializer.extension
@@ -54,7 +60,8 @@ class DatabaseFileManager(IFileManager):
             conn.commit()
 
     @staticmethod
-    def load(document_id: str, serializer: ISerializer):
+    def load(document_id: str,
+             serializer: ISerializer):
         db_manager = DatabaseFileManager()
 
         with sqlite3.connect(db_manager.__db_name) as conn:

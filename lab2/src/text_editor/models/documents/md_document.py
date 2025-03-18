@@ -9,7 +9,8 @@ class MarkdownDocument(Document):
         super().__init__()
         self._components.append(TextComponent(''))
 
-    def set_theme(self, theme: Theme):
+    def set_theme(self,
+                  theme: Theme):
         super().set_theme(theme)
 
         new_components = []
@@ -35,7 +36,9 @@ class MarkdownDocument(Document):
         text_without_style = strip_markdown(self.get_text())
         self._components = [TextComponent(text_without_style)]
 
-    def apply_bold(self, start: int, end: int) -> None:
+    def apply_bold(self,
+                   start: int,
+                   end: int) -> None:
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
         bold_part = BoldTextComponent(TextComponent(text[start:end + 1]))
@@ -44,7 +47,9 @@ class MarkdownDocument(Document):
         self._components = [component for component in (before, bold_part, after) if component]
         self.notify()
 
-    def apply_italic(self, start: int, end: int) -> None:
+    def apply_italic(self,
+                     start: int,
+                     end: int) -> None:
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
         italic_part = ItalicTextComponent(TextComponent(text[start:end + 1]))
@@ -53,7 +58,8 @@ class MarkdownDocument(Document):
         self._components = [component for component in (before, italic_part, after) if component]
         self.notify()
 
-    def from_dict(self, data: dict) -> 'MarkdownDocument':
+    def from_dict(self,
+                  data: dict) -> 'MarkdownDocument':
         self._components = []
         for component in data['components']:
             if component['type'] == 'TextComponent':

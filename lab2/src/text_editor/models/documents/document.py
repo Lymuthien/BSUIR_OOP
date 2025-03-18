@@ -10,28 +10,36 @@ class Document(IObservable, IDictable):
         self.__observers: list[IObserver] = []
         self._settings: Settings = Settings()
 
-    def set_theme(self, theme: Theme):
+    def set_theme(self,
+                  theme: Theme):
         self._settings.theme = theme
 
     @property
     def settings(self):
         return self._settings
 
-    def insert_text(self, text: str, position: int) -> None:
+    def insert_text(self,
+                    text: str,
+                    position: int) -> None:
         current_text = self.get_text()
         new_text = current_text[:position] + text + current_text[position:]
 
         self._components = [TextComponent(new_text)]
         self.notify()
 
-    def replace_text(self, new_text: str, start: int, end: int) -> None:
+    def replace_text(self,
+                     new_text: str,
+                     start: int,
+                     end: int) -> None:
         current_text = self.get_text()
         new_text = current_text[:start] + new_text + current_text[end + 1:]
 
         self._components = [TextComponent(new_text)]
         self.notify()
 
-    def delete_text(self, start: int, end: int) -> None:
+    def delete_text(self,
+                    start: int,
+                    end: int) -> None:
         current_text = self.get_text()
         new_text = current_text[:start] + current_text[end + 1:]
 
@@ -45,11 +53,13 @@ class Document(IObservable, IDictable):
     def get_text(self) -> str:
         return ''.join(component.get_text() for component in self._components)
 
-    def attach(self, observer: IObserver) -> None:
+    def attach(self,
+               observer: IObserver) -> None:
         if observer not in self.__observers:
             self.__observers.append(observer)
 
-    def detach(self, observer: IObserver) -> None:
+    def detach(self,
+               observer: IObserver) -> None:
         if observer in self.__observers:
             self.__observers.remove(observer)
 
@@ -63,5 +73,6 @@ class Document(IObservable, IDictable):
             'components': [component.to_dict() for component in self._components]
         }
 
-    def from_dict(self, data: dict) -> 'Document':
+    def from_dict(self,
+                  data: dict) -> 'Document':
         raise NotImplementedError("Subclasses must implement from_dict")

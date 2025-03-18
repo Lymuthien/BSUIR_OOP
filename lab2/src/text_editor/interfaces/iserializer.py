@@ -7,15 +7,18 @@ class IDictable(ABC):
 
     @classmethod
     @abstractmethod
-    def from_dict(cls, data: dict): ...
+    def from_dict(cls,
+                  data: dict): ...
 
 
 class ISerializer(ABC):
     @abstractmethod
-    def serialize(self, data) -> str: ...
+    def serialize(self,
+                  data) -> str: ...
 
     @abstractmethod
-    def deserialize(self, data: str): ...
+    def deserialize(self,
+                    data: str): ...
 
     @property
     @abstractmethod

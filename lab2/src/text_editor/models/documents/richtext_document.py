@@ -9,14 +9,16 @@ class RichTextDocument(Document):
     def __init__(self):
         super().__init__()
 
-    def from_dict(self, data: dict) -> 'RichTextDocument':
+    def from_dict(self,
+                  data: dict) -> 'RichTextDocument':
         self._components = [TextComponent(component['text']) for component in data['components']]
 
         return self
 
 
 class MdToRichTextAdapter(RichTextDocument):
-    def __init__(self, md_document: MarkdownDocument):
+    def __init__(self,
+                 md_document: MarkdownDocument):
         super().__init__()
         self.__md_document = md_document
 

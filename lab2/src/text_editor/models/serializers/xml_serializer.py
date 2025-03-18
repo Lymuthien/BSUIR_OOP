@@ -5,13 +5,15 @@ from ...models.documents.md_document import MarkdownDocument
 
 
 class XmlSerializer(ISerializer):
-    def serialize(self, data: dict) -> str:
+    def serialize(self,
+                  data: dict) -> str:
         root = ElementTree.Element('root')
         self._dict_to_xml(root, data)
 
         return ElementTree.tostring(root, encoding='unicode')
 
-    def deserialize(self, data: str) -> dict:
+    def deserialize(self,
+                    data: str) -> dict:
         root = ElementTree.fromstring(data)
 
         return self._xml_to_dict(root)
@@ -19,7 +21,9 @@ class XmlSerializer(ISerializer):
     def extension(self) -> str:
         return "xml"
 
-    def _dict_to_xml(self, parent: ElementTree.Element, data: dict):
+    def _dict_to_xml(self,
+                     parent: ElementTree.Element,
+                     data: dict):
         for key, value in data.items():
             elem = ElementTree.SubElement(parent, key)
 
@@ -36,7 +40,8 @@ class XmlSerializer(ISerializer):
             else:
                 elem.text = str(value)
 
-    def _xml_to_dict(self, element) -> dict:
+    def _xml_to_dict(self,
+                     element) -> dict:
         result = {}
 
         for child in element:
@@ -56,15 +61,18 @@ class XmlSerializer(ISerializer):
 
 
 class DocumentToXmlSerializerAdapter(XmlSerializer):
-    def __init__(self, document: Document):
+    def __init__(self,
+                 document: Document):
         self.__document = document
 
-    def serialize(self, data: Document = None) -> str:
+    def serialize(self,
+                  data: Document = None) -> str:
         doc = data if data is not None else self.__document
 
         return super().serialize(doc.to_dict())
 
-    def deserialize(self, data: str) -> Document:
+    def deserialize(self,
+                    data: str) -> Document:
         serialized_data = super().deserialize(data)
 
         return MarkdownDocument().from_dict(serialized_data)
