@@ -22,5 +22,5 @@ class MdToPlainTextAdapter(PlainTextDocument):
 
     def get_text(self) -> str:
         text = self.__md_document.get_text()
-        rtf_text = strip_markdown(text)
-        return rtf_text
+        plane_text = strip_markdown(text)
+        return plane_text

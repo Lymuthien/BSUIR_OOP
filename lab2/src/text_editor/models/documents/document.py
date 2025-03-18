@@ -1,5 +1,7 @@
+from ..theme import Theme
 from ...interfaces.iobservable import IObservable, IObserver
 from ...interfaces.iserializer import IDictable
+from ...services.settings import Settings
 from ..text_component import TextComponent
 
 
@@ -7,6 +9,10 @@ class Document(IObservable, IDictable):
     def __init__(self):
         self._components: list[TextComponent] = []
         self.__observers: list[IObserver] = []
+        self._settings: Settings = Settings()
+
+    def set_theme(self, theme: Theme):
+        self._settings.theme = theme
 
     def insert_text(self, text: str, position: int) -> None:
         current_text = self.get_text()

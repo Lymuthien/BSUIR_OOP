@@ -1,11 +1,31 @@
 from .document import Document
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent
+from ..theme import Theme
 
 
 class MarkdownDocument(Document):
     def __init__(self):
         super().__init__()
         self._components.append(TextComponent(''))
+
+    def set_theme(self, theme: Theme):
+        super().set_theme(theme)
+        new_components = []
+        font = '#' * self._settings.font_size
+        bald = self._settings.all_bald
+        italic = self._settings.all_italic
+
+        for component in self._components:
+            new_component = TextComponent(component.get_text())
+            if bald:
+                new_component = BoldTextComponent(new_component)
+            if italic:
+                new_component = ItalicTextComponent(new_component)
+            new_component = TextComponent(new_component.get_text().replace('\n', '\n' + font))
+            new_components.append(new_component)
+
+        self._components = new_components
+
 
     def apply_bold(self, start: int, end: int) -> None:
         text = self.get_text()
