@@ -14,23 +14,16 @@ class MarkdownDocument(Document):
                   theme: Theme):
         super().set_theme(theme)
 
-        new_components = []
         font = '#' * self._settings.font_size
-        bold = self._settings.all_bold
-        italic = self._settings.all_italic
-
         self._clear_from_style()
 
-        for component in self._components:
-            new_component = TextComponent(component.get_text())
-            if bold:
-                new_component = BoldTextComponent(new_component)
-            if italic:
-                new_component = ItalicTextComponent(new_component)
-            new_component = TextComponent(font + ' ' + new_component.get_text().replace('\n', '\n' + font + ' '))
-            new_components.append(new_component)
+        new_text = TextComponent(self.get_text())
+        if self._settings.all_bold:
+            new_text = BoldTextComponent(new_text)
+        if self._settings.all_italic:
+            new_text = ItalicTextComponent(new_text)
 
-        self._components = new_components
+        self._components = [TextComponent(font + ' ' + new_text.get_text().replace('\n', '\n' + font + ' '))]
         self.notify()
 
     def _clear_from_style(self):
