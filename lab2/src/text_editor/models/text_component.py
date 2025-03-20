@@ -28,6 +28,12 @@ class TextDecorator(TextComponent):
         super().__init__(text)
         self._text_component: TextComponent = text_component
 
+    @staticmethod
+    def _if_decorated(text: str) -> bool:
+        if text and text.count('*') != len(text):
+            return True
+        return False
+
 
 class BoldTextComponent(TextDecorator):
     def __init__(self,
@@ -35,7 +41,11 @@ class BoldTextComponent(TextDecorator):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:
-        return f'**{self._text_component.get_text()}**'
+        text = self._text_component.get_text()
+        formatted_text = '\n'.join(map(lambda paragraph: f'**{paragraph}**' if self._if_decorated(paragraph)
+        else paragraph, text.split('\n')))
+
+        return formatted_text
 
 
 class ItalicTextComponent(TextDecorator):
@@ -44,4 +54,8 @@ class ItalicTextComponent(TextDecorator):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:
-        return f'*{self._text_component.get_text()}*'
+        text = self._text_component.get_text()
+        formatted_text = '\n'.join(map(lambda paragraph: f'*{paragraph}*' if self._if_decorated(paragraph)
+        else paragraph, text.split('\n')))
+
+        return formatted_text

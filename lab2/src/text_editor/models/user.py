@@ -1,4 +1,6 @@
 from abc import abstractmethod
+
+from .documents.document import Document
 from ..interfaces import IObserver
 
 
@@ -9,11 +11,12 @@ class User(IObserver):
     @abstractmethod
     def can_change_document_settings(self) -> bool: ...
 
-    def update(self, document) -> None:
-        print(f"Document updated: \n'{document.get_formatted_text()}'")
+    def update(self, document: Document) -> None:
+        return
+        print(f"Document updated: \n'{document.get_text()}'")
 
 
-class Editor(User):
+class EditorUser(User):
     def can_edit_text(self) -> bool:
         return True
 
@@ -21,7 +24,7 @@ class Editor(User):
         return False
 
 
-class Reader(User):
+class ReaderUser(User):
     def can_edit_text(self) -> bool:
         return False
 
