@@ -1,10 +1,9 @@
+from .interfaces import IFileManager
 from .services import HistoryManager, LocalFileManager, DatabaseFileManager
 from .models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
 import uuid
-
-from .interfaces import ISerializer
 
 
 class Editor(object):
@@ -15,7 +14,7 @@ class Editor(object):
 
         self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                     'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
-                                    'json': DocumentToJsonSerializerAdapter(MarkdownDocument()),}
+                                    'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), }
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, True, False),
 
                                       Theme(3, True, True), Theme(4, True, False),
@@ -30,6 +29,7 @@ class Editor(object):
         self.__doc.attach(self.__current_user)
         password = uuid.uuid4().hex
         self.__doc.set_password(password)
+
         return password
 
     def open_document(self):
@@ -41,7 +41,12 @@ class Editor(object):
         self.__current_user = None
         self.__history.clear()
 
-    def save_document_local(self, filepath: str, extension: str = 'md', format_: str = 'txt'):
+    def save_document(self,
+                      filepath: str,
+                      extension: str = 'md',
+                      format_: str = 'txt',
+                      local: bool = True):
+        saver: IFileManager = LocalFileManager() if local else DatabaseFileManager()
         extension = extension.lower().strip()
         format_ = format_.lower().strip()
 
@@ -53,15 +58,16 @@ class Editor(object):
         file_extension = None if format != 'txt' else extension
 
         if extension == 'md':
-            self.__local.save(self.__doc, filepath, serializer, extension=file_extension)
+            saver.save(self.__doc, filepath, serializer, extension=file_extension)
         elif extension == 'rtf':
-            self.__local.save(MdToRichTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
+            saver.save(MdToRichTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
         elif extension == 'txt':
-            self.__local.save(MdToPlainTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
+            saver.save(MdToPlainTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
         else:
             raise Exception('Unknown extension')
 
-    def login_as_admin(self, password: str):
+    def login_as_admin(self,
+                       password: str):
         if self.__doc.validate_password(password):
             self.__current_user = Admin()
         else:
@@ -73,7 +79,9 @@ class Editor(object):
     def redo(self):
         self.__history.redo()
 
-    def insert_text(self, text: str, position: int):
+    def insert_text(self,
+                    text: str,
+                    position: int):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
@@ -81,7 +89,9 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def erase_text(self, start: int, end: int):
+    def erase_text(self,
+                   start: int,
+                   end: int):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
@@ -89,7 +99,9 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def apply_bold(self, start: int, end: int):
+    def apply_bold(self,
+                   start: int,
+                   end: int):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
@@ -97,7 +109,9 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def apply_italic(self, start: int, end: int):
+    def apply_italic(self,
+                     start: int,
+                     end: int):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
@@ -105,7 +119,8 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def set_theme(self, theme_number: int):
+    def set_theme(self,
+                  theme_number: int):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
@@ -113,7 +128,8 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def set_read_only(self, read_only: bool):
+    def set_read_only(self,
+                      read_only: bool):
         if not self.__current_user.can_change_document_settings():
             raise Exception('User cant change document settings')
 

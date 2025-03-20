@@ -49,7 +49,8 @@ class DatabaseFileManager(IFileManager):
     @staticmethod
     def save(data,
              document_id: str,
-             serializer: ISerializer) -> None:
+             serializer: ISerializer,
+             extension: str = None) -> None:
         db_manager = DatabaseFileManager()
         serialized_data = serializer.serialize(data)
         format_ = serializer.extension
