@@ -3,6 +3,7 @@ import pypandoc
 from .document import Document
 from .md_document import MarkdownDocument
 from ..text_component import TextComponent
+from ..settings import Settings
 
 
 class RichTextDocument(Document):
@@ -12,6 +13,7 @@ class RichTextDocument(Document):
     def from_dict(self,
                   data: dict) -> 'RichTextDocument':
         self._components = [TextComponent(component['text']) for component in data['components']]
+        self._settings = Settings().from_dict(data['settings'])
 
         return self
 

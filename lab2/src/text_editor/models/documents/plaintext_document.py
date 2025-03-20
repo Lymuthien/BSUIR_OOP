@@ -1,6 +1,7 @@
 from strip_markdown import strip_markdown
 from .document import Document
 from .md_document import MarkdownDocument
+from ..settings import Settings
 
 from ..text_component import TextComponent
 
@@ -12,6 +13,7 @@ class PlainTextDocument(Document):
     def from_dict(self,
                   data: dict) -> 'PlainTextDocument':
         self._components = [TextComponent(component['text']) for component in data['components']]
+        self._settings = Settings().from_dict(data['settings'])
 
         return self
 

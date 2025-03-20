@@ -87,7 +87,8 @@ class Document(IObservable, IDictable):
     def to_dict(self) -> dict:
         return {
             'type': self.__class__.__name__,
-            'components': [component.to_dict() for component in self._components]
+            'components': [component.to_dict() for component in self._components],
+            'settings': self._settings.to_dict()
         }
 
     def from_dict(self,

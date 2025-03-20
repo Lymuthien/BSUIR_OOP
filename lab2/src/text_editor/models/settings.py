@@ -1,9 +1,10 @@
 from .theme import Theme
 from ..utils.singleton import singleton
+from ..interfaces import IDictable
 
 
 @singleton
-class Settings(object):
+class Settings(IDictable):
     def __init__(self):
         self.__font_size: int = 4
         self.__all_bold: bool = False
@@ -59,6 +60,26 @@ class Settings(object):
         self.__font_size = theme.font_size
         self.__all_bold = theme.bold
         self.__all_italic = theme.italic
+
+    def to_dict(self) -> dict:
+        return {
+            'type': self.__class__.__name__,
+            'font_size': self.font_size,
+            'all_bold': self.all_bold,
+            'all_italic': self.all_italic,
+            'read_only': self.read_only,
+            'hash_password': self.hash_password,
+        }
+
+    def from_dict(self,
+                  data: dict) -> 'Settings':
+        self.__font_size = data['font_size']
+        self.__all_bold = data['all_bold']
+        self.__all_italic = data['all_italic']
+        self.__read_only = data['read_only']
+        self.__hash_password = data['hash_password']
+
+        return self
 
 
 
