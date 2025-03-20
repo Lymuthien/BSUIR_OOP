@@ -1,9 +1,7 @@
-import functools
-
 from .services import HistoryManager, LocalFileManager, DatabaseFileManager
 from .models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
-    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, JsonSerializer, TxtSerializer, \
-    XmlSerializer
+    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
+    DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
 import uuid
 
 from .interfaces import ISerializer
@@ -14,9 +12,12 @@ class Editor(object):
         self.__history: HistoryManager = HistoryManager()
         self.__local: LocalFileManager = LocalFileManager()
         self.__db: DatabaseFileManager = DatabaseFileManager()
-        self.__serializers: dict[str, ISerializer] = {'txt': TxtSerializer(), 'xml': XmlSerializer(),
-                                                      'json': JsonSerializer()}
+
+        self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
+                                    'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
+                                    'json': DocumentToJsonSerializerAdapter(MarkdownDocument()),}
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, True, False),
+
                                       Theme(3, True, True), Theme(4, True, False),
                                       Theme(5, False, True), Theme(6, False, False), ]
         self.__current_password: str | None = None
@@ -39,7 +40,6 @@ class Editor(object):
         self.__doc = None
         self.__current_user = None
         self.__history.clear()
-        pass
 
     def save_document_local(self, filepath: str, extension: str = 'md', format_: str = 'txt'):
         extension = extension.lower().strip()
@@ -50,12 +50,14 @@ class Editor(object):
         except KeyError:
             raise Exception('Unknown format')
 
+        file_extension = None if format != 'txt' else extension
+
         if extension == 'md':
-            self.__local.save(self.__doc, filepath, serializer)
+            self.__local.save(self.__doc, filepath, serializer, extension=file_extension)
         elif extension == 'rtf':
-            self.__local.save(MdToRichTextAdapter(self.__doc), filepath, serializer)
+            self.__local.save(MdToRichTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
         elif extension == 'txt':
-            self.__local.save(MdToPlainTextAdapter(self.__doc), filepath, serializer)
+            self.__local.save(MdToPlainTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
         else:
             raise Exception('Unknown extension')
 

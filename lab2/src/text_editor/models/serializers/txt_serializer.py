@@ -12,6 +12,7 @@ class TxtSerializer(ISerializer):
                     data: str):
         return data
 
+    @property
     def extension(self) -> str:
         return 'txt'
 

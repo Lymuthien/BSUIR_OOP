@@ -18,6 +18,7 @@ class XmlSerializer(ISerializer):
 
         return self._xml_to_dict(root)
 
+    @property
     def extension(self) -> str:
         return "xml"
 

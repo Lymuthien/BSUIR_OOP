@@ -14,6 +14,7 @@ class JsonSerializer(ISerializer):
         data_dict = json.loads(data)
         return data_dict
 
+    @property
     def extension(self) -> str:
         return 'json'
 

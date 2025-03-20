@@ -6,9 +6,12 @@ class LocalFileManager(IFileManager):
     @staticmethod
     def save(data,
              filename: str,
-             serializer: ISerializer) -> None:
+             serializer: ISerializer,
+             extension: str = None) -> None:
         serialized_data = serializer.serialize(data)
-        filename += serializer.extension
+        filename += '.'
+        filename += serializer.extension if extension is None else extension
+
         with open(filename, 'w') as file:
             file.write(serialized_data)
 
