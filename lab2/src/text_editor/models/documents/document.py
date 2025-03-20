@@ -29,7 +29,7 @@ class Document(IObservable, IDictable):
 
     def set_theme(self,
                   theme: Theme):
-        self._settings.theme = theme
+        self._settings.set_theme(theme)
 
     @property
     def settings(self):

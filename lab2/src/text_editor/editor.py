@@ -16,7 +16,9 @@ class Editor(object):
         self.__db: DatabaseFileManager = DatabaseFileManager()
         self.__serializers: dict[str, ISerializer] = {'txt': TxtSerializer(), 'xml': XmlSerializer(),
                                                       'json': JsonSerializer()}
-        self.__themes: list[Theme] = []
+        self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, True, False),
+                                      Theme(3, True, True), Theme(4, True, False),
+                                      Theme(5, False, True), Theme(6, False, False), ]
         self.__current_password: str | None = None
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
@@ -105,7 +107,7 @@ class Editor(object):
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
 
-        command = ChangeThemeCommand(self.__doc, self.__themes[theme_number])
+        command = ChangeThemeCommand(self.__doc, self.__themes[theme_number - 1])
         command.execute()
         self.__history.add_command(command)
 

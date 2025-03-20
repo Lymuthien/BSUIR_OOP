@@ -27,7 +27,7 @@ class MarkdownDocument(Document):
                 new_component = BoldTextComponent(new_component)
             if italic:
                 new_component = ItalicTextComponent(new_component)
-            new_component = TextComponent(new_component.get_text().replace('\n', '\n' + font))
+            new_component = TextComponent(font + ' ' + new_component.get_text().replace('\n', '\n' + font + ' '))
             new_components.append(new_component)
 
         self._components = new_components
