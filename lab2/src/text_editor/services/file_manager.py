@@ -48,19 +48,21 @@ class DatabaseFileManager(IFileManager):
 
     @staticmethod
     def save(data,
-             document_id: str,
+             filename: str,
              serializer: ISerializer,
              extension: str = None) -> None:
         db_manager = DatabaseFileManager()
         serialized_data = serializer.serialize(data)
         format_ = serializer.extension
+        filename += '.'
+        filename += format_ if extension is None else extension
 
         with sqlite3.connect(db_manager.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT OR REPLACE INTO documents (id, data, format)
                 VALUES (?, ?, ?)
-            """, (document_id, serialized_data, format_))
+            """, (filename, serialized_data, format_))
             conn.commit()
 
     @staticmethod

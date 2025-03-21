@@ -9,8 +9,6 @@ import uuid
 class Editor(object):
     def __init__(self):
         self.__history: HistoryManager = HistoryManager()
-        self.__local: LocalFileManager = LocalFileManager()
-        self.__db: DatabaseFileManager = DatabaseFileManager()
 
         self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                     'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
@@ -46,7 +44,7 @@ class Editor(object):
                       extension: str = 'md',
                       format_: str = 'txt',
                       local: bool = True):
-        saver: IFileManager = LocalFileManager() if local else DatabaseFileManager()
+        saver = LocalFileManager if local else DatabaseFileManager
         extension = extension.lower().strip()
         format_ = format_.lower().strip()
 
