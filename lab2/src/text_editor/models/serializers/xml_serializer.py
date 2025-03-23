@@ -71,3 +71,9 @@ class DocumentToXmlSerializerAdapter(XmlSerializer):
 
         return super().serialize(doc.to_dict())
 
+    def deserialize(self,
+                    data: str):
+        data = super().deserialize(data)
+
+        return MarkdownDocument().from_dict(data)
+

@@ -3,6 +3,8 @@ from ..interfaces import IDictable
 
 
 def to_bool(value: str) -> bool | None:
+    if isinstance(value, bool):
+        return value
     if value.lower() == 'true':
         return True
     if value.lower() == 'false':

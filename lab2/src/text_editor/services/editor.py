@@ -1,9 +1,10 @@
 import secrets
 
-from .models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
+from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
-from .services import HistoryManager, LocalFileManager, DatabaseFileManager
+from .history_manager import HistoryManager
+from .file_manager import DatabaseFileManager, LocalFileManager
 
 
 class Editor(object):
@@ -40,11 +41,11 @@ class Editor(object):
         except KeyError:
             raise Exception('Unknown format')
 
-        data = loader.load(filename, serializer)
+        doc = loader.load(filename, serializer)
         if self.__doc:
             self.__doc.detach(self.__current_user)
 
-        self.__doc = MarkdownDocument().from_dict(data)
+        self.__doc = doc
         self.__current_user = ReaderUser() if self.__doc.settings.read_only else EditorUser()
         self.__doc.attach(self.__current_user)
 
