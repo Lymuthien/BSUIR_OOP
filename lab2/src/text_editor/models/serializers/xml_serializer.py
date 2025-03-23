@@ -46,18 +46,17 @@ class XmlSerializer(ISerializer):
         result = {}
 
         for child in element:
-            if len(child):
-                content = self._xml_to_dict(child)
-            else:
-                content = child.text
+            content = self._xml_to_dict(child) if len(child) else child.text
 
             if child.tag in result:
                 if not isinstance(result[child.tag], list):
                     result[child.tag] = [result[child.tag]]
                 result[child.tag].append(content)
             else:
-                result[child.tag] = content
+                result[child.tag] = list(content.values()) if isinstance(content, dict) and 'item' in content.keys() \
+                    else content
 
+        print(result)
         return result
 
 
@@ -72,8 +71,3 @@ class DocumentToXmlSerializerAdapter(XmlSerializer):
 
         return super().serialize(doc.to_dict())
 
-    def deserialize(self,
-                    data: str) -> Document:
-        serialized_data = super().deserialize(data)
-
-        return MarkdownDocument().from_dict(serialized_data)

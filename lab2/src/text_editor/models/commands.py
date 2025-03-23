@@ -17,7 +17,7 @@ class WriteCommand(ICommand):
         self.__doc.insert_text(self.__text, self.__pos)
 
     def undo(self) -> None:
-        self.__doc.delete_text(self.__pos, self.__pos + len(self.__text))
+        self.__doc.delete_text(self.__pos, self.__pos + len(self.__text) - 1)
 
     def redo(self) -> None:
         self.execute()

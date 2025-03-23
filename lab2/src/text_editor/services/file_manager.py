@@ -81,7 +81,5 @@ class DatabaseFileManager(IFileManager):
                 raise ValueError
 
             serialized_data, stored_format = result
-            if stored_format != serializer.extension:
-                raise ValueError
 
             return serializer.deserialize(serialized_data)

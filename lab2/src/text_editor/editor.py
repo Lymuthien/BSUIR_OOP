@@ -1,9 +1,9 @@
-from .interfaces import IFileManager
-from .services import HistoryManager, LocalFileManager, DatabaseFileManager
+import secrets
+
 from .models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
-import uuid
+from .services import HistoryManager, LocalFileManager, DatabaseFileManager
 
 
 class Editor(object):
@@ -13,10 +13,9 @@ class Editor(object):
         self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                     'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
                                     'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), }
-        self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, True, False),
-
-                                      Theme(3, True, True), Theme(4, True, False),
-                                      Theme(5, False, True), Theme(6, False, False), ]
+        self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
+                                      Theme(3, True, True), Theme(4, False, True),
+                                      Theme(5, True, True),]
         self.__current_password: str | None = None
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
@@ -25,13 +24,29 @@ class Editor(object):
         self.__current_user = Admin()
         self.__doc = MarkdownDocument()
         self.__doc.attach(self.__current_user)
-        password = uuid.uuid4().hex
+        password = secrets.token_urlsafe(8)
         self.__doc.set_password(password)
 
         return password
 
-    def open_document(self):
-        pass
+    def open_document(self,
+                      filename: str,
+                      local: bool = True):
+        loader = LocalFileManager if local else DatabaseFileManager
+        extension = filename.split('.')[-1].lower()
+
+        try:
+            serializer = self.__serializers[extension]
+        except KeyError:
+            raise Exception('Unknown format')
+
+        data = loader.load(filename, serializer)
+        if self.__doc:
+            self.__doc.detach(self.__current_user)
+
+        self.__doc = MarkdownDocument().from_dict(data)
+        self.__current_user = ReaderUser() if self.__doc.settings.read_only else EditorUser()
+        self.__doc.attach(self.__current_user)
 
     def close_document(self):
         self.__doc.detach(self.__current_user)
@@ -67,7 +82,9 @@ class Editor(object):
     def login_as_admin(self,
                        password: str):
         if self.__doc.validate_password(password):
+            self.__doc.detach(self.__current_user)
             self.__current_user = Admin()
+            self.__doc.attach(self.__current_user)
         else:
             raise Exception('Invalid password')
 
@@ -126,6 +143,9 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
+    def read_only(self) -> bool:
+        return self.__doc.settings.read_only
+
     def set_read_only(self,
                       read_only: bool):
         if not self.__current_user.can_change_document_settings():
@@ -135,3 +155,6 @@ class Editor(object):
 
     def get_text(self):
         return self.__doc.get_text()
+
+    def is_opened(self) -> bool:
+        return self.__doc is not None

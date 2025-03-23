@@ -1,9 +1,14 @@
 from .theme import Theme
-from ..utils.singleton import singleton
 from ..interfaces import IDictable
 
 
-@singleton
+def to_bool(value: str) -> bool | None:
+    if value.lower() == 'true':
+        return True
+    if value.lower() == 'false':
+        return False
+
+
 class Settings(IDictable):
     def __init__(self):
         self.__font_size: int = 4
@@ -73,13 +78,10 @@ class Settings(IDictable):
 
     def from_dict(self,
                   data: dict) -> 'Settings':
-        self.__font_size = data['font_size']
-        self.__all_bold = data['all_bold']
-        self.__all_italic = data['all_italic']
-        self.__read_only = data['read_only']
+        self.__font_size = int(data['font_size'])
+        self.__all_bold = to_bool(data['all_bold'])
+        self.__all_italic = to_bool(data['all_italic'])
+        self.__read_only = to_bool(data['read_only'])
         self.__hash_password = data['hash_password']
 
         return self
-
-
-

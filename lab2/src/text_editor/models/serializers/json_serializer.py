@@ -29,8 +29,3 @@ class DocumentToJsonSerializerAdapter(JsonSerializer):
         doc = data if data is not None else self.__document
         return super().serialize(doc.to_dict())
 
-    def deserialize(self,
-                    data: str) -> Document:
-        serialized_data = super().deserialize(data)
-
-        return MarkdownDocument().from_dict(serialized_data)
