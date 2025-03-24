@@ -1,3 +1,6 @@
+import functools
+
+from ..interfaces import ICommand
 from .editor_settings import EditorSettings
 from .file_manager import DatabaseFileManager, LocalFileManager
 from .history_manager import HistoryManager
@@ -22,6 +25,13 @@ class Editor(object):
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
 
+    def _user_command(self, command: ICommand):
+        self._check_can_edit_text()
+        command.execute()
+        self.__history.add_command(command)
+
+    def user_message(self) -> str:
+        return self.__current_user.message
     @property
     def settings(self) -> EditorSettings:
         return self.__settings
@@ -105,19 +115,13 @@ class Editor(object):
 
     def insert_text(self,
                     text: str,
-                    position: int):
-        self._check_can_edit_text()
-        command = WriteCommand(text, position, self.__doc)
-        command.execute()
-        self.__history.add_command(command)
+                    position: int) -> None:
+        self._user_command(WriteCommand(text, position, self.__doc))
 
     def erase_text(self,
                    start: int,
-                   end: int):
-        self._check_can_edit_text()
-        command = EraseCommand(start, end, self.__doc)
-        command.execute()
-        self.__history.add_command(command)
+                   end: int) -> None:
+        self._user_command(EraseCommand(start, end, self.__doc))
 
     def apply_style(self,
                     start: int,
@@ -125,17 +129,12 @@ class Editor(object):
                     italic: bool = False,
                     strikethrough: bool = False,
                     bold: bool = False):
-        self._check_can_edit_text()
-        command = ChangeStyleCommand(start, end, self.__doc, italic=italic, strikethrough=strikethrough, bold=bold)
-        command.execute()
-        self.__history.add_command(command)
+        self._user_command(ChangeStyleCommand(start, end, self.__doc, italic=italic,
+                                              strikethrough=strikethrough, bold=bold))
 
     def set_theme(self,
                   theme_number: int):
-        self._check_can_edit_text()
-        command = ChangeThemeCommand(self.__doc, self.__themes[theme_number - 1])
-        command.execute()
-        self.__history.add_command(command)
+        self._user_command(ChangeThemeCommand(self.__doc, self.__themes[theme_number - 1]))
 
     def read_only(self) -> bool:
         return self.__doc.settings.read_only
@@ -147,8 +146,8 @@ class Editor(object):
 
         self.__doc.settings.read_only = read_only
 
-    def get_text(self):
-        return self.__doc.get_text()
+    def get_text(self) -> str | None:
+        return self.__doc.get_text() if self.__doc else None
 
     def is_opened(self) -> bool:
         return self.__doc is not None

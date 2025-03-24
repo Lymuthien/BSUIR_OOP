@@ -5,7 +5,7 @@ import pyperclip
 from prompt_toolkit import Application
 from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.layout.containers import Window
+from prompt_toolkit.layout.containers import Window, HSplit
 from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
@@ -24,6 +24,11 @@ class ConsoleEditor(object):
         self.__styles = Style([*zip(font_sizes, colors)])
         self.__kb = KeyBindings()
         self._set_key_bindings(self.__kb)
+        self._app: Application | None = None
+
+    def _update_buffers(self) -> None:
+        self.buffer.text = self.__editor.get_text()
+        self.notification_buffer.text = self.__editor.user_message()
 
     @staticmethod
     def _select_text(buffer: Buffer) -> tuple | None:
@@ -56,26 +61,26 @@ class ConsoleEditor(object):
         @kb.add('c-z')
         def undo(event):
             self.__editor.undo()
-            event.current_buffer.text = self.__editor.get_text()
+            self._update_buffers()
 
         @kb.add('c-y')
         def redo(event):
             self.__editor.redo()
-            event.current_buffer.text = self.__editor.get_text()
+            self._update_buffers()
 
         @kb.add('c-b')
         def apply_bold(event):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
                 self.__editor.apply_style(select_indexes[0], select_indexes[1], bold=True)
-                event.current_buffer.text = self.__editor.get_text()
+                self._update_buffers()
 
         @kb.add('c-i')
         def apply_italic(event):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
                 self.__editor.apply_style(select_indexes[0], select_indexes[1], italic=True)
-                event.current_buffer.text = self.__editor.get_text()
+                self._update_buffers()
 
         @kb.add('c-c')
         def copy(event):
@@ -88,18 +93,18 @@ class ConsoleEditor(object):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
                 self.__editor.apply_style(select_indexes[0], select_indexes[1], strikethrough=True)
-                event.current_buffer.text = self.__editor.get_text()
+                self._update_buffers()
 
         @kb.add('c-v')
         def paste(event):
             text = pyperclip.paste()
             self.__editor.insert_text(text, event.current_buffer.cursor_position)
-            event.current_buffer.text = self.__editor.get_text()
+            self._update_buffers()
 
         def set_theme_handler(theme_number: int) -> callable:
             def handler(event):
                 self.__editor.set_theme(theme_number)
-                event.current_buffer.text = self.__editor.get_text()
+                self._update_buffers()
 
             return handler
 
@@ -137,15 +142,24 @@ class ConsoleEditor(object):
         else:
             self.__editor.erase_text(cursor_position, cursor_position + old_len - new_len - 1)
 
+        self.notification_buffer.text = self.__editor.user_message()
+
     def _run_editor_space(self):
-        buffer = Buffer(on_text_changed=lambda buff: self._on_text_changed(buff.text, buffer.cursor_position))
+        self.buffer = buffer = Buffer(
+            on_text_changed=lambda buff: self._on_text_changed(buff.text, buffer.cursor_position))
         buffer.text = self.__editor.get_text()
         buffer.read_only = self.__editor.read_only
 
-        window = Window(content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}')
-        app = Application(layout=Layout(window), key_bindings=self.__kb, full_screen=True, style=self.__styles)
+        self.notification_buffer = Buffer()
 
-        app.run()
+        notification_window = Window(content=BufferControl(buffer=self.notification_buffer), height=5)
+        window = Window(content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}',
+                        height=45)
+
+        self.layout = Layout(HSplit([window, notification_window]))
+        self._app = Application(layout=self.layout, key_bindings=self.__kb, full_screen=True, style=self.__styles)
+
+        self._app.run()
 
     def run(self):
         ConsoleMenu.main_menu(self.__editor, self._run_editor_space, self._height, self._width)

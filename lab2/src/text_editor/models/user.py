@@ -1,10 +1,18 @@
+import datetime
 from abc import abstractmethod
 
 from .documents.document import Document
-from ..interfaces import IObserver
+from ..interfaces import IUser
 
 
-class User(IObserver):
+class User(IUser):
+    def __init__(self):
+        self._message: str = ''
+
+    @property
+    def message(self) -> str:
+        return self._message
+
     @abstractmethod
     def can_edit_text(self) -> bool: ...
 
@@ -12,7 +20,7 @@ class User(IObserver):
     def can_change_document_settings(self) -> bool: ...
 
     def update(self, document: Document) -> None:
-        print(f"Document updated: \n'{document.get_text()}'")
+        self._message = f'Document updated: {datetime.datetime.now()}'
 
 
 class EditorUser(User):

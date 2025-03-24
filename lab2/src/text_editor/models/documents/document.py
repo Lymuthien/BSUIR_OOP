@@ -1,11 +1,12 @@
-from ..theme import Theme
 from ..document_settings import DocumentSettings
+from ..password_manager import PasswordManager
 from ..text_component import TextComponent
-from ...interfaces import IObserver, IObservable, IDictable
-from..password_manager import PasswordManager
+from ..theme import Theme
+from ...interfaces import IObserver, IUser
+from ...interfaces.idocument import IDocument
 
 
-class Document(IObservable, IDictable):
+class Document(IDocument):
     def __init__(self):
         self._components: list[TextComponent] = []
         self.__observers: list[IObserver] = []
