@@ -1,11 +1,10 @@
-import secrets
-
 from .editor_settings import EditorSettings
+from .file_manager import DatabaseFileManager, LocalFileManager
+from .history_manager import HistoryManager
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
-from .history_manager import HistoryManager
-from .file_manager import DatabaseFileManager, LocalFileManager
+from ..models.password_manager import PasswordManager
 
 
 class Editor(object):
@@ -17,7 +16,7 @@ class Editor(object):
                                     'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), }
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
                                       Theme(3, True, True), Theme(4, False, True),
-                                      Theme(5, True, True),]
+                                      Theme(5, True, True), ]
         self.__settings: EditorSettings = EditorSettings()
         self.__current_password: str | None = None
         self.__doc: MarkdownDocument | None = None
@@ -31,7 +30,7 @@ class Editor(object):
         self.__current_user = Admin()
         self.__doc = MarkdownDocument()
         self.__doc.attach(self.__current_user)
-        password = secrets.token_urlsafe(8)
+        password = PasswordManager.create_password()
         self.__doc.set_password(password)
 
         return password
@@ -76,15 +75,12 @@ class Editor(object):
             raise Exception('Unknown format')
 
         file_extension = None if format != 'txt' else extension
+        docs = {'md': self.__doc, 'rtf': MdToRichTextAdapter(self.__doc), 'txt': MdToPlainTextAdapter(self.__doc)}
 
-        if extension == 'md':
-            saver.save(self.__doc, filepath, serializer, extension=file_extension)
-        elif extension == 'rtf':
-            saver.save(MdToRichTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
-        elif extension == 'txt':
-            saver.save(MdToPlainTextAdapter(self.__doc), filepath, serializer, extension=file_extension)
-        else:
+        if extension not in docs:
             raise Exception('Unknown extension')
+
+        saver.save(docs[extension], filepath, serializer, extension=file_extension)
 
     def login_as_admin(self,
                        password: str):
@@ -123,27 +119,14 @@ class Editor(object):
         command.execute()
         self.__history.add_command(command)
 
-    def apply_bold(self,
-                   start: int,
-                   end: int):
+    def apply_style(self,
+                    start: int,
+                    end: int,
+                    italic: bool = False,
+                    strikethrough: bool = False,
+                    bold: bool = False):
         self._check_can_edit_text()
-        command = ChangeStyleCommand(start, end, self.__doc, bold=True)
-        command.execute()
-        self.__history.add_command(command)
-
-    def apply_italic(self,
-                     start: int,
-                     end: int):
-        self._check_can_edit_text()
-        command = ChangeStyleCommand(start, end, self.__doc, italic=True)
-        command.execute()
-        self.__history.add_command(command)
-
-    def apply_strikethrough(self,
-                     start: int,
-                     end: int):
-        self._check_can_edit_text()
-        command = ChangeStyleCommand(start, end, self.__doc, strikethrough=True)
+        command = ChangeStyleCommand(start, end, self.__doc, italic=italic, strikethrough=strikethrough, bold=bold)
         command.execute()
         self.__history.add_command(command)
 
@@ -175,9 +158,6 @@ class Editor(object):
             raise Exception('User cant edit text')
 
     @staticmethod
-    def delete_document(path:str, local=True) -> None:
-        if local:
-            LocalFileManager.delete(path)
-        else:
-            DatabaseFileManager.delete(path)
-
+    def delete_document(path: str, local=True) -> None:
+        deleter = LocalFileManager if local else DatabaseFileManager
+        deleter.delete(path)

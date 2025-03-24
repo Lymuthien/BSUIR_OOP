@@ -12,7 +12,6 @@ class User(IObserver):
     def can_change_document_settings(self) -> bool: ...
 
     def update(self, document: Document) -> None:
-        return
         print(f"Document updated: \n'{document.get_text()}'")
 
 

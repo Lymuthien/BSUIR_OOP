@@ -67,14 +67,14 @@ class ConsoleEditor(object):
         def apply_bold(event):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
-                self.__editor.apply_bold(select_indexes[0], select_indexes[1])
+                self.__editor.apply_style(select_indexes[0], select_indexes[1], bold=True)
                 event.current_buffer.text = self.__editor.get_text()
 
         @kb.add('c-i')
         def apply_italic(event):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
-                self.__editor.apply_italic(select_indexes[0], select_indexes[1])
+                self.__editor.apply_style(select_indexes[0], select_indexes[1], italic=True)
                 event.current_buffer.text = self.__editor.get_text()
 
         @kb.add('c-c')
@@ -87,7 +87,7 @@ class ConsoleEditor(object):
         def apply_strikethrough(event):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
-                self.__editor.apply_strikethrough(select_indexes[0], select_indexes[1])
+                self.__editor.apply_style(select_indexes[0], select_indexes[1], strikethrough=True)
                 event.current_buffer.text = self.__editor.get_text()
 
         @kb.add('c-v')

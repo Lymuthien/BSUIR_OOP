@@ -1,9 +1,8 @@
-import hashlib
-
 from ..theme import Theme
 from ..document_settings import DocumentSettings
 from ..text_component import TextComponent
 from ...interfaces import IObserver, IObservable, IDictable
+from..password_manager import PasswordManager
 
 
 class Document(IObservable, IDictable):
@@ -14,18 +13,12 @@ class Document(IObservable, IDictable):
 
     def set_password(self, password: str):
         if self._settings.hash_password is None:
-            self._settings.hash_password = self.__hash_password(password)
+            self._settings.hash_password = PasswordManager.hash_password(password)
         else:
             raise Exception('Password is already set')
 
-    @staticmethod
-    def __hash_password(password: str) -> str:
-        """Generate secure hash from plain text password."""
-
-        return hashlib.sha512(password.encode('utf-8')).hexdigest()
-
     def validate_password(self, password: str) -> bool:
-        return self.__hash_password(password) == self._settings.hash_password
+        return PasswordManager.hash_password(password) == self._settings.hash_password
 
     def set_theme(self,
                   theme: Theme):
@@ -62,10 +55,6 @@ class Document(IObservable, IDictable):
         new_text = current_text[:start] + current_text[end + 1:]
 
         self._components = [TextComponent(new_text)]
-        self.notify()
-
-    def clear(self) -> None:
-        self._components = []
         self.notify()
 
     def get_text(self) -> str:
