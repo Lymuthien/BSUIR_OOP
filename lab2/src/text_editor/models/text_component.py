@@ -55,7 +55,20 @@ class ItalicTextComponent(TextDecorator):
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
-        formatted_text = '\n'.join(map(lambda paragraph: f'*{paragraph}*' if self._if_decorated(paragraph)
+        formatted_text = '\n'.join(map(lambda paragraph: f'_{paragraph}_' if self._if_decorated(paragraph)
+        else paragraph, text.split('\n')))
+
+        return formatted_text
+
+
+class StrikethrounghTextComponent(TextDecorator):
+    def __init__(self,
+                 text_component: TextComponent):
+        super().__init__(text_component.get_text(), text_component)
+
+    def get_text(self) -> str:
+        text = self._text_component.get_text()
+        formatted_text = '\n'.join(map(lambda paragraph: f'~~{paragraph}~~' if self._if_decorated(paragraph)
         else paragraph, text.split('\n')))
 
         return formatted_text

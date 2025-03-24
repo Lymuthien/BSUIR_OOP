@@ -49,12 +49,14 @@ class ChangeStyleCommand(ICommand):
                  end: int,
                  doc: MarkdownDocument,
                  bold: bool = False,
-                 italic: bool = False) -> None:
+                 italic: bool = False,
+                 strikethrough: bool = False) -> None:
         self.__start = start
         self.__end = end
         self.__doc = doc
         self.__bold = bold
         self.__italic = italic
+        self.__strikethrough = strikethrough
         self.__old_text = doc.get_text()
         self.__new_text = None
 
@@ -63,6 +65,8 @@ class ChangeStyleCommand(ICommand):
             self.__doc.apply_bold(self.__start, self.__end)
         if self.__italic:
             self.__doc.apply_italic(self.__start, self.__end)
+        if self.__strikethrough:
+            self.__doc.apply_strikethrough(self.__start, self.__end)
         self.__new_text = self.__doc.get_text()
 
     def undo(self) -> None:

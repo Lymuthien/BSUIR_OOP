@@ -1,7 +1,7 @@
 import hashlib
 
 from ..theme import Theme
-from ..settings import Settings
+from ..document_settings import DocumentSettings
 from ..text_component import TextComponent
 from ...interfaces import IObserver, IObservable, IDictable
 
@@ -10,7 +10,7 @@ class Document(IObservable, IDictable):
     def __init__(self):
         self._components: list[TextComponent] = []
         self.__observers: list[IObserver] = []
-        self._settings: Settings = Settings()
+        self._settings: DocumentSettings = DocumentSettings()
 
     def set_password(self, password: str):
         if self._settings.hash_password is None:
@@ -30,6 +30,7 @@ class Document(IObservable, IDictable):
     def set_theme(self,
                   theme: Theme):
         self._settings.set_theme(theme)
+        self.notify()
 
     @property
     def settings(self):

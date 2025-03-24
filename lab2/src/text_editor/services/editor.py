@@ -1,5 +1,6 @@
 import secrets
 
+from .editor_settings import EditorSettings
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
@@ -17,9 +18,14 @@ class Editor(object):
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
                                       Theme(3, True, True), Theme(4, False, True),
                                       Theme(5, True, True),]
+        self.__settings: EditorSettings = EditorSettings()
         self.__current_password: str | None = None
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
+
+    @property
+    def settings(self) -> EditorSettings:
+        return self.__settings
 
     def create_document(self) -> str:
         self.__current_user = Admin()
@@ -90,17 +96,21 @@ class Editor(object):
             raise Exception('Invalid password')
 
     def undo(self):
-        self.__history.undo()
+        try:
+            self.__history.undo()
+        except Exception:
+            pass
 
     def redo(self):
-        self.__history.redo()
+        try:
+            self.__history.redo()
+        except Exception:
+            pass
 
     def insert_text(self,
                     text: str,
                     position: int):
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
-
+        self._check_can_edit_text()
         command = WriteCommand(text, position, self.__doc)
         command.execute()
         self.__history.add_command(command)
@@ -108,9 +118,7 @@ class Editor(object):
     def erase_text(self,
                    start: int,
                    end: int):
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
-
+        self._check_can_edit_text()
         command = EraseCommand(start, end, self.__doc)
         command.execute()
         self.__history.add_command(command)
@@ -118,9 +126,7 @@ class Editor(object):
     def apply_bold(self,
                    start: int,
                    end: int):
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
-
+        self._check_can_edit_text()
         command = ChangeStyleCommand(start, end, self.__doc, bold=True)
         command.execute()
         self.__history.add_command(command)
@@ -128,18 +134,22 @@ class Editor(object):
     def apply_italic(self,
                      start: int,
                      end: int):
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
-
+        self._check_can_edit_text()
         command = ChangeStyleCommand(start, end, self.__doc, italic=True)
+        command.execute()
+        self.__history.add_command(command)
+
+    def apply_strikethrough(self,
+                     start: int,
+                     end: int):
+        self._check_can_edit_text()
+        command = ChangeStyleCommand(start, end, self.__doc, strikethrough=True)
         command.execute()
         self.__history.add_command(command)
 
     def set_theme(self,
                   theme_number: int):
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
-
+        self._check_can_edit_text()
         command = ChangeThemeCommand(self.__doc, self.__themes[theme_number - 1])
         command.execute()
         self.__history.add_command(command)
@@ -159,3 +169,7 @@ class Editor(object):
 
     def is_opened(self) -> bool:
         return self.__doc is not None
+
+    def _check_can_edit_text(self) -> None:
+        if not self.__current_user.can_edit_text():
+            raise Exception('User cant edit text')

@@ -19,6 +19,9 @@ class ConsoleEditor(object):
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
 
+        font_sizes = map(str, self.__editor.settings.font_sizes)
+        colors = ('red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white')
+        self.__styles = Style([*zip(font_sizes, colors)])
         self.__kb = KeyBindings()
         self._set_key_bindings(self.__kb)
 
@@ -35,6 +38,16 @@ class ConsoleEditor(object):
             return start_position, end_position
 
     def _set_key_bindings(self, kb: KeyBindings):
+        @kb.add('c-t')
+        def increase_font(event):
+            self.__editor.settings.font_size = self.__editor.settings.font_size + 1
+            event.app.layout.container.style = f'class:{self.__editor.settings.font_size}'
+
+        @kb.add('c-u')
+        def decrease_font(event):
+            self.__editor.settings.font_size = self.__editor.settings.font_size - 1
+            event.app.layout.container.style = f'class:{self.__editor.settings.font_size}'
+
         @kb.add('c-d')
         def exit_app(event):
             event.app.exit()
@@ -69,6 +82,13 @@ class ConsoleEditor(object):
             select_indexes = self._select_text(event.current_buffer)
             if select_indexes:
                 pyperclip.copy(event.current_buffer.text[select_indexes[0]:select_indexes[1] + 1])
+
+        @kb.add('c-n')
+        def apply_strikethrough(event):
+            select_indexes = self._select_text(event.current_buffer)
+            if select_indexes:
+                self.__editor.apply_strikethrough(select_indexes[0], select_indexes[1])
+                event.current_buffer.text = self.__editor.get_text()
 
         @kb.add('c-v')
         def paste(event):
@@ -122,8 +142,8 @@ class ConsoleEditor(object):
         buffer.text = self.__editor.get_text()
         buffer.read_only = self.__editor.read_only
 
-        window = Window(content=BufferControl(buffer=buffer))
-        app = Application(layout=Layout(window), key_bindings=self.__kb, full_screen=True)
+        window = Window(content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}')
+        app = Application(layout=Layout(window), key_bindings=self.__kb, full_screen=True, style=self.__styles)
 
         app.run()
 

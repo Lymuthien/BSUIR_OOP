@@ -11,7 +11,7 @@ def to_bool(value: str) -> bool | None:
         return False
 
 
-class Settings(IDictable):
+class DocumentSettings(IDictable):
     def __init__(self):
         self.__font_size: int = 4
         self.__all_bold: bool = False
@@ -79,7 +79,7 @@ class Settings(IDictable):
         }
 
     def from_dict(self,
-                  data: dict) -> 'Settings':
+                  data: dict) -> 'DocumentSettings':
         self.__font_size = int(data['font_size'])
         self.__all_bold = to_bool(data['all_bold'])
         self.__all_italic = to_bool(data['all_italic'])

@@ -1,7 +1,8 @@
 from strip_markdown import strip_markdown
+
 from .document import Document
-from ..settings import Settings
-from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent
+from ..document_settings import DocumentSettings
+from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethrounghTextComponent
 from ..theme import Theme
 
 
@@ -52,6 +53,17 @@ class MarkdownDocument(Document):
         self._components = [component for component in (before, italic_part, after) if component]
         self.notify()
 
+    def apply_strikethrough(self,
+                            start: int,
+                            end: int) -> None:
+        text = self.get_text()
+        before = TextComponent(text[:start]) if start > 0 else None
+        strikethrough_part = StrikethrounghTextComponent(TextComponent(text[start:end + 1]))
+        after = TextComponent(text[end + 1:]) if end + 1 < len(text) else None
+
+        self._components = [component for component in (before, strikethrough_part, after) if component]
+        self.notify()
+
     def from_dict(self,
                   data: dict) -> 'MarkdownDocument':
         self._components = []
@@ -63,6 +75,6 @@ class MarkdownDocument(Document):
             elif component['type'] == 'ItalicTextComponent':
                 self._components.append(ItalicTextComponent(component['text']))
 
-        self._settings = Settings().from_dict(data['settings'])
+        self._settings = DocumentSettings().from_dict(data['settings'])
 
         return self

@@ -1,8 +1,6 @@
 from ..interfaces import ICommand
-from ..utils.singleton import singleton
 
 
-@singleton
 class HistoryManager:
     def __init__(self):
         self.__undo_stack: list[ICommand] = []
