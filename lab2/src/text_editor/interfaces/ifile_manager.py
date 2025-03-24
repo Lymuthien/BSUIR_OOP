@@ -14,3 +14,7 @@ class IFileManager(ABC):
     @abstractmethod
     def load(path: str,
              serializer: ISerializer): ...
+
+    @staticmethod
+    @abstractmethod
+    def delete(path: str): ...

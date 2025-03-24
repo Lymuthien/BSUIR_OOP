@@ -46,20 +46,17 @@ class ConsoleMenu(object):
     @staticmethod
     def open_menu(editor: Editor):
         os.system('cls')
-        error_msg = ''
-        while True:
-            print(error_msg)
-            cmd = input('Enter space ([L]ocal or [D]atabase): ').strip().lower()
+        cmd = input('Enter space ([L]ocal or [D]atabase): ').strip().lower()
 
-            try:
-                if cmd[3] != 'l' and cmd[3] != 'd':
-                    raise ValueError('Invalid input.')
-                flag = True if cmd[3] == 'l' else False
+        try:
+            if cmd != 'l' and cmd != 'd':
+                raise ValueError('Invalid input.')
+            flag = True if cmd == 'l' else False
 
-                editor.open_document(input('Enter filename: '), flag)
-                return
-            except Exception as e:
-                error_msg = str(e)
+            editor.open_document(input('Enter filepath (ex. data\doc.txt): '), flag)
+        except Exception as e:
+            print(e)
+            time.sleep(1.5)
 
     @staticmethod
     def main_menu(editor: Editor, method: callable, height, width) -> None:
@@ -93,9 +90,7 @@ class ConsoleMenu(object):
                             method()
 
                     case 'd':
-                        os.system('cls')
-                        cmd = input('Enter path to document: ')
-                        pass
+                        ConsoleMenu.delete_menu(editor)
 
                     case 'e':
                         os.system('cls')
@@ -106,3 +101,18 @@ class ConsoleMenu(object):
 
             except Exception as e:
                 error_msg = str(e)
+
+    @staticmethod
+    def delete_menu(editor: Editor) -> None:
+        os.system('cls')
+        cmd = input('Enter space ([L]ocal or [D]atabase): ').strip().lower()
+
+        try:
+            if cmd != 'l' and cmd != 'd':
+                raise ValueError('Invalid input.')
+            flag = True if cmd == 'l' else False
+
+            editor.delete_document(input('Enter filepath (ex. data\doc.txt): '), flag)
+        except Exception as e:
+            print(e)
+            time.sleep(1.5)

@@ -173,3 +173,11 @@ class Editor(object):
     def _check_can_edit_text(self) -> None:
         if not self.__current_user.can_edit_text():
             raise Exception('User cant edit text')
+
+    @staticmethod
+    def delete_document(path:str, local=True) -> None:
+        if local:
+            LocalFileManager.delete(path)
+        else:
+            DatabaseFileManager.delete(path)
+

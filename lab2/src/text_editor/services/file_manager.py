@@ -1,4 +1,6 @@
+import os
 import sqlite3
+
 from ..interfaces import ISerializer, IFileManager
 
 
@@ -22,6 +24,13 @@ class LocalFileManager(IFileManager):
             serialized_data = file.read()
 
         return serializer.deserialize(serialized_data)
+
+    @staticmethod
+    def delete(path: str) -> None:
+        try:
+            os.remove(path)
+        except Exception:
+            raise
 
 
 class DatabaseFileManager(IFileManager):
@@ -83,3 +92,18 @@ class DatabaseFileManager(IFileManager):
             serialized_data, stored_format = result
 
             return serializer.deserialize(serialized_data)
+
+    @staticmethod
+    def delete(path: str) -> None:
+        db_manager = DatabaseFileManager()
+        try:
+            with sqlite3.connect(db_manager.db_name) as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                            DELETE FROM documents WHERE id = ?
+                        """, (path,))
+                if cursor.rowcount == 0:
+                    raise ValueError('Doc not found')
+                conn.commit()
+        except Exception:
+            raise
