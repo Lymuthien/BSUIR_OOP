@@ -1,20 +1,17 @@
 from .editor_settings import EditorSettings
 from .history_manager import HistoryManager
-from ..interfaces import ICommand, IFileManager
+from ..interfaces import ICommand, IFileManager, ISerializer
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
-    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
-    DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
+    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme
 from ..models.password_manager import PasswordManager
 
 
 class Editor(object):
-    def __init__(self, loaders: dict[str, IFileManager]):
+    def __init__(self, loaders: dict[str, IFileManager], serializers: dict[str, ISerializer]):
         self.__history: HistoryManager = HistoryManager()
         self.__loaders: dict[str, IFileManager] = loaders
 
-        self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
-                                    'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
-                                    'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), }
+        self.__serializers: dict[str, ISerializer] = serializers
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
                                       Theme(3, True, True), Theme(4, False, True),
                                       Theme(5, True, True), ]
