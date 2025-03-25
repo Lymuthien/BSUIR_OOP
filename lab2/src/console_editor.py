@@ -46,12 +46,14 @@ class ConsoleEditor(object):
         @kb.add('c-t')
         def increase_font(event):
             self.__editor.settings.font_size = self.__editor.settings.font_size + 1
-            event.app.layout.container.style = f'class:{self.__editor.settings.font_size}'
+            event.app.layout.visible_windows[0].style = f'class:{self.__editor.settings.font_size}'
+            event.app.layout.visible_windows[1].style = f'class:{self.__editor.settings.font_size}'
 
         @kb.add('c-u')
         def decrease_font(event):
             self.__editor.settings.font_size = self.__editor.settings.font_size - 1
-            event.app.layout.container.style = f'class:{self.__editor.settings.font_size}'
+            event.app.layout.visible_windows[0].style = f'class:{self.__editor.settings.font_size}'
+            event.app.layout.visible_windows[1].style = f'class:{self.__editor.settings.font_size}'
 
         @kb.add('c-d')
         def exit_app(event):

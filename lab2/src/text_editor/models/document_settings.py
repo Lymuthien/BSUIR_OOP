@@ -28,7 +28,7 @@ class DocumentSettings(IDictable):
         self.__read_only = value
 
     @property
-    def hash_password(self) -> str:
+    def hash_password(self) -> str | None:
         return self.__hash_password
 
     @hash_password.setter

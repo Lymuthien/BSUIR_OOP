@@ -1,3 +1,5 @@
+import re
+
 from strip_markdown import strip_markdown
 from .document import Document
 from .md_document import MarkdownDocument
@@ -28,4 +30,5 @@ class MdToPlainTextAdapter(PlainTextDocument):
     def get_text(self) -> str:
         text = self.__md_document.get_text()
         plane_text = strip_markdown(text)
+        plane_text = re.sub(r'~~(.*?)~~', r'\1', plane_text)
         return plane_text

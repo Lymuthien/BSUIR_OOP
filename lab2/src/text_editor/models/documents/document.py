@@ -2,7 +2,7 @@ from ..document_settings import DocumentSettings
 from ..password_manager import PasswordManager
 from ..text_component import TextComponent
 from ..theme import Theme
-from ...interfaces import IObserver, IUser
+from ...interfaces import IObserver
 from ...interfaces.idocument import IDocument
 
 
@@ -27,7 +27,7 @@ class Document(IDocument):
         self.notify()
 
     @property
-    def settings(self):
+    def settings(self) -> DocumentSettings:
         return self._settings
 
     def insert_text(self,

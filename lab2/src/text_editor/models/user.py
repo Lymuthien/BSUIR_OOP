@@ -1,7 +1,6 @@
 import datetime
 from abc import abstractmethod
 
-from .documents.document import Document
 from ..interfaces import IUser
 
 
@@ -13,13 +12,11 @@ class User(IUser):
     def message(self) -> str:
         return self._message
 
-    @abstractmethod
     def can_edit_text(self) -> bool: ...
 
-    @abstractmethod
     def can_change_document_settings(self) -> bool: ...
 
-    def update(self, document: Document) -> None:
+    def update(self, document) -> None:
         self._message = f'Document updated: {datetime.datetime.now()}'
 
 

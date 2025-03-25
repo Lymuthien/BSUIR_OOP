@@ -61,7 +61,7 @@ class ItalicTextComponent(TextDecorator):
         return formatted_text
 
 
-class StrikethrounghTextComponent(TextDecorator):
+class StrikethroughTextComponent(TextDecorator):
     def __init__(self,
                  text_component: TextComponent):
         super().__init__(text_component.get_text(), text_component)
