@@ -1,6 +1,5 @@
 from .theme import Theme
-from ..interfaces import ICommand
-from ..models.documents.document import Document
+from ..interfaces import ICommand, IDocument
 from ..models.documents.md_document import MarkdownDocument
 
 
@@ -8,7 +7,7 @@ class WriteCommand(ICommand):
     def __init__(self,
                  text: str,
                  pos: int,
-                 doc: Document) -> None:
+                 doc: IDocument) -> None:
         self.__text = text
         self.__pos = pos
         self.__doc = doc
@@ -27,7 +26,7 @@ class EraseCommand(ICommand):
     def __init__(self,
                  start: int,
                  end: int,
-                 doc: Document) -> None:
+                 doc: IDocument) -> None:
         self.__start = start
         self.__end = end
         self.__doc = doc
@@ -78,7 +77,7 @@ class ChangeStyleCommand(ICommand):
 
 class ChangeThemeCommand(ICommand):
     def __init__(self,
-                 doc: MarkdownDocument,
+                 doc: IDocument,
                  theme: Theme) -> None:
         self.__doc = doc
         self.__theme = theme

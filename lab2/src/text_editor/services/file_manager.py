@@ -2,7 +2,7 @@ import os
 import sqlite3
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload, MediaIoBaseUpload
+from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import io
 
 from ..interfaces import ISerializer, IFileManager
@@ -119,7 +119,7 @@ class GoogleDriveFileManager(IFileManager):
     def save(self,
              data,
              filename: str,
-             serializer,
+             serializer: ISerializer,
              extension: str = None) -> None:
         serialized_data = serializer.serialize(data)
         filename += '.'
@@ -133,7 +133,7 @@ class GoogleDriveFileManager(IFileManager):
 
     def load(self,
              filename: str,
-             serializer):
+             serializer: ISerializer):
         results = self.__service.files().list(q=f"name='{filename}'", fields="files(id)").execute()
         items = results.get('files', [])
 

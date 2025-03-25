@@ -2,13 +2,13 @@ from ..document_settings import DocumentSettings
 from ..password_manager import PasswordManager
 from ..text_component import TextComponent
 from ..theme import Theme
-from ...interfaces import IObserver
+from ...interfaces import IObserver, ITextComponent
 from ...interfaces.idocument import IDocument
 
 
 class Document(IDocument):
     def __init__(self):
-        self._components: list[TextComponent] = []
+        self._components: list[ITextComponent] = []
         self.__observers: list[IObserver] = []
         self._settings: DocumentSettings = DocumentSettings()
 

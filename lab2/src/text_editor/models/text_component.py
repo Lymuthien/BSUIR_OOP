@@ -1,7 +1,7 @@
-from ..interfaces import ITextComponent, IDictable
+from ..interfaces import ITextComponent
 
 
-class TextComponent(ITextComponent, IDictable):
+class TextComponent(ITextComponent):
     def __init__(self,
                  text: str):
         self.__text: str = text

@@ -12,8 +12,7 @@ from prompt_toolkit.styles import Style
 
 from text_editor.models import MarkdownDocument, DocumentToJsonSerializerAdapter, DocumentToTxtSerializerAdapter, \
     DocumentToXmlSerializerAdapter
-from text_editor.services import Editor, ConsoleMenu, LocalFileManager
-from text_editor.services.file_manager import GoogleDriveFileManager, DatabaseFileManager
+from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager, DatabaseFileManager
 
 
 class ConsoleEditor(object):

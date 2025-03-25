@@ -1,5 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
-class ITextComponent(ABC):
+from .iserializer import IDictable
+
+
+class ITextComponent(IDictable):
     @abstractmethod
     def get_text(self) -> str: ...
