@@ -3,18 +3,18 @@ from ..interfaces.iserializer import ISerializer
 
 
 class IFileManager(ABC):
-    @staticmethod
     @abstractmethod
-    def save(data,
+    def save(self,
+             data,
              path: str,
              serializer: ISerializer,
              extension: str = None) -> None: ...
 
-    @staticmethod
     @abstractmethod
-    def load(path: str,
+    def load(self,
+             path: str,
              serializer: ISerializer): ...
 
-    @staticmethod
     @abstractmethod
-    def delete(path: str): ...
+    def delete(self,
+               path: str): ...

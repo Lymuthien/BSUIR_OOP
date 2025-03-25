@@ -1,7 +1,6 @@
 from .editor_settings import EditorSettings
-from .file_manager import DatabaseFileManager, LocalFileManager
 from .history_manager import HistoryManager
-from ..interfaces import ICommand
+from ..interfaces import ICommand, IFileManager
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
@@ -9,8 +8,9 @@ from ..models.password_manager import PasswordManager
 
 
 class Editor(object):
-    def __init__(self):
+    def __init__(self, loaders: dict[str, IFileManager]):
         self.__history: HistoryManager = HistoryManager()
+        self.__loaders: dict[str, IFileManager] = loaders
 
         self.__serializers: dict = {'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                     'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
@@ -23,9 +23,9 @@ class Editor(object):
         self.__current_user: User | None = None
 
     def _user_command(self, command: ICommand):
-        self._check_can_edit_text()
-        command.execute()
-        self.__history.add_command(command)
+        if self._check_can_edit_text():
+            command.execute()
+            self.__history.add_command(command)
 
     def user_message(self) -> str:
         return self.__current_user.message
@@ -45,8 +45,8 @@ class Editor(object):
 
     def open_document(self,
                       filename: str,
-                      local: bool = True):
-        loader = LocalFileManager if local else DatabaseFileManager
+                      loader: str):
+        loader = self.__loaders[loader]
         extension = filename.split('.')[-1].lower()
 
         try:
@@ -70,10 +70,10 @@ class Editor(object):
 
     def save_document(self,
                       filepath: str,
+                      loader: str,
                       extension: str = 'md',
-                      format_: str = 'txt',
-                      local: bool = True):
-        saver = LocalFileManager if local else DatabaseFileManager
+                      format_: str = 'txt',):
+        saver = self.__loaders[loader]
         extension = extension.lower().strip()
         format_ = format_.lower().strip()
 
@@ -140,8 +140,7 @@ class Editor(object):
     def set_read_only(self,
                       read_only: bool):
         if not self.__current_user.can_change_document_settings():
-            raise Exception('User cant change document settings')
-
+            raise PermissionError('User cant change document settings')
         self.__doc.settings.read_only = read_only
 
     def get_text(self) -> str | None:
@@ -150,11 +149,9 @@ class Editor(object):
     def is_opened(self) -> bool:
         return self.__doc is not None
 
-    def _check_can_edit_text(self) -> None:
-        if not self.__current_user.can_edit_text():
-            raise Exception('User cant edit text')
+    def _check_can_edit_text(self) -> bool:
+        return self.__current_user.can_edit_text()
 
-    @staticmethod
-    def delete_document(path: str, local=True) -> None:
-        deleter = LocalFileManager if local else DatabaseFileManager
+    def delete_document(self, path: str, loader: str) -> None:
+        deleter = self.__loaders[loader]
         deleter.delete(path)

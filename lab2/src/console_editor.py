@@ -10,12 +10,15 @@ from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
 
-from text_editor.services import Editor, ConsoleMenu
+from text_editor.services import Editor, ConsoleMenu, LocalFileManager
+from text_editor.services.file_manager import GoogleDriveFileManager, DatabaseFileManager
 
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor()
+        self.__editor = Editor(
+            loaders={'local': LocalFileManager(), 'database': DatabaseFileManager(), 'cloud':
+                GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')})
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
 
@@ -126,10 +129,13 @@ class ConsoleEditor(object):
 
         @kb.add('c-r')
         def read_only(event):
-            self.__editor.set_read_only(not self.__editor.read_only())
-            event.app.exit()
-            ConsoleMenu.save_menu(self.__editor)
-            self.__editor.close_document()
+            try:
+                self.__editor.set_read_only(not self.__editor.read_only())
+                event.app.exit()
+                ConsoleMenu.save_menu(self.__editor)
+                self.__editor.close_document()
+            except Exception as e:
+                self.notification_buffer.text = str(e)
 
     def _on_text_changed(self, new_text: str, cursor_position: int):
         old_text = self.__editor.get_text()

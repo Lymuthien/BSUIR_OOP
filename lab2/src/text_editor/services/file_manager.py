@@ -1,12 +1,16 @@
 import os
 import sqlite3
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload, MediaIoBaseUpload
+import io
 
 from ..interfaces import ISerializer, IFileManager
 
 
 class LocalFileManager(IFileManager):
-    @staticmethod
-    def save(data,
+    def save(self,
+             data,
              filename: str,
              serializer: ISerializer,
              extension: str = None) -> None:
@@ -17,16 +21,16 @@ class LocalFileManager(IFileManager):
         with open(filename, 'w') as file:
             file.write(serialized_data)
 
-    @staticmethod
-    def load(filename: str,
+    def load(self,
+             filename: str,
              serializer: ISerializer):
         with open(filename, 'r') as file:
             serialized_data = file.read()
 
         return serializer.deserialize(serialized_data)
 
-    @staticmethod
-    def delete(path: str) -> None:
+    def delete(self,
+               path: str) -> None:
         try:
             os.remove(path)
         except Exception:
@@ -55,18 +59,17 @@ class DatabaseFileManager(IFileManager):
             """)
             conn.commit()
 
-    @staticmethod
-    def save(data,
+    def save(self,
+             data,
              filename: str,
              serializer: ISerializer,
              extension: str = None) -> None:
-        db_manager = DatabaseFileManager()
         serialized_data = serializer.serialize(data)
         format_ = serializer.extension
         filename += '.'
         filename += format_ if extension is None else extension
 
-        with sqlite3.connect(db_manager.db_name) as conn:
+        with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 INSERT OR REPLACE INTO documents (id, data, format)
@@ -74,12 +77,11 @@ class DatabaseFileManager(IFileManager):
             """, (filename, serialized_data, format_))
             conn.commit()
 
-    @staticmethod
-    def load(document_id: str,
+    def load(self,
+             document_id: str,
              serializer: ISerializer):
-        db_manager = DatabaseFileManager()
 
-        with sqlite3.connect(db_manager.__db_name) as conn:
+        with sqlite3.connect(self.__db_name) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT data, format FROM documents WHERE id = ?
@@ -93,11 +95,10 @@ class DatabaseFileManager(IFileManager):
 
             return serializer.deserialize(serialized_data)
 
-    @staticmethod
-    def delete(path: str) -> None:
-        db_manager = DatabaseFileManager()
+    def delete(self,
+               path: str) -> None:
         try:
-            with sqlite3.connect(db_manager.db_name) as conn:
+            with sqlite3.connect(self.db_name) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                             DELETE FROM documents WHERE id = ?
@@ -107,3 +108,57 @@ class DatabaseFileManager(IFileManager):
                 conn.commit()
         except Exception:
             raise
+
+
+class GoogleDriveFileManager(IFileManager):
+    def __init__(self,
+                 credentials_path: str):
+        self.__credentials = service_account.Credentials.from_service_account_file(credentials_path)
+        self.__service = build('drive', 'v3', credentials=self.__credentials)
+
+    def save(self,
+             data,
+             filename: str,
+             serializer,
+             extension: str = None) -> None:
+        serialized_data = serializer.serialize(data)
+        filename += '.'
+        filename += serializer.extension if extension is None else extension
+
+        file_stream = io.BytesIO(serialized_data.encode('utf-8'))
+
+        file_metadata = {'name': filename}
+        media = MediaIoBaseUpload(file_stream, mimetype='text/plain')
+        self.__service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+    def load(self,
+             filename: str,
+             serializer):
+        results = self.__service.files().list(q=f"name='{filename}'", fields="files(id)").execute()
+        items = results.get('files', [])
+
+        if not items:
+            raise FileNotFoundError(f"Файл {filename} не найден")
+
+        file_id = items[0]['id']
+        request = self.__service.files().get_media(fileId=file_id)
+        fh = io.BytesIO()
+        downloader = MediaIoBaseDownload(fh, request)
+        done = False
+        while not done:
+            status, done = downloader.next_chunk()
+
+        fh.seek(0)
+        serialized_data = fh.read().decode()
+        return serializer.deserialize(serialized_data)
+
+    def delete(self,
+               path: str) -> None:
+        results = self.__service.files().list(q=f"name='{path}'", fields="files(id)").execute()
+        items = results.get('files', [])
+
+        if not items:
+            raise FileNotFoundError(f"Файл {path} не найден")
+
+        file_id = items[0]['id']
+        self.__service.files().delete(fileId=file_id).execute()
