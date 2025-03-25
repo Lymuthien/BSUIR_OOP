@@ -1,9 +1,7 @@
-import functools
-
-from ..interfaces import ICommand
 from .editor_settings import EditorSettings
 from .file_manager import DatabaseFileManager, LocalFileManager
 from .history_manager import HistoryManager
+from ..interfaces import ICommand
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, DocumentToJsonSerializerAdapter, \
     DocumentToXmlSerializerAdapter, DocumentToTxtSerializerAdapter
@@ -21,7 +19,6 @@ class Editor(object):
                                       Theme(3, True, True), Theme(4, False, True),
                                       Theme(5, True, True), ]
         self.__settings: EditorSettings = EditorSettings()
-        self.__current_password: str | None = None
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
 
@@ -32,6 +29,7 @@ class Editor(object):
 
     def user_message(self) -> str:
         return self.__current_user.message
+
     @property
     def settings(self) -> EditorSettings:
         return self.__settings

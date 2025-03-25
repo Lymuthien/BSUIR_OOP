@@ -23,7 +23,7 @@ class MdToRichTextAdapter(RichTextDocument):
                  md_document: MarkdownDocument):
         super().__init__()
         self.__md_document = md_document
-        self._components = [TextComponent(md_document.get_text())]
+        self._components = [TextComponent(self.get_text())]
 
     def get_text(self) -> str:
         text = self.__md_document.get_text()
