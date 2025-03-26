@@ -17,7 +17,7 @@ from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDr
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(loaders={'local': LocalFileManager(), 'database': DatabaseFileManager(),
+        self.__editor = Editor(loaders={'local': LocalFileManager(),
                                         'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
                                serializers={'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                             'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),

@@ -1,5 +1,7 @@
-from .iobservable import IObserver, IObservable
 from abc import abstractmethod
+
+from .iobservable import IObserver
+
 
 class IUser(IObserver):
     @abstractmethod

@@ -1,6 +1,7 @@
+from abc import abstractmethod
+
 from .iobservable import IObservable
 from .iserializer import IDictable
-from abc import abstractmethod
 
 
 class IDocument(IObservable, IDictable):

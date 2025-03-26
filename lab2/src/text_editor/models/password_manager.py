@@ -23,4 +23,3 @@ class PasswordManager(object):
 
         password = secrets.token_urlsafe(12)
         return password
-

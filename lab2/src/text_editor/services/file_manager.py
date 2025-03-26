@@ -1,9 +1,9 @@
+import io
 import os
-import sqlite3
+
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
-import io
 
 from ..interfaces import ISerializer, IFileManager
 
@@ -33,79 +33,6 @@ class LocalFileManager(IFileManager):
                path: str) -> None:
         try:
             os.remove(path)
-        except Exception:
-            raise
-
-
-class DatabaseFileManager(IFileManager):
-    def __init__(self,
-                 db_name: str = 'documents.db'):
-        self.__db_name = db_name
-        self._create_table()
-
-    @property
-    def db_name(self) -> str:
-        return self.__db_name
-
-    def _create_table(self) -> None:
-        with sqlite3.connect(self.__db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS documents (
-                    id TEXT PRIMARY KEY,
-                    data TEXT NOT NULL,
-                    format TEXT NOT NULL
-                )
-            """)
-            conn.commit()
-
-    def save(self,
-             data,
-             filename: str,
-             serializer: ISerializer,
-             extension: str = None) -> None:
-        serialized_data = serializer.serialize(data)
-        format_ = serializer.extension
-        filename += '.'
-        filename += format_ if extension is None else extension
-
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                INSERT OR REPLACE INTO documents (id, data, format)
-                VALUES (?, ?, ?)
-            """, (filename, serialized_data, format_))
-            conn.commit()
-
-    def load(self,
-             document_id: str,
-             serializer: ISerializer):
-
-        with sqlite3.connect(self.__db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT data, format FROM documents WHERE id = ?
-            """, (document_id,))
-            result = cursor.fetchone()
-
-            if result is None:
-                raise ValueError
-
-            serialized_data, stored_format = result
-
-            return serializer.deserialize(serialized_data)
-
-    def delete(self,
-               path: str) -> None:
-        try:
-            with sqlite3.connect(self.db_name) as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                            DELETE FROM documents WHERE id = ?
-                        """, (path,))
-                if cursor.rowcount == 0:
-                    raise ValueError('Doc not found')
-                conn.commit()
         except Exception:
             raise
 

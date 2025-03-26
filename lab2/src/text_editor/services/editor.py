@@ -68,7 +68,7 @@ class Editor(object):
                       filepath: str,
                       loader: str,
                       extension: str = 'md',
-                      format_: str = 'txt',):
+                      format_: str = 'txt', ):
         saver = self.__loaders[loader]
         extension = extension.lower().strip()
         format_ = format_.lower().strip()

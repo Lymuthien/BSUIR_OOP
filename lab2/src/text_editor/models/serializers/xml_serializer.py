@@ -1,4 +1,5 @@
 from xml.etree import ElementTree
+
 from ...interfaces import ISerializer
 from ...models.documents.document import Document
 from ...models.documents.md_document import MarkdownDocument
@@ -76,4 +77,3 @@ class DocumentToXmlSerializerAdapter(XmlSerializer):
         data = super().deserialize(data)
 
         return MarkdownDocument().from_dict(data)
-

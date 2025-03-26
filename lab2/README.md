@@ -24,7 +24,7 @@ but save it to different types and formats.
 - Ability to undo/redo text modifications.
 
 ### Storage Options
-- Store documents in local files, the cloud, the database.
+- Store documents in local files, the cloud.
 
 ### User Roles & Permissions
 - Roles: Viewer (read-only), Editor (edit access), Admin (manage users & permissions)

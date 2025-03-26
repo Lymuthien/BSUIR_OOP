@@ -1,4 +1,5 @@
 import json
+
 from ...interfaces import ISerializer
 from ...models.documents.document import Document
 from ...models.documents.md_document import MarkdownDocument
@@ -34,4 +35,3 @@ class DocumentToJsonSerializerAdapter(JsonSerializer):
         deserialized_data = super().deserialize(data)
 
         return MarkdownDocument().from_dict(deserialized_data)
-

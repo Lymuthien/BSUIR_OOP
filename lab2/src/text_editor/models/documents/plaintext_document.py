@@ -1,9 +1,9 @@
 import re
 
 from strip_markdown import strip_markdown
+
 from .document import Document
 from .md_document import MarkdownDocument
-
 from ..text_component import TextComponent
 
 

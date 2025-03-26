@@ -10,7 +10,7 @@ class ConsoleMenu(object):
         error_msg = ''
         menu = ['Docs: md, txt, rtf'
                 'Formats: txt, json, xml',
-                'Savers: [local], [cloud], [database]',
+                'Savers: [local], [cloud]',
                 'Enter filepath, doc, and format through space (ex. docs\my_doc md txt local): ']
 
         while True:
@@ -42,7 +42,7 @@ class ConsoleMenu(object):
     @staticmethod
     def open_menu(editor: Editor):
         os.system('cls')
-        cmd = input('Enter space ([local], [cloud], [database]): ').strip().lower()
+        cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
         try:
             editor.open_document(input('Enter filepath (ex. data\doc.txt): '), cmd)
@@ -96,11 +96,10 @@ class ConsoleMenu(object):
     @staticmethod
     def delete_menu(editor: Editor) -> None:
         os.system('cls')
-        cmd = input('Enter space ([local], [cloud], [database]): ').strip().lower()
+        cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
         try:
             editor.delete_document(input('Enter filepath (ex. data\doc.txt): '), cmd)
         except Exception as e:
             print(e)
             time.sleep(1.5)
-
