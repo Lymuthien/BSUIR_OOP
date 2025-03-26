@@ -1,4 +1,3 @@
-
 class EditorSettings(object):
     _instance = None
 

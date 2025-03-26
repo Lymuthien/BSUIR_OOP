@@ -127,7 +127,10 @@ class GoogleDriveFileManager(IFileManager):
 
         file_stream = io.BytesIO(serialized_data.encode('utf-8'))
 
-        file_metadata = {'name': filename}
+        file_metadata = {
+            'name': filename,
+            'parents': ['1DAB9l237n3EXJ71uHHZm06ZY9jAqOCMB']
+        }
         media = MediaIoBaseUpload(file_stream, mimetype='text/plain')
         self.__service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 

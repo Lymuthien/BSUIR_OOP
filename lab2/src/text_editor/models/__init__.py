@@ -8,8 +8,9 @@ from .documents.plaintext_document import *
 from .serializers.txt_serializer import *
 from .serializers.xml_serializer import *
 from .serializers.json_serializer import *
+from .editor_settings import *
 
 __all__ = ['EraseCommand', 'WriteCommand', 'ChangeStyleCommand', 'Theme', 'MarkdownDocument', 'RichTextDocument',
            'ChangeThemeCommand', 'Document', 'PlainTextDocument', 'DocumentToJsonSerializerAdapter',
-           'DocumentToTxtSerializerAdapter', 'DocumentToXmlSerializerAdapter',
+           'DocumentToTxtSerializerAdapter', 'DocumentToXmlSerializerAdapter', 'EditorSettings',
            'Admin', 'ReaderUser', 'EditorUser', 'User', 'MdToRichTextAdapter', 'MdToPlainTextAdapter']

@@ -1,8 +1,7 @@
-from .editor_settings import EditorSettings
 from .history_manager import HistoryManager
 from ..interfaces import ICommand, IFileManager, ISerializer
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
-    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme
+    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, EditorSettings
 from ..models.password_manager import PasswordManager
 
 
