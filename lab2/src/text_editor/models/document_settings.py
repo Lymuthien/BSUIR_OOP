@@ -80,7 +80,6 @@ class DocumentSettings(IDictable):
 
     def from_dict(self,
                   data: dict) -> 'DocumentSettings':
-        ds = DocumentSettings()
         self.__font_size = int(data['font_size'])
         self.__all_bold = to_bool(data['all_bold'])
         self.__all_italic = to_bool(data['all_italic'])

@@ -1,7 +1,6 @@
 from strip_markdown import strip_markdown
 
 from .document import Document
-from ..document_settings import DocumentSettings
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent
 from ..theme import Theme
 
@@ -75,6 +74,6 @@ class MarkdownDocument(Document):
             elif component['type'] == 'ItalicTextComponent':
                 self._components.append(ItalicTextComponent(component['text']))
 
-        self._settings = DocumentSettings().from_dict(data['settings'])
+        self._settings = self.settings.from_dict(data['settings'])
 
         return self
