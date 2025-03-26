@@ -29,7 +29,7 @@ class TextDecorator(TextComponent):
         self._text_component: TextComponent = text_component
 
     @staticmethod
-    def _if_decorated(text: str) -> bool:
+    def _can_decorate(text: str) -> bool:
         if text and text.count('*') != len(text):
             return True
         return False
@@ -42,7 +42,7 @@ class BoldTextComponent(TextDecorator):
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
-        formatted_text = '\n'.join(map(lambda paragraph: f'**{paragraph}**' if self._if_decorated(paragraph)
+        formatted_text = '\n'.join(map(lambda paragraph: f'**{paragraph}**' if self._can_decorate(paragraph)
         else paragraph, text.split('\n')))
 
         return formatted_text
@@ -55,7 +55,7 @@ class ItalicTextComponent(TextDecorator):
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
-        formatted_text = '\n'.join(map(lambda paragraph: f'_{paragraph}_' if self._if_decorated(paragraph)
+        formatted_text = '\n'.join(map(lambda paragraph: f'_{paragraph}_' if self._can_decorate(paragraph)
         else paragraph, text.split('\n')))
 
         return formatted_text
@@ -68,7 +68,7 @@ class StrikethroughTextComponent(TextDecorator):
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
-        formatted_text = '\n'.join(map(lambda paragraph: f'~~{paragraph}~~' if self._if_decorated(paragraph)
+        formatted_text = '\n'.join(map(lambda paragraph: f'~~{paragraph}~~' if self._can_decorate(paragraph)
         else paragraph, text.split('\n')))
 
         return formatted_text

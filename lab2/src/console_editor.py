@@ -91,6 +91,14 @@ class ConsoleEditor(object):
                 self.__editor.apply_style(select_indexes[0], select_indexes[1], italic=True)
                 self._update_buffers()
 
+        @kb.add('c-x')
+        def cut(event):
+            select_indexes = self._select_text(event.current_buffer)
+            if select_indexes:
+                pyperclip.copy(event.current_buffer.text[select_indexes[0]:select_indexes[1] + 1])
+                self.__editor.erase_text(*select_indexes)
+                self._update_buffers()
+
         @kb.add('c-c')
         def copy(event):
             select_indexes = self._select_text(event.current_buffer)
@@ -136,8 +144,6 @@ class ConsoleEditor(object):
             try:
                 self.__editor.set_read_only(not self.__editor.read_only())
                 event.app.exit()
-                ConsoleMenu.save_menu(self.__editor)
-                self.__editor.close_document()
             except Exception as e:
                 self.notification_buffer.text = str(e)
 
