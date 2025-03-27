@@ -24,7 +24,8 @@ class ConsoleEditor(object):
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
         self._console_menu = ConsoleMenu({'local': LocalFileManager(),
-                                        'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')})
+                                        'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
+                                         self.__editor)
 
         font_sizes = map(str, self.__editor.settings.font_sizes)
         colors = ('red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white')
@@ -71,6 +72,10 @@ class ConsoleEditor(object):
         def undo(event):
             self.__editor.undo()
             self._update_buffers()
+
+        @kb.add('c-w')
+        def set_role(event):
+            self._console_menu.set_role_menu()
 
         @kb.add('c-y')
         def redo(event):
@@ -131,21 +136,8 @@ class ConsoleEditor(object):
         @kb.add('c-s')
         def save(event):
             event.app.exit()
-            self._console_menu.save_menu(self.__editor)
+            self._console_menu.save_menu()
             time.sleep(1)
-
-        @kb.add('c-l')
-        def login(event):
-            event.app.exit()
-            self._console_menu.login_menu(self.__editor)
-
-        @kb.add('c-r')
-        def read_only(event):
-            try:
-                self.__editor.set_read_only(not self.__editor.read_only())
-                event.app.exit()
-            except Exception as e:
-                self.notification_buffer.text = str(e)
 
     def _on_text_changed(self, new_text: str, cursor_position: int):
         old_text = self.__editor.get_text()
@@ -180,7 +172,7 @@ class ConsoleEditor(object):
         self._app.run()
 
     def run(self):
-        self._console_menu.main_menu(self.__editor, self._run_editor_space, self._height, self._width)
+        self._console_menu.main_menu(self._run_editor_space, self._height, self._width)
 
 
 if __name__ == '__main__':

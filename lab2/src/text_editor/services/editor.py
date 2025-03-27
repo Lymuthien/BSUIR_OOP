@@ -1,13 +1,16 @@
+from .auth_service import AuthService
 from .history_manager import HistoryManager
-from ..interfaces import ICommand, IFileManager, ISerializer
+from ..interfaces import ICommand, IFileManager, ISerializer, IUser
 from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, EditorSettings
-from ..models.password_manager import PasswordManager
 
 
 class Editor(object):
     def __init__(self, serializers: dict[str, ISerializer]):
+        self.__users: dict[str: IUser] = {}
+        self.__auth_service = AuthService(self.__users)
         self.__history: HistoryManager = HistoryManager()
+        self.__roles: dict[str: IUser] = {'Admin': Admin(), 'Editor': EditorUser(), 'Reader': ReaderUser()}
 
         self.__serializers: dict[str, ISerializer] = serializers
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
@@ -19,7 +22,7 @@ class Editor(object):
         self.__file_manager: IFileManager | None = None
 
     def _user_command(self, command: ICommand):
-        if self._check_can_edit_text():
+        if self._is_user_can_edit_text():
             command.execute()
             self.__history.add_command(command)
 
@@ -30,17 +33,19 @@ class Editor(object):
     def settings(self) -> EditorSettings:
         return self.__settings
 
-    def create_document(self) -> str:
-        self.__current_user = Admin()
+    def create_document(self) -> None:
+        if self.__current_user is None:
+            raise Exception('Login please.')
+
         self.__doc = MarkdownDocument()
         self.__doc.attach(self.__current_user)
-        password = PasswordManager.create_password()
-        self.__doc.set_password(password)
-
-        return password
+        self.__doc.set_role(self.__current_user.name, self.__roles['Admin'])
 
     def open_document(self,
-                      filename: str):
+                      filename: str) -> None:
+        if self.__current_user is None:
+            raise Exception('Login please.')
+
         extension = filename.split('.')[-1].lower()
 
         try:
@@ -49,17 +54,14 @@ class Editor(object):
             raise Exception('Unknown format')
 
         doc = self.__file_manager.load(filename, serializer)
-        if self.__doc:
-            self.__doc.detach(self.__current_user)
+
+        if doc.get_role(self.__current_user.name) is None:
+            raise PermissionError('You cant read this file.')
 
         self.__doc = doc
-        self.__current_user = ReaderUser() if self.__doc.settings.read_only else EditorUser()
-        self.__doc.attach(self.__current_user)
 
     def close_document(self):
-        self.__doc.detach(self.__current_user)
         self.__doc = None
-        self.__current_user = None
         self.__history.clear()
 
     def set_file_manager(self, file_manager: IFileManager):
@@ -85,14 +87,38 @@ class Editor(object):
 
         self.__file_manager.save(docs[extension], filepath, serializer, extension=file_extension)
 
-    def login_as_admin(self,
-                       password: str):
-        if self.__doc.validate_password(password):
-            self.__doc.detach(self.__current_user)
-            self.__current_user = Admin()
-            self.__doc.attach(self.__current_user)
-        else:
-            raise Exception('Invalid password')
+    def login(self,
+              name: str,
+              password: str):
+        self.__current_user = self.__auth_service.login(name, password)
+
+    def register(self,
+                 name: str,
+                 password: str, ):
+        self.__current_user = self.__auth_service.register_user(name, password)
+        self.__users[name] = self.__current_user
+
+    def logout(self):
+        self.__current_user = None
+
+    def give_role(self,
+                  name: str,
+                  role: str, ):
+        if self.__current_user is None:
+            raise Exception('Login please')
+
+        if self.__users.get(name) is None:
+            raise Exception('User not found')
+
+        if not self.__doc.get_role(self.__current_user.name).can_change_document_settings():
+            raise PermissionError('User cant change document settings')
+
+        try:
+            self.__doc.set_role(name, self.__roles[role])
+            self.__doc.attach(self.__users[name])
+            # TODO: notify user.
+        except KeyError:
+            raise Exception('Unknown role')
 
     def undo(self):
         try:
@@ -129,23 +155,21 @@ class Editor(object):
                   theme_number: int):
         self._user_command(ChangeThemeCommand(self.__doc, self.__themes[theme_number - 1]))
 
-    def read_only(self) -> bool:
-        return self.__doc.settings.read_only
-
-    def set_read_only(self,
-                      read_only: bool):
-        if not self.__current_user.can_change_document_settings():
-            raise PermissionError('User cant change document settings')
-        self.__doc.settings.read_only = read_only
-
     def get_text(self) -> str | None:
         return self.__doc.get_text() if self.__doc else None
 
     def is_opened(self) -> bool:
         return self.__doc is not None
 
-    def _check_can_edit_text(self) -> bool:
-        return self.__current_user.can_edit_text()
+    def _is_user_can_edit_text(self) -> bool:
+        return self.__doc.get_role(self.__current_user.name).can_edit_text()
 
-    def delete_document(self, path: str) -> None:
-        self.__file_manager.delete(path)
+    def _is_user_can_edit_settings(self) -> bool:
+        return self.__doc.get_role(self.__current_user.name).can_change_document_settings()
+
+    def delete_document(self) -> None:
+        pass
+    # надо сделать так, чтобы удалять мог админ, и получать как то путь к файлу
+
+    def read_only(self) -> bool:
+        return self._is_user_can_edit_text()

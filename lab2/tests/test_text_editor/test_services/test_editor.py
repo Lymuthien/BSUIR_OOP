@@ -24,15 +24,6 @@ class TestEditor(unittest.TestCase):
         self.editor.create_document()
         self.assertTrue(self.editor.is_opened)
 
-    def test_login_as_admin(self):
-        password = self.editor.create_document()
-        self.editor.login_as_admin(password)
-
-    def test_login_as_admin_incorrect_password_raise_error(self):
-        self.editor.create_document()
-        with self.assertRaises(Exception):
-            self.editor.login_as_admin('<PASSWORD>')
-
     def test_open_document(self):
         self.editor.open_document('lalala.s', 'l')
         self.mock_loader.load.assert_called_once()

@@ -6,12 +6,6 @@ from .iserializer import IDictable
 
 class IDocument(IObservable, IDictable):
     @abstractmethod
-    def set_password(self, password: str): ...
-
-    @abstractmethod
-    def validate_password(self, password: str) -> bool: ...
-
-    @abstractmethod
     def set_theme(self,
                   theme): ...
 

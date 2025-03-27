@@ -20,22 +20,6 @@ class DocumentSettings(IDictable):
         self.__hash_password: str | None = None
 
     @property
-    def read_only(self) -> bool:
-        return self.__read_only
-
-    @read_only.setter
-    def read_only(self, value: bool):
-        self.__read_only = value
-
-    @property
-    def hash_password(self) -> str | None:
-        return self.__hash_password
-
-    @hash_password.setter
-    def hash_password(self, value: str):
-        self.__hash_password = value
-
-    @property
     def font_size(self) -> int:
         return self.__font_size
 
@@ -74,8 +58,6 @@ class DocumentSettings(IDictable):
             'font_size': self.font_size,
             'all_bold': self.all_bold,
             'all_italic': self.all_italic,
-            'read_only': self.read_only,
-            'hash_password': self.hash_password,
         }
 
     def from_dict(self,
@@ -83,7 +65,5 @@ class DocumentSettings(IDictable):
         self.__font_size = int(data['font_size'])
         self.__all_bold = to_bool(data['all_bold'])
         self.__all_italic = to_bool(data['all_italic'])
-        self.__read_only = to_bool(data['read_only'])
-        self.__hash_password = data['hash_password']
 
         return self

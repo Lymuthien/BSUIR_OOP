@@ -1,8 +1,7 @@
 from ..document_settings import DocumentSettings
-from ..password_manager import PasswordManager
 from ..text_component import TextComponent
 from ..theme import Theme
-from ...interfaces import IObserver, ITextComponent
+from ...interfaces import IObserver, ITextComponent, IUser
 from ...interfaces.idocument import IDocument
 
 
@@ -10,16 +9,8 @@ class Document(IDocument):
     def __init__(self):
         self._components: list[ITextComponent] = []
         self.__observers: list[IObserver] = []
+        self.__users: dict[str: IUser] = {}
         self._settings: DocumentSettings = DocumentSettings()
-
-    def set_password(self, password: str):
-        if self._settings.hash_password is None:
-            self._settings.hash_password = PasswordManager.hash_password(password)
-        else:
-            raise Exception('Password is already set')
-
-    def validate_password(self, password: str) -> bool:
-        return PasswordManager.hash_password(password) == self._settings.hash_password
 
     def set_theme(self,
                   theme: Theme):
@@ -60,6 +51,15 @@ class Document(IDocument):
 
     def get_text(self) -> str:
         return ''.join(component.get_text() for component in self._components)
+
+    def set_role(self,
+                 name: str,
+                 role: IUser) -> None:
+        self.__users[name] = role
+
+    def get_role(self,
+                 name: str) -> IUser:
+        return self.__users.get(name)
 
     def attach(self,
                observer: IObserver) -> None:
