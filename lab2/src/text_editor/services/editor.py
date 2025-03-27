@@ -6,9 +6,8 @@ from ..models.password_manager import PasswordManager
 
 
 class Editor(object):
-    def __init__(self, loaders: dict[str, IFileManager], serializers: dict[str, ISerializer]):
+    def __init__(self, serializers: dict[str, ISerializer]):
         self.__history: HistoryManager = HistoryManager()
-        self.__loaders: dict[str, IFileManager] = loaders
 
         self.__serializers: dict[str, ISerializer] = serializers
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
@@ -17,6 +16,7 @@ class Editor(object):
         self.__settings: EditorSettings = EditorSettings()
         self.__doc: MarkdownDocument | None = None
         self.__current_user: User | None = None
+        self.__file_manager: IFileManager | None = None
 
     def _user_command(self, command: ICommand):
         if self._check_can_edit_text():
@@ -40,9 +40,7 @@ class Editor(object):
         return password
 
     def open_document(self,
-                      filename: str,
-                      loader: str):
-        loader = self.__loaders[loader]
+                      filename: str):
         extension = filename.split('.')[-1].lower()
 
         try:
@@ -50,7 +48,7 @@ class Editor(object):
         except KeyError:
             raise Exception('Unknown format')
 
-        doc = loader.load(filename, serializer)
+        doc = self.__file_manager.load(filename, serializer)
         if self.__doc:
             self.__doc.detach(self.__current_user)
 
@@ -64,12 +62,13 @@ class Editor(object):
         self.__current_user = None
         self.__history.clear()
 
+    def set_file_manager(self, file_manager: IFileManager):
+        self.__file_manager = file_manager
+
     def save_document(self,
                       filepath: str,
-                      loader: str,
                       extension: str = 'md',
                       format_: str = 'txt', ):
-        saver = self.__loaders[loader]
         extension = extension.lower().strip()
         format_ = format_.lower().strip()
 
@@ -84,7 +83,7 @@ class Editor(object):
         if extension not in docs:
             raise Exception('Unknown extension')
 
-        saver.save(docs[extension], filepath, serializer, extension=file_extension)
+        self.__file_manager.save(docs[extension], filepath, serializer, extension=file_extension)
 
     def login_as_admin(self,
                        password: str):
@@ -148,6 +147,5 @@ class Editor(object):
     def _check_can_edit_text(self) -> bool:
         return self.__current_user.can_edit_text()
 
-    def delete_document(self, path: str, loader: str) -> None:
-        deleter = self.__loaders[loader]
-        deleter.delete(path)
+    def delete_document(self, path: str) -> None:
+        self.__file_manager.delete(path)

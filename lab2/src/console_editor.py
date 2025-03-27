@@ -12,19 +12,19 @@ from prompt_toolkit.styles import Style
 
 from text_editor.models import MarkdownDocument, DocumentToJsonSerializerAdapter, DocumentToTxtSerializerAdapter, \
     DocumentToXmlSerializerAdapter
-from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager, DatabaseFileManager
+from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager
 
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(loaders={'local': LocalFileManager(),
-                                        'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
-                               serializers={'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
+        self.__editor = Editor(serializers={'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
                                             'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
                                             'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), })
 
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
+        self._console_menu = ConsoleMenu({'local': LocalFileManager(),
+                                        'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')})
 
         font_sizes = map(str, self.__editor.settings.font_sizes)
         colors = ('red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white')
@@ -131,13 +131,13 @@ class ConsoleEditor(object):
         @kb.add('c-s')
         def save(event):
             event.app.exit()
-            ConsoleMenu.save_menu(self.__editor)
+            self._console_menu.save_menu(self.__editor)
             time.sleep(1)
 
         @kb.add('c-l')
         def login(event):
             event.app.exit()
-            ConsoleMenu.login_menu(self.__editor)
+            self._console_menu.login_menu(self.__editor)
 
         @kb.add('c-r')
         def read_only(event):
@@ -180,7 +180,7 @@ class ConsoleEditor(object):
         self._app.run()
 
     def run(self):
-        ConsoleMenu.main_menu(self.__editor, self._run_editor_space, self._height, self._width)
+        self._console_menu.main_menu(self.__editor, self._run_editor_space, self._height, self._width)
 
 
 if __name__ == '__main__':
