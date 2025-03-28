@@ -1,9 +1,10 @@
 from abc import abstractmethod
 
+from . import IDictable
 from .iobservable import IObserver
 
 
-class IUser(IObserver):
+class IUser(IObserver, IDictable):
     @property
     @abstractmethod
     def name(self) -> str: ...

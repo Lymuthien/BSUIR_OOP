@@ -31,6 +31,19 @@ class User(IUser):
     def update(self, document) -> None:
         self._message = f'Document updated: {datetime.datetime.now()}'
 
+    def to_dict(self) -> dict:
+        return {
+            'type': self.__class__.__name__,
+            'name': self.name,
+            'password': self._password,
+        }
+
+    def from_dict(self,
+                  data: dict) -> IUser:
+        self._name = data['name']
+        self._password = data['password']
+        return self
+
 
 class EditorUser(User):
     def can_edit_text(self) -> bool:

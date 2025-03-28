@@ -65,6 +65,8 @@ class MarkdownDocument(Document):
 
     def from_dict(self,
                   data: dict) -> 'MarkdownDocument':
+        super().from_dict(data)
+
         self._components = []
         for component in data['components']:
             if component['type'] == 'TextComponent':

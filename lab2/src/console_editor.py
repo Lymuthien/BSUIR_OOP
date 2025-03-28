@@ -75,6 +75,7 @@ class ConsoleEditor(object):
 
         @kb.add('c-w')
         def set_role(event):
+            event.app.exit()
             self._console_menu.set_role_menu()
 
         @kb.add('c-y')
@@ -178,3 +179,8 @@ class ConsoleEditor(object):
 if __name__ == '__main__':
     console = ConsoleEditor()
     console.run()
+
+
+
+
+

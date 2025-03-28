@@ -11,8 +11,7 @@ class RichTextDocument(Document):
 
     def from_dict(self,
                   data: dict) -> 'RichTextDocument':
-        self._components = [TextComponent(component['text']) for component in data['components']]
-        self._settings = self.settings.from_dict(data['settings'])
+        super().from_dict(data)
 
         return self
 

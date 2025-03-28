@@ -172,4 +172,4 @@ class Editor(object):
     # надо сделать так, чтобы удалять мог админ, и получать как то путь к файлу
 
     def read_only(self) -> bool:
-        return self._is_user_can_edit_text()
+        return not self._is_user_can_edit_text()

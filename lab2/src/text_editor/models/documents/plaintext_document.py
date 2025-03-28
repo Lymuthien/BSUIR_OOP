@@ -13,8 +13,7 @@ class PlainTextDocument(Document):
 
     def from_dict(self,
                   data: dict) -> 'PlainTextDocument':
-        self._components = [TextComponent(component['text']) for component in data['components']]
-        self._settings = self.settings.from_dict(data['settings'])
+        super().from_dict(data)
 
         return self
 

@@ -42,6 +42,7 @@ class ConsoleMenu(object):
             os.system('cls')
             self._editor.give_role(id_, role)
         except Exception as e:
+            print(e)
             time.sleep(1.5)
 
     def login_menu(self) -> None:
@@ -107,8 +108,7 @@ class ConsoleMenu(object):
                         self._editor.logout()
                     case 'c':
                         os.system('cls')
-                        print(self._editor.create_document())
-                        input('\nRemember this id and password. Press Enter to continue.')
+                        self._editor.create_document()
                         while self._editor.is_opened():
                             method()
                     case 'o':
