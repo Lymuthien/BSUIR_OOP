@@ -7,10 +7,9 @@ from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeTheme
 
 class Editor(object):
     def __init__(self, serializers: dict[str, ISerializer]):
-        self.__users: dict[str: IUser] = {}
+        self.__users: list[str] = []
         self.__auth_service = AuthService(self.__users)
         self.__history: HistoryManager = HistoryManager()
-        self.__roles: dict[str: IUser] = {'Admin': Admin(), 'Editor': EditorUser(), 'Reader': ReaderUser()}
 
         self.__serializers: dict[str, ISerializer] = serializers
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
@@ -18,7 +17,7 @@ class Editor(object):
                                       Theme(5, True, True), ]
         self.__settings: EditorSettings = EditorSettings()
         self.__doc: MarkdownDocument | None = None
-        self.__current_user: User | None = None
+        self.__current_user: str | None = None
         self.__file_manager: IFileManager | None = None
 
     def _user_command(self, command: ICommand):
@@ -27,7 +26,7 @@ class Editor(object):
             self.__history.add_command(command)
 
     def user_message(self) -> str:
-        return self.__current_user.message
+        return self.__doc.get_role(self.__current_user).message
 
     @property
     def settings(self) -> EditorSettings:
@@ -38,8 +37,7 @@ class Editor(object):
             raise Exception('Login please.')
 
         self.__doc = MarkdownDocument()
-        self.__doc.attach(self.__current_user)
-        self.__doc.set_role(self.__current_user.name, self.__roles['Admin'])
+        self.__doc.attach(Admin(self.__current_user))
 
     def open_document(self,
                       filename: str) -> None:
@@ -55,7 +53,7 @@ class Editor(object):
 
         doc = self.__file_manager.load(filename, serializer)
 
-        if doc.get_role(self.__current_user.name) is None:
+        if doc.get_role(self.__current_user) is None:
             raise PermissionError('You cant read this file.')
 
         self.__doc = doc
@@ -88,15 +86,13 @@ class Editor(object):
         self.__file_manager.save(docs[extension], filepath, serializer, extension=file_extension)
 
     def login(self,
-              name: str,
-              password: str):
-        self.__current_user = self.__auth_service.login(name, password)
+              name: str):
+        self.__current_user = self.__auth_service.login(name)
 
     def register(self,
-                 name: str,
-                 password: str, ):
-        self.__current_user = self.__auth_service.register_user(name, password)
-        self.__users[name] = self.__current_user
+                 name: str,):
+        self.__current_user = self.__auth_service.register_user(name)
+        self.__users.append(self.__current_user)
 
     def logout(self):
         self.__current_user = None
@@ -107,18 +103,18 @@ class Editor(object):
         if self.__current_user is None:
             raise Exception('Login please')
 
-        if self.__users.get(name) is None:
+        if name not in self.__users:
             raise Exception('User not found')
 
-        if not self.__doc.get_role(self.__current_user.name).can_change_document_settings():
+        if not self.__doc.get_role(self.__current_user).can_change_document_settings():
             raise PermissionError('User cant change document settings')
 
         try:
-            self.__doc.set_role(name, self.__roles[role])
-            self.__doc.attach(self.__users[name])
+            user_class = User.registry().get(role.lower())
+            self.__doc.attach(user_class(name))
             # TODO: notify user.
-        except KeyError:
-            raise Exception('Unknown role')
+        except Exception as e:
+            raise print(e)
 
     def undo(self):
         try:
@@ -162,10 +158,10 @@ class Editor(object):
         return self.__doc is not None
 
     def _is_user_can_edit_text(self) -> bool:
-        return self.__doc.get_role(self.__current_user.name).can_edit_text()
+        return self.__doc.get_role(self.__current_user).can_edit_text()
 
     def _is_user_can_edit_settings(self) -> bool:
-        return self.__doc.get_role(self.__current_user.name).can_change_document_settings()
+        return self.__doc.get_role(self.__current_user).can_change_document_settings()
 
     def delete_document(self) -> None:
         pass

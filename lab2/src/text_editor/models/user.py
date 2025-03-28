@@ -1,6 +1,5 @@
 import datetime
 
-from .password_manager import PasswordManager
 from ..interfaces import IUser
 
 
@@ -9,12 +8,11 @@ class User(IUser):
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        cls._registry[cls.__name__] = cls
+        cls._registry[cls.__name__.lower()] = cls
 
-    def __init__(self, name='base', password: str = 'base'):
+    def __init__(self, name='base'):
         self._message: str = ''
         self._name = name
-        self._password: str = PasswordManager.hash_password(password)
 
     @classmethod
     def registry(cls) -> dict:
@@ -23,12 +21,6 @@ class User(IUser):
     @property
     def name(self) -> str:
         return self._name
-
-    def validate_password(self, password: str) -> bool:
-        return self._password == PasswordManager.hash_password(password)
-
-    def hash_password(self, password: str) -> str:
-        return self._password
 
     @property
     def message(self) -> str:
@@ -45,13 +37,11 @@ class User(IUser):
         return {
             'type': self.__class__.__name__,
             'name': self.name,
-            'password': self._password,
         }
 
     def from_dict(self,
                   data: dict) -> IUser:
         self._name = data['name']
-        self._password = data['password']
         return self
 
 

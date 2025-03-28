@@ -36,11 +36,11 @@ class ConsoleMenu(object):
 
     def set_role_menu(self) -> None:
         os.system('cls')
-        id_ = input('Enter ID: ')
-        role = input('Enter role: ')
+        name = input('Enter name: ')
+        role = input('Enter role (EditorUser, Admin, ReaderUser): ')
         try:
             os.system('cls')
-            self._editor.give_role(id_, role)
+            self._editor.give_role(name, role)
         except Exception as e:
             print(e)
             time.sleep(1.5)
@@ -48,9 +48,8 @@ class ConsoleMenu(object):
     def login_menu(self) -> None:
         os.system('cls')
         name = input('Enter name: ').strip()
-        password = input('Enter password: ').strip()
         try:
-            self._editor.login(name, password)
+            self._editor.login(name)
         except Exception as e:
             print(e)
             time.sleep(1.5)
@@ -69,10 +68,9 @@ class ConsoleMenu(object):
     def register_menu(self):
         os.system('cls')
         name = input('Enter name: ').strip()
-        password = input('Enter password: ').strip()
 
         try:
-            self._editor.register(name, password)
+            self._editor.register(name)
         except Exception as e:
             print(e)
             time.sleep(1.5)

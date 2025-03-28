@@ -9,7 +9,6 @@ from ...interfaces.idocument import IDocument
 class Document(IDocument):
     def __init__(self):
         self._components: list[ITextComponent] = []
-        self.__observers: list[IUser] = []
         self.__users: dict[str: IUser] = {}
         self._settings: DocumentSettings = DocumentSettings()
 
@@ -64,16 +63,16 @@ class Document(IDocument):
 
     def attach(self,
                observer: IUser) -> None:
-        if observer not in self.__observers:
-            self.__observers.append(observer)
+        self.__users[observer.name] = observer
+        # мб тут если он уже есть в юзере оповещать о смене роли
 
     def detach(self,
                observer: IUser) -> None:
-        if observer in self.__observers:
-            self.__observers.remove(observer)
+        if observer.name in self.__users:
+            del self.__users[observer.name]
 
     def notify(self) -> None:
-        for observer in self.__observers:
+        for observer in self.__users.values():
             observer.update(self)
 
     def to_dict(self) -> dict:
@@ -82,23 +81,21 @@ class Document(IDocument):
             'components': [component.to_dict() for component in self._components],
             'settings': self._settings.to_dict(),
             'users': {name: user.to_dict() for name, user in self.__users.items()},
-            'observers': [user.to_dict() for user in self.__observers],
         }
 
     def from_dict(self,
                   data: dict) -> 'Document':
         self._components = [TextComponent(component['text']) for component in data['components']]
         self._settings = self.settings.from_dict(data['settings'])
-        self.__observers = [User().from_dict(observer) for observer in data['observers']]
         self.__users = {}
 
         for name, user_data in data['users'].items():
-            user_type = user_data['type']
+            user_type = user_data['type'].lower()
             user_class = User.registry().get(user_type)
             if user_class:
                 self.__users[name] = user_class().from_dict(user_data)
             else:
-                raise ValueError(f"Неизвестный тип пользователя: {user_type}")
+                raise ValueError(f'Unknown user role: {user_type}')
 
         return self
 

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from . import IDictable
+from .iserializer import IDictable
 from .iobservable import IObserver
 
 
@@ -15,9 +15,6 @@ class IUser(IObserver, IDictable):
     @abstractmethod
     def can_change_document_settings(self) -> bool: ...
 
+    @property
     @abstractmethod
-    def validate_password(self, password: str) -> bool: ...
-
-    @abstractmethod
-    def hash_password(self, password: str) -> str: ...
-
+    def message(self) -> str: ...
