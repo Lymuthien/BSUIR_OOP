@@ -2,9 +2,19 @@ from ..interfaces import ITextComponent
 
 
 class TextComponent(ITextComponent):
+    _registry = {}
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls._registry[cls.__name__.lower()] = cls
+
     def __init__(self,
                  text: str):
         self.__text: str = text
+
+    @classmethod
+    def registry(cls) -> dict:
+        return cls._registry
 
     def get_text(self) -> str:
         return self.__text
@@ -16,7 +26,7 @@ class TextComponent(ITextComponent):
         }
 
     def from_dict(self,
-                  data: dict) -> 'TextComponent':
+                  data: dict) -> ITextComponent:
         self.__text = data['text']
         return self
 
@@ -37,7 +47,7 @@ class TextDecorator(TextComponent):
 
 class BoldTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent):
+                 text_component: TextComponent = TextComponent('')):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:
@@ -50,7 +60,7 @@ class BoldTextComponent(TextDecorator):
 
 class ItalicTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent):
+                 text_component: TextComponent = TextComponent('')):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:
@@ -63,7 +73,7 @@ class ItalicTextComponent(TextDecorator):
 
 class StrikethroughTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent):
+                 text_component: TextComponent = TextComponent('')):
         super().__init__(text_component.get_text(), text_component)
 
     def get_text(self) -> str:

@@ -1,4 +1,4 @@
-from ..user import User, EditorUser, Admin, ReaderUser
+from ..user import User
 from ..document_settings import DocumentSettings
 from ..text_component import TextComponent
 from ..theme import Theme

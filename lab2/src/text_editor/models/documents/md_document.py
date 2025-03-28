@@ -69,12 +69,12 @@ class MarkdownDocument(Document):
 
         self._components = []
         for component in data['components']:
-            if component['type'] == 'TextComponent':
-                self._components.append(TextComponent(component['text']))
-            elif component['type'] == 'BoldTextComponent':
-                self._components.append(BoldTextComponent(component['text']))
-            elif component['type'] == 'ItalicTextComponent':
-                self._components.append(ItalicTextComponent(component['text']))
+            component_type = component['type'].lower()
+            component_class = TextComponent.registry().get(component_type)
+            if component_class:
+                self._components.append(component_class().from_dict(component))
+            else:
+                raise ValueError(f'Unknown component: {component_type}')
 
         self._settings = self.settings.from_dict(data['settings'])
 

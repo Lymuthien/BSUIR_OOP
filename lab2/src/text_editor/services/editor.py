@@ -1,24 +1,24 @@
 from .auth_service import AuthService
 from .history_manager import HistoryManager
-from ..interfaces import ICommand, IFileManager, ISerializer, IUser
-from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, EditorUser, ReaderUser, \
+from ..interfaces import ICommand, IFileManager, ISerializer
+from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, \
     User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, EditorSettings
 
 
 class Editor(object):
     def __init__(self, serializers: dict[str, ISerializer]):
         self.__users: list[str] = []
-        self.__auth_service = AuthService(self.__users)
-        self.__history: HistoryManager = HistoryManager()
-
-        self.__serializers: dict[str, ISerializer] = serializers
         self.__themes: list[Theme] = [Theme(1, True, True), Theme(2, False, True),
                                       Theme(3, True, True), Theme(4, False, True),
                                       Theme(5, True, True), ]
+        self.__serializers: dict[str, ISerializer] = serializers
         self.__settings: EditorSettings = EditorSettings()
         self.__doc: MarkdownDocument | None = None
         self.__current_user: str | None = None
         self.__file_manager: IFileManager | None = None
+
+        self.__auth_service = AuthService(self.__users)
+        self.__history: HistoryManager = HistoryManager()
 
     def _user_command(self, command: ICommand):
         if self._is_user_can_edit_text():
