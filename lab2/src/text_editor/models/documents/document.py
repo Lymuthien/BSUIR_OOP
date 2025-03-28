@@ -91,13 +91,14 @@ class Document(IDocument):
         self._settings = self.settings.from_dict(data['settings'])
         self.__observers = [User().from_dict(observer) for observer in data['observers']]
         self.__users = {}
-        for name, user in data['users'].items():
-            if user['type'] == 'Admin':
-                self.__users[name] = Admin().from_dict(user)
-            elif user['type'] == 'EditorUser':
-                self.__users[name] = EditorUser().from_dict(user)
-            elif user['type'] == 'ReaderUser':
-                self.__users[name] = ReaderUser().from_dict(user)
+
+        for name, user_data in data['users'].items():
+            user_type = user_data['type']
+            user_class = User.registry().get(user_type)
+            if user_class:
+                self.__users[name] = user_class().from_dict(user_data)
+            else:
+                raise ValueError(f"Неизвестный тип пользователя: {user_type}")
 
         return self
 

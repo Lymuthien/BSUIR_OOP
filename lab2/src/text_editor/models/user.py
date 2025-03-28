@@ -5,10 +5,20 @@ from ..interfaces import IUser
 
 
 class User(IUser):
+    _registry = {}
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls._registry[cls.__name__] = cls
+
     def __init__(self, name='base', password: str = 'base'):
         self._message: str = ''
         self._name = name
         self._password: str = PasswordManager.hash_password(password)
+
+    @classmethod
+    def registry(cls) -> dict:
+        return cls._registry
 
     @property
     def name(self) -> str:
