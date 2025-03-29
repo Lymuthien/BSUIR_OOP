@@ -12,11 +12,10 @@ class LocalFileManager(IFileManager):
     def save(self,
              data,
              filename: str,
-             serializer: ISerializer,
-             extension: str = None) -> None:
+             serializer: ISerializer) -> None:
         serialized_data = serializer.serialize(data)
         filename += '.'
-        filename += serializer.extension if extension is None else extension
+        filename += serializer.extension
 
         with open(filename, 'w') as file:
             file.write(serialized_data)
@@ -46,11 +45,10 @@ class GoogleDriveFileManager(IFileManager):
     def save(self,
              data,
              filename: str,
-             serializer: ISerializer,
-             extension: str = None) -> None:
+             serializer: ISerializer) -> None:
         serialized_data = serializer.serialize(data)
         filename += '.'
-        filename += serializer.extension if extension is None else extension
+        filename += serializer.extension
 
         file_stream = io.BytesIO(serialized_data.encode('utf-8'))
 

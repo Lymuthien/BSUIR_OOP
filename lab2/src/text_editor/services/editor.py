@@ -68,22 +68,21 @@ class Editor(object):
     def save_document(self,
                       filepath: str,
                       extension: str = 'md',
-                      format_: str = 'txt', ):
+                      format_: str = 'json', ):
         extension = extension.lower().strip()
         format_ = format_.lower().strip()
 
         try:
             serializer = self.__serializers[format_]
-        except KeyError:
+        except Exception:
             raise Exception('Unknown format')
 
-        file_extension = None if format != 'txt' else extension
         docs = {'md': self.__doc, 'rtf': MdToRichTextAdapter(self.__doc), 'txt': MdToPlainTextAdapter(self.__doc)}
 
         if extension not in docs:
             raise Exception('Unknown extension')
 
-        self.__file_manager.save(docs[extension], filepath, serializer, extension=file_extension)
+        self.__file_manager.save(docs[extension], filepath, serializer)
 
     def login(self,
               name: str):

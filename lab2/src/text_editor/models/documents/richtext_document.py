@@ -18,13 +18,14 @@ class RichTextDocument(Document):
 
 class MdToRichTextAdapter(RichTextDocument):
     def __init__(self,
-                 md_document: MarkdownDocument):
+                 md_document: MarkdownDocument = MarkdownDocument()):
         super().__init__()
         self.__md_document = md_document
-        self._components = [TextComponent(self.get_text())]
+        self._components = [TextComponent(self._convert_md_to_rich(md_document.get_text()))]
+        self._users = self.__md_document.users()
 
-    def get_text(self) -> str:
-        text = self.__md_document.get_text()
+    @staticmethod
+    def _convert_md_to_rich(text: str) -> str:
         rtf_text = pypandoc.convert_text(text, 'rtf', 'md')
 
         if '{' not in rtf_text:
@@ -33,3 +34,19 @@ class MdToRichTextAdapter(RichTextDocument):
             rtf_text = rtf_text[:1] + r'\rtf1 ' + rtf_text[1:]
 
         return rtf_text
+
+    def from_dict(self,
+                  data: dict) -> MarkdownDocument:
+        super().from_dict(data)
+        return RichTextToMdAdapter(self)
+
+
+class RichTextToMdAdapter(MarkdownDocument):
+    def __init__(self, rich_text_document: RichTextDocument):
+        super().__init__()
+        self._components = [TextComponent(self._convert_rich_to_md(rich_text_document.get_text()))]
+        self._users = rich_text_document.users()
+
+    @staticmethod
+    def _convert_rich_to_md(rich_text: str) -> str:
+        return pypandoc.convert_text(rich_text, 'md', 'rtf')

@@ -7,9 +7,10 @@ class TextComponent(ITextComponent):
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         cls._registry[cls.__name__.lower()] = cls
+        cls._registry[TextComponent.__name__.lower()] = TextComponent
 
     def __init__(self,
-                 text: str):
+                 text: str = ''):
         self.__text: str = text
 
     @classmethod
@@ -33,9 +34,8 @@ class TextComponent(ITextComponent):
 
 class TextDecorator(TextComponent):
     def __init__(self,
-                 text: str,
                  text_component: TextComponent):
-        super().__init__(text)
+        super().__init__()
         self._text_component: TextComponent = text_component
 
     @staticmethod
@@ -47,8 +47,8 @@ class TextDecorator(TextComponent):
 
 class BoldTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent('')):
-        super().__init__(text_component.get_text(), text_component)
+                 text_component: TextComponent = TextComponent()):
+        super().__init__(text_component)
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
@@ -60,8 +60,8 @@ class BoldTextComponent(TextDecorator):
 
 class ItalicTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent('')):
-        super().__init__(text_component.get_text(), text_component)
+                 text_component: TextComponent = TextComponent()):
+        super().__init__(text_component)
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
@@ -73,8 +73,8 @@ class ItalicTextComponent(TextDecorator):
 
 class StrikethroughTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent('')):
-        super().__init__(text_component.get_text(), text_component)
+                 text_component: TextComponent = TextComponent()):
+        super().__init__(text_component)
 
     def get_text(self) -> str:
         text = self._text_component.get_text()

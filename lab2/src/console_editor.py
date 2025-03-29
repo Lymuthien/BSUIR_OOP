@@ -1,6 +1,7 @@
 import os
 import time
 
+import pypandoc
 import pyperclip
 from prompt_toolkit import Application
 from prompt_toolkit.buffer import Buffer
@@ -10,21 +11,19 @@ from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
 
-from text_editor.models import MarkdownDocument, DocumentToJsonSerializerAdapter, DocumentToTxtSerializerAdapter, \
-    DocumentToXmlSerializerAdapter
+from text_editor.models import MarkdownDocument, DocumentToJsonSerializerAdapter, DocumentToXmlSerializerAdapter
 from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager
 
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(serializers={'txt': DocumentToTxtSerializerAdapter(MarkdownDocument()),
-                                            'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
+        self.__editor = Editor(serializers={'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
                                             'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), })
 
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
         self._console_menu = ConsoleMenu({'local': LocalFileManager(),
-                                        'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
+                                          'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
                                          self.__editor)
 
         font_sizes = map(str, self.__editor.settings.font_sizes)
@@ -176,11 +175,7 @@ class ConsoleEditor(object):
         self._console_menu.main_menu(self._run_editor_space, self._height, self._width)
 
 
+
 if __name__ == '__main__':
     console = ConsoleEditor()
     console.run()
-
-
-
-
-

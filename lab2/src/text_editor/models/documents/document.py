@@ -1,25 +1,28 @@
-from ..user import User
-from ..document_settings import DocumentSettings
 from ..text_component import TextComponent
 from ..theme import Theme
+from ..user import User
 from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
 
 
 class Document(IDocument):
+    _registry = {}
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls._registry[cls.__name__.lower()] = cls
+
+    @classmethod
+    def registry(cls) -> dict:
+        return cls._registry
+
     def __init__(self):
         self._components: list[ITextComponent] = []
-        self.__users: dict[str: IUser] = {}
-        self._settings: DocumentSettings = DocumentSettings()
+        self._users: dict[str: IUser] = {}
 
     def set_theme(self,
                   theme: Theme):
-        self._settings.set_theme(theme)
         self.notify()
-
-    @property
-    def settings(self) -> DocumentSettings:
-        return self._settings
 
     def insert_text(self,
                     text: str,
@@ -52,52 +55,47 @@ class Document(IDocument):
     def get_text(self) -> str:
         return ''.join(component.get_text() for component in self._components)
 
-    def set_role(self,
-                 name: str,
-                 role: IUser) -> None:
-        self.__users[name] = role
-
     def get_role(self,
                  name: str) -> IUser:
-        return self.__users.get(name)
+        return self._users.get(name)
 
     def attach(self,
                observer: IUser) -> None:
-        self.__users[observer.name] = observer
+        self._users[observer.name] = observer
         # мб тут если он уже есть в юзере оповещать о смене роли
 
     def detach(self,
                observer: IUser) -> None:
-        if observer.name in self.__users:
-            del self.__users[observer.name]
+        if observer.name in self._users:
+            del self._users[observer.name]
 
     def notify(self) -> None:
-        for observer in self.__users.values():
+        for observer in self._users.values():
             observer.update(self)
+
+    def users(self) -> dict[str: IUser]:
+        return self._users
 
     def to_dict(self) -> dict:
         return {
             'type': self.__class__.__name__,
             'components': [component.to_dict() for component in self._components],
-            'settings': self._settings.to_dict(),
-            'users': {name: user.to_dict() for name, user in self.__users.items()},
+            'users': [user.to_dict() for user in self._users.values()],
         }
 
     def from_dict(self,
                   data: dict) -> 'Document':
         self._components = [TextComponent(component['text']) for component in data['components']]
-        self._settings = self.settings.from_dict(data['settings'])
-        self.__users = {}
+        self._users = {}
 
-        for name, user_data in data['users'].items():
+        for user_data in data['users']:
             user_type = user_data['type'].lower()
             user_class = User.registry().get(user_type)
             if user_class:
-                self.__users[name] = user_class().from_dict(user_data)
+                user = user_class().from_dict(user_data)
+                self._users[user.name] = user
             else:
                 raise ValueError(f'Unknown user role: {user_type}')
 
         return self
-
-    # TODO: add user fabric
 

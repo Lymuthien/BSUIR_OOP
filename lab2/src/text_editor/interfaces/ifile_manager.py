@@ -8,8 +8,7 @@ class IFileManager(ABC):
     def save(self,
              data,
              path: str,
-             serializer: ISerializer,
-             extension: str = None) -> None: ...
+             serializer: ISerializer) -> None: ...
 
     @abstractmethod
     def load(self,

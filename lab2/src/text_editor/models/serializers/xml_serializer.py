@@ -2,7 +2,6 @@ from xml.etree import ElementTree
 
 from ...interfaces import ISerializer
 from ...models.documents.document import Document
-from ...models.documents.md_document import MarkdownDocument
 
 
 class XmlSerializer(ISerializer):
@@ -57,7 +56,6 @@ class XmlSerializer(ISerializer):
                 result[child.tag] = list(content.values()) if isinstance(content, dict) and 'item' in content.keys() \
                     else content
 
-        print(result)
         return result
 
 
@@ -76,4 +74,9 @@ class DocumentToXmlSerializerAdapter(XmlSerializer):
                     data: str):
         data = super().deserialize(data)
 
-        return MarkdownDocument().from_dict(data)
+        doc_type = data['type'].lower()
+        doc_class = Document.registry().get(doc_type)
+        if doc_class:
+            return doc_class().from_dict(data)
+        else:
+            raise ValueError(f'Unknown doc type: {doc_type}')

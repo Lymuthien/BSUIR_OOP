@@ -9,10 +9,6 @@ class IDocument(IObservable, IDictable):
     def set_theme(self,
                   theme): ...
 
-    @property
-    @abstractmethod
-    def settings(self): ...
-
     @abstractmethod
     def insert_text(self,
                     text: str,

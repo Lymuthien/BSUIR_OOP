@@ -11,28 +11,29 @@ class ConsoleMenu(object):
         self._editor = editor
 
     def save_menu(self) -> None:
-        error_msg = ''
-        menu = ['Docs: md, txt, rtf'
-                'Formats: txt, json, xml',
+        menu = ['Docs: md, txt, rtf',
+                'Formats: json, xml',
                 'Savers: [local], [cloud]',
-                'Enter filepath, doc, and format through space (ex. docs\my_doc md txt local): ']
+                'Enter filepath, doc, and format through space (ex. docs\my_doc md json local): ']
 
-        while True:
-            os.system('cls')
-            print(error_msg)
-            for item in menu:
-                print(item)
+        os.system('cls')
+        for item in menu:
+            print(item)
 
-            try:
-                cmd = input().strip().lower().split()
-                if len(cmd) != 4:
-                    raise ValueError('Invalid input.')
+        try:
+            cmd = input().strip().lower().split()
+            if len(cmd) != 4:
+                raise ValueError('Invalid input.')
 
-                self._editor.set_file_manager(self._savers[cmd[3]])
-                self._editor.save_document(filepath=cmd[0], extension=cmd[1], format_=cmd[2])
-                return
-            except Exception as e:
-                raise
+            if cmd[3] not in self._savers:
+                raise ValueError('Unknown saver.')
+
+            self._editor.set_file_manager(self._savers[cmd[3]])
+            self._editor.save_document(filepath=cmd[0], extension=cmd[1], format_=cmd[2])
+            return
+        except Exception as e:
+            print(e)
+            time.sleep(1.5)
 
     def set_role_menu(self) -> None:
         os.system('cls')
