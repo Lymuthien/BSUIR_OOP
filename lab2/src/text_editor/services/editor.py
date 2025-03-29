@@ -110,8 +110,7 @@ class Editor(object):
 
         try:
             user_class = User.registry().get(role.lower())
-            self.__doc.attach(user_class(name))
-            # TODO: notify user.
+            self.__doc.set_role(user_class(name))
         except Exception as e:
             raise print(e)
 

@@ -1,3 +1,5 @@
+import datetime
+
 from ..text_component import TextComponent
 from ..theme import Theme
 from ...factories.generic_factory import GenericFactory
@@ -50,19 +52,23 @@ class Document(IDocument, Registrable):
                  name: str) -> IUser:
         return self._users.get(name)
 
+    def set_role(self,
+                 user: IUser) -> None:
+        self._users[user.name] = user
+        user.update(f'Your role now: {user.__class__.__name__}')
+
     def attach(self,
                observer: IUser) -> None:
         self._users[observer.name] = observer
-        # мб тут если он уже есть в юзере оповещать о смене роли
 
     def detach(self,
                observer: IUser) -> None:
         if observer.name in self._users:
             del self._users[observer.name]
 
-    def notify(self) -> None:
+    def notify(self, message: str = None) -> None:
         for observer in self._users.values():
-            observer.update(self)
+            observer.update(f'Document updated: {datetime.datetime.now()}' if message is None else message)
 
     def users(self) -> dict[str: IUser]:
         return self._users

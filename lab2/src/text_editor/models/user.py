@@ -21,18 +21,20 @@ class User(IUser, Registrable):
 
     def can_change_document_settings(self) -> bool: ...
 
-    def update(self, document) -> None:
-        self._message = f'Document updated: {datetime.datetime.now()}'
+    def update(self, message: str) -> None:
+        self._message = message
 
     def to_dict(self) -> dict:
         return {
             'type': self.__class__.__name__,
+            'message': self._message,
             'name': self.name,
         }
 
     def from_dict(self,
                   data: dict) -> IUser:
         self._name = data['name']
+        self._message = data['message']
         return self
 
 

@@ -2,7 +2,7 @@ class Registrable(object):
     _registry: dict[str: type['Registrable']] = {}
 
     @classmethod
-    def registry(cls) -> dict[str, type['Registrable']]:
+    def registry(cls) -> dict[str: type['Registrable']]:
         return cls._registry
 
     def __init_subclass__(cls, **kwargs):

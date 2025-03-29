@@ -1,7 +1,6 @@
 import os
 import time
 
-import pypandoc
 import pyperclip
 from prompt_toolkit import Application
 from prompt_toolkit.buffer import Buffer
@@ -161,6 +160,7 @@ class ConsoleEditor(object):
         buffer.read_only = self.__editor.read_only
 
         self.notification_buffer = Buffer()
+        self.notification_buffer.text = self.__editor.user_message()
 
         notification_window = Window(content=BufferControl(buffer=self.notification_buffer), height=5)
         window = Window(content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}',
