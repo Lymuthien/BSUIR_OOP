@@ -1,22 +1,13 @@
 import datetime
 
 from ..interfaces import IUser
+from .registrable import Registrable
 
 
-class User(IUser):
-    _registry = {}
-
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        cls._registry[cls.__name__.lower()] = cls
-
+class User(IUser, Registrable):
     def __init__(self, name='base'):
         self._message: str = ''
         self._name = name
-
-    @classmethod
-    def registry(cls) -> dict:
-        return cls._registry
 
     @property
     def name(self) -> str:

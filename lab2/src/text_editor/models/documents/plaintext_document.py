@@ -39,8 +39,9 @@ class MdToPlainTextAdapter(PlainTextDocument):
 
 
 class PlainTextToMdAdapter(MarkdownDocument):
-    def __init__(self, plain_text_document: PlainTextDocument):
+    def __init__(self, plain_text_document: PlainTextDocument | None = None):
         super().__init__()
-        self._components = [TextComponent(plain_text_document.get_text())]
-        self._users = plain_text_document.users()
+        if plain_text_document is not None:
+            self._components = [TextComponent(plain_text_document.get_text())]
+            self._users = plain_text_document.users()
 

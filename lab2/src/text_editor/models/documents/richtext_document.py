@@ -42,10 +42,11 @@ class MdToRichTextAdapter(RichTextDocument):
 
 
 class RichTextToMdAdapter(MarkdownDocument):
-    def __init__(self, rich_text_document: RichTextDocument):
+    def __init__(self, rich_text_document: RichTextDocument | None = None):
         super().__init__()
-        self._components = [TextComponent(self._convert_rich_to_md(rich_text_document.get_text()))]
-        self._users = rich_text_document.users()
+        if rich_text_document is not None:
+            self._components = [TextComponent(self._convert_rich_to_md(rich_text_document.get_text()))]
+            self._users = rich_text_document.users()
 
     @staticmethod
     def _convert_rich_to_md(rich_text: str) -> str:

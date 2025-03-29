@@ -4,6 +4,7 @@ from .document import Document
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent, \
     TextDecorator
 from ..theme import Theme
+from ...factories.generic_factory import GenericFactory
 
 
 class MarkdownDocument(Document):
@@ -12,9 +13,9 @@ class MarkdownDocument(Document):
         self._components.append(TextComponent(''))
 
     def _apply_style(self,
-                    start: int,
-                    end: int,
-                    text_decorator: type[TextDecorator]):
+                     start: int,
+                     end: int,
+                     text_decorator: type[TextDecorator]):
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
         bold_part = text_decorator(TextComponent(text[start:end + 1]))
@@ -63,12 +64,8 @@ class MarkdownDocument(Document):
         super().from_dict(data)
 
         self._components = []
-        for component in data['components']:
-            component_type = component['type'].lower()
-            component_class = TextComponent.registry().get(component_type)
-            if component_class:
-                self._components.append(component_class().from_dict(component))
-            else:
-                raise ValueError(f'Unknown component: {component_type}. valid components: {TextComponent.registry()}')
+        for component_data in data['components']:
+            component = GenericFactory.create(component_data).from_dict(component_data)
+            self._components.append(component)
 
         return self

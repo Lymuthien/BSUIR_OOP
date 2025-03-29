@@ -1,21 +1,12 @@
 from ..text_component import TextComponent
 from ..theme import Theme
-from ..user import User
+from ...factories.generic_factory import GenericFactory
 from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
+from ..registrable import Registrable
 
 
-class Document(IDocument):
-    _registry = {}
-
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        cls._registry[cls.__name__.lower()] = cls
-
-    @classmethod
-    def registry(cls) -> dict:
-        return cls._registry
-
+class Document(IDocument, Registrable):
     def __init__(self):
         self._components: list[ITextComponent] = []
         self._users: dict[str: IUser] = {}
@@ -89,13 +80,8 @@ class Document(IDocument):
         self._users = {}
 
         for user_data in data['users']:
-            user_type = user_data['type'].lower()
-            user_class = User.registry().get(user_type)
-            if user_class:
-                user = user_class().from_dict(user_data)
-                self._users[user.name] = user
-            else:
-                raise ValueError(f'Unknown user role: {user_type}')
+            user = GenericFactory.create(user_data).from_dict(user_data)
+            self._users[user.name] = user
 
         return self
 

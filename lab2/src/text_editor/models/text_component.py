@@ -1,21 +1,13 @@
+from abc import abstractmethod
+
+from .registrable import Registrable
 from ..interfaces import ITextComponent
 
 
-class TextComponent(ITextComponent):
-    _registry = {}
-
-    def __init_subclass__(cls, **kwargs):
-        super().__init_subclass__(**kwargs)
-        cls._registry[cls.__name__.lower()] = cls
-        cls._registry[TextComponent.__name__.lower()] = TextComponent
-
+class TextComponent(ITextComponent, Registrable):
     def __init__(self,
                  text: str = ''):
         self.__text: str = text
-
-    @classmethod
-    def registry(cls) -> dict:
-        return cls._registry
 
     def get_text(self) -> str:
         return self.__text
@@ -23,7 +15,7 @@ class TextComponent(ITextComponent):
     def to_dict(self) -> dict:
         return {
             'type': self.__class__.__name__,
-            'text': self.__text
+            'text': self.get_text()
         }
 
     def from_dict(self,
@@ -32,7 +24,7 @@ class TextComponent(ITextComponent):
         return self
 
 
-class TextDecorator(TextComponent):
+class TextDecorator(ITextComponent, Registrable):
     def __init__(self,
                  text_component: TextComponent):
         super().__init__()
@@ -43,6 +35,20 @@ class TextDecorator(TextComponent):
         if text and text.count('*') != len(text):
             return True
         return False
+
+    @abstractmethod
+    def get_text(self) -> str: ...
+
+    def to_dict(self) -> dict:
+        return {
+            'type': self.__class__.__name__,
+            'text': self.get_text()
+        }
+
+    def from_dict(self,
+                  data: dict) -> ITextComponent:
+        self._text_component = TextComponent().from_dict(data)
+        return self
 
 
 class BoldTextComponent(TextDecorator):

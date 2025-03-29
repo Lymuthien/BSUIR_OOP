@@ -1,8 +1,8 @@
 import json
 
+from ...factories.generic_factory import GenericFactory
 from ...interfaces import ISerializer
 from ...models.documents.document import Document
-from ...models.documents.md_document import MarkdownDocument
 
 
 class JsonSerializer(ISerializer):
@@ -34,11 +34,5 @@ class DocumentToJsonSerializerAdapter(JsonSerializer):
                     data: str):
         deserialized_data = super().deserialize(data)
 
-        doc_type = deserialized_data['type'].lower()
-        doc_class = Document.registry().get(doc_type)
-        if doc_class:
-            return doc_class().from_dict(deserialized_data)
-        else:
-            raise ValueError(f'Unknown doc type: {doc_type}')
-
-
+        doc = GenericFactory.create(deserialized_data)
+        return doc.from_dict(deserialized_data)
