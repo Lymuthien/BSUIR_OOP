@@ -1,8 +1,11 @@
+from typing import final
+
 from .theme import Theme
 from ..interfaces import ICommand, IDocument
 from ..models.documents.md_document import MarkdownDocument
 
 
+@final
 class WriteCommand(ICommand):
     def __init__(self,
                  text: str,
@@ -22,6 +25,7 @@ class WriteCommand(ICommand):
         self.execute()
 
 
+@final
 class EraseCommand(ICommand):
     def __init__(self,
                  start: int,
@@ -42,6 +46,7 @@ class EraseCommand(ICommand):
         self.execute()
 
 
+@final
 class ChangeStyleCommand(ICommand):
     def __init__(self,
                  start: int,
@@ -75,6 +80,7 @@ class ChangeStyleCommand(ICommand):
         self.__doc.replace_text(self.__new_text, 0, len(self.__old_text) - 1)
 
 
+@final
 class ChangeThemeCommand(ICommand):
     def __init__(self,
                  doc: IDocument,

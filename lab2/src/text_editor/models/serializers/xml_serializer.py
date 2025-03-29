@@ -61,15 +61,9 @@ class XmlSerializer(ISerializer):
 
 
 class DocumentToXmlSerializerAdapter(XmlSerializer):
-    def __init__(self,
-                 document: Document):
-        self.__document = document
-
     def serialize(self,
                   data: Document = None) -> str:
-        doc = data if data is not None else self.__document
-
-        return super().serialize(doc.to_dict())
+        return super().serialize(data.to_dict())
 
     def deserialize(self,
                     data: str):

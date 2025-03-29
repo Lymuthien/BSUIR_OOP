@@ -10,14 +10,14 @@ from prompt_toolkit.layout.controls import BufferControl
 from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
 
-from text_editor.models import MarkdownDocument, DocumentToJsonSerializerAdapter, DocumentToXmlSerializerAdapter
+from text_editor.models import DocumentToJsonSerializerAdapter, DocumentToXmlSerializerAdapter
 from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager
 
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(serializers={'xml': DocumentToXmlSerializerAdapter(MarkdownDocument()),
-                                            'json': DocumentToJsonSerializerAdapter(MarkdownDocument()), })
+        self.__editor = Editor(serializers={'xml': DocumentToXmlSerializerAdapter(),
+                                            'json': DocumentToJsonSerializerAdapter(), })
 
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines

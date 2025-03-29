@@ -1,8 +1,7 @@
 import json
 
 from ...factories.generic_factory import GenericFactory
-from ...interfaces import ISerializer
-from ...models.documents.document import Document
+from ...interfaces import IDictable, ISerializer
 
 
 class JsonSerializer(ISerializer):
@@ -21,17 +20,12 @@ class JsonSerializer(ISerializer):
 
 
 class DocumentToJsonSerializerAdapter(JsonSerializer):
-    def __init__(self,
-                 document: Document):
-        self.__document = document
-
     def serialize(self,
-                  data: Document = None) -> str:
-        doc = data if data is not None else self.__document
-        return super().serialize(doc.to_dict())
+                  data: IDictable = None) -> str:
+        return super().serialize(data.to_dict())
 
     def deserialize(self,
-                    data: str):
+                    data: str) -> IDictable:
         deserialized_data = super().deserialize(data)
 
         doc = GenericFactory.create(deserialized_data)

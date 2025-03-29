@@ -1,5 +1,3 @@
-import datetime
-
 from ..interfaces import IUser
 from .registrable import Registrable
 
@@ -17,11 +15,14 @@ class User(IUser, Registrable):
     def message(self) -> str:
         return self._message
 
-    def can_edit_text(self) -> bool: ...
+    def can_edit_text(self) -> bool:
+        raise NotImplementedError()
 
-    def can_change_document_settings(self) -> bool: ...
+    def can_change_document_settings(self) -> bool:
+        raise NotImplementedError()
 
-    def update(self, message: str) -> None:
+    def update(self,
+               message: str) -> None:
         self._message = message
 
     def to_dict(self) -> dict:
