@@ -1,5 +1,6 @@
 class EditorSettings(object):
     _instance = None
+    _initialized = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -7,8 +8,10 @@ class EditorSettings(object):
         return cls._instance
 
     def __init__(self):
-        self.__font_size = 11
-        self.__font_sizes = (9, 10, 11, 12, 13, 14)
+        if not EditorSettings._initialized:
+            self.__font_size = 11
+            self.__font_sizes = (9, 10, 11, 12, 13, 14)
+            EditorSettings._initialized = True
 
     @property
     def font_size(self) -> int:
