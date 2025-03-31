@@ -2,7 +2,7 @@ from typing import final
 
 from .theme import Theme
 from ..interfaces import ICommand, IDocument
-from ..models.documents.md_document import MarkdownDocument
+from ..models.documents import MarkdownDocument
 
 
 @final

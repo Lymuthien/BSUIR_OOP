@@ -1,7 +1,6 @@
 from xml.etree import ElementTree
 
-from ..documents.plaintext_document import PlainTextToMdAdapter
-from ..documents.richtext_document import RichTextToMdAdapter
+from ..documents import PlainTextToMdAdapter, RichTextToMdAdapter
 from ...factories.document_factory import documents
 from ...interfaces import ISerializer, IDocument
 

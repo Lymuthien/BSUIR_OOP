@@ -11,7 +11,8 @@ from prompt_toolkit.layout.layout import Layout
 from prompt_toolkit.styles import Style
 
 from text_editor.models import DocumentToJsonSerializerAdapter, DocumentToXmlSerializerAdapter
-from text_editor.services import Editor, ConsoleMenu, LocalFileManager, GoogleDriveFileManager
+from text_editor.services import Editor, LocalFileManager, GoogleDriveFileManager
+from text_editor.ui.console_menu import ConsoleMenu
 
 
 class ConsoleEditor(object):
