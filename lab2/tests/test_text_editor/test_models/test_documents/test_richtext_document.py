@@ -1,21 +1,40 @@
 import unittest
-from unittest.mock import MagicMock
 
-from text_editor.models.documents.md_document import MarkdownDocument
-from text_editor.models.documents.richtext_document import MdToRichTextAdapter
+from text_editor.models import MarkdownDocument, MdToRichTextAdapter
+from text_editor.models.text_component import TextComponent
 
 
-class TestMdRichTextAdapter(unittest.TestCase):
+class TestMdToRichTextAdapter(unittest.TestCase):
     def setUp(self):
-        self.mock_doc = MagicMock(spec=MarkdownDocument)
-        self.adapter = MdToRichTextAdapter(self.mock_doc)
+        self.md_document = MarkdownDocument()
+        self.adapter = MdToRichTextAdapter(self.md_document)
 
-    def test_get_text(self):
-        self.mock_doc.get_text.return_value = '## Show me **your** homework.\n'
-        self.assertEqual(self.adapter.get_text(),
-                         '{\\rtf1 \\pard \\ql \\f0 \\sa180 \\li0 \\fi0 \\outlinelevel1 \\b \\fs32 Show '
-                         'me {\\b your} homework.\\par}\r\n')
+    def test_to_dict_includes_correct_type(self):
+        result = self.adapter.to_dict()
+        self.assertIn('type', result)
+        self.assertEqual(result['type'], 'RichTextDocument')
 
+    def test_rich_text_conversion(self):
+        self.md_document._components = [TextComponent("**Bold** _Italic_")]
+        adapter = MdToRichTextAdapter(self.md_document)
+        converted_text = adapter.get_text()
+        self.assertTrue(converted_text.startswith(r"{\rtf1"))
+        self.assertIn(r"{\b Bold}", converted_text)
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_users_property_is_populated_from_md_document(self):
+        self.md_document._users = {"test_user": None}
+        adapter = MdToRichTextAdapter(self.md_document)
+        self.assertEqual(adapter.users(), self.md_document.users())
+
+    def test_to_dict_contains_components(self):
+        self.md_document._components = [TextComponent("Some text")]
+        adapter = MdToRichTextAdapter(self.md_document)
+        result = adapter.to_dict()
+        self.assertIn('components', result)
+        self.assertEqual(len(result['components']), 1)
+        self.assertIn("Some text", result['components'][0]['text'])
+
+    def test_conversion_from_empty_document(self):
+        self.md_document._components = [TextComponent("")]
+        adapter = MdToRichTextAdapter(self.md_document)
+        self.assertEqual(adapter.get_text(), r"{\rtf1}")
