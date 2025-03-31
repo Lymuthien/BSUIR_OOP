@@ -23,7 +23,7 @@ class TextComponent(ITextComponent):
         return self
 
 
-class TextDecorator(ITextComponent, Registrable):
+class TextDecorator(ITextComponent):
     def __init__(self,
                  text_component: TextComponent):
         super().__init__()

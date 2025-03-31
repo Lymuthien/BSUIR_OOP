@@ -65,7 +65,7 @@ class MarkdownDocument(Document):
 
         self._components = []
         for component_data in data['components']:
-            type_name = component_data['type']
+            type_name = component_data['type'].lower()
             component = text_components[type_name].create_text_component().from_dict(component_data)
             self._components.append(component)
 
