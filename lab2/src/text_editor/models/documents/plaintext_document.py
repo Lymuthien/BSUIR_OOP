@@ -32,10 +32,11 @@ class MdToPlainTextAdapter(PlainTextDocument):
         plane_text = re.sub(r'~~(.*?)~~', r'\1', plane_text)
         return plane_text
 
-    def from_dict(self,
-                  data: dict) -> MarkdownDocument:
-        super().from_dict(data)
-        return PlainTextToMdAdapter(self)
+    def to_dict(self) -> dict:
+        dict_ = super().to_dict()
+        dict_['type'] = PlainTextDocument.__name__
+
+        return dict_
 
 
 class PlainTextToMdAdapter(MarkdownDocument):
@@ -44,4 +45,10 @@ class PlainTextToMdAdapter(MarkdownDocument):
         if plain_text_document is not None:
             self._components = [TextComponent(plain_text_document.get_text())]
             self._users = plain_text_document.users()
+
+    def to_dict(self) -> dict:
+        dict_ = super().to_dict()
+        dict_['type'] = MarkdownDocument.__name__
+
+        return dict_
 

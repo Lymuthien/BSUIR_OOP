@@ -35,10 +35,11 @@ class MdToRichTextAdapter(RichTextDocument):
 
         return rtf_text
 
-    def from_dict(self,
-                  data: dict) -> MarkdownDocument:
-        super().from_dict(data)
-        return RichTextToMdAdapter(self)
+    def to_dict(self) -> dict:
+        dict_ = super().to_dict()
+        dict_['type'] = RichTextDocument.__name__
+
+        return dict_
 
 
 class RichTextToMdAdapter(MarkdownDocument):
@@ -51,3 +52,9 @@ class RichTextToMdAdapter(MarkdownDocument):
     @staticmethod
     def _convert_rich_to_md(rich_text: str) -> str:
         return pypandoc.convert_text(rich_text, 'md', 'rtf')
+
+    def to_dict(self) -> dict:
+        dict_ = super().to_dict()
+        dict_['type'] = MarkdownDocument.__name__
+
+        return dict_
