@@ -71,7 +71,7 @@ class ItalicTextComponent(TextDecorator):
 
     def get_text(self) -> str:
         text = self._text_component.get_text()
-        formatted_text = '\n'.join(map(lambda paragraph: f'_{paragraph}_' if self._can_decorate(paragraph)
+        formatted_text = '\n'.join(map(lambda paragraph: f'*{paragraph}*' if self._can_decorate(paragraph)
         else paragraph, text.split('\n')))
 
         return formatted_text

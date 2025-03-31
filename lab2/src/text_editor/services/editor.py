@@ -89,7 +89,7 @@ class Editor(object):
         self.__current_user = self.__auth_service.login(name)
 
     def register(self,
-                 name: str,):
+                 name: str, ):
         self.__current_user = self.__auth_service.register_user(name)
         self.__users.append(self.__current_user)
 
@@ -161,8 +161,13 @@ class Editor(object):
     def _is_user_can_edit_settings(self) -> bool:
         return self.__doc.get_role(self.__current_user).can_change_document_settings()
 
-    def delete_document(self) -> None:
-        pass
+    def delete_document(self, filename: str) -> None:
+        self.open_document(filename)
+        if self._is_user_can_edit_settings():
+            self.__file_manager.delete(filename)
+        self.close_document()
+
+
     # надо сделать так, чтобы удалять мог админ, и получать как то путь к файлу
 
     def read_only(self) -> bool:
