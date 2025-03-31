@@ -2,9 +2,8 @@ import json
 
 from ..documents.plaintext_document import PlainTextToMdAdapter
 from ..documents.richtext_document import RichTextToMdAdapter
-from ...factories.generic_factory import GenericFactory
-from ...factories.document_factory import DocumentFactory, documents
-from ...interfaces import IDictable, ISerializer
+from ...factories.document_factory import documents
+from ...interfaces import ISerializer, IDocument
 
 
 class JsonSerializer(ISerializer):
@@ -24,11 +23,11 @@ class JsonSerializer(ISerializer):
 
 class DocumentToJsonSerializerAdapter(JsonSerializer):
     def serialize(self,
-                  data: IDictable = None) -> str:
+                  data: IDocument = None) -> str:
         return super().serialize(data.to_dict())
 
     def deserialize(self,
-                    data: str) -> IDictable:
+                    data: str) -> IDocument:
         deserialized_data = super().deserialize(data)
 
         type_name = deserialized_data['type'].lower()

@@ -1,8 +1,9 @@
 from xml.etree import ElementTree
 
-from ...factories.generic_factory import GenericFactory
-from ...interfaces import ISerializer
-from ...models.documents.document import Document
+from ..documents.plaintext_document import PlainTextToMdAdapter
+from ..documents.richtext_document import RichTextToMdAdapter
+from ...factories.document_factory import documents
+from ...interfaces import ISerializer, IDocument
 
 
 class XmlSerializer(ISerializer):
@@ -62,12 +63,20 @@ class XmlSerializer(ISerializer):
 
 class DocumentToXmlSerializerAdapter(XmlSerializer):
     def serialize(self,
-                  data: Document = None) -> str:
+                  data: IDocument = None) -> str:
         return super().serialize(data.to_dict())
 
     def deserialize(self,
-                    data: str):
+                    data: str) -> IDocument:
         deserialized_data = super().deserialize(data)
 
-        doc = GenericFactory.create(deserialized_data)
-        return doc.from_dict(deserialized_data)
+        type_name = deserialized_data['type'].lower()
+        doc = documents[type_name].create_document()
+
+        doc = doc.from_dict(deserialized_data)
+        if doc.__class__.__name__ == 'PlainTextDocument':
+            return PlainTextToMdAdapter(doc)
+        elif doc.__class__.__name__ == 'RichTextDocument':
+            return RichTextToMdAdapter(doc)
+        else:
+            return doc

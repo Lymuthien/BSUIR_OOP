@@ -1,11 +1,11 @@
 import datetime
 
+from ..registrable import Registrable
 from ..text_component import TextComponent
 from ..theme import Theme
-from ...factories.generic_factory import GenericFactory
+from ...factories.user_factory import users
 from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
-from ..registrable import Registrable
 
 
 class Document(IDocument, Registrable):
@@ -86,8 +86,8 @@ class Document(IDocument, Registrable):
         self._users = {}
 
         for user_data in data['users']:
-            user = GenericFactory.create(user_data).from_dict(user_data)
+            type_name = user_data['type'].lower()
+            user = users[type_name].create_user().from_dict(user_data)
             self._users[user.name] = user
 
         return self
-
