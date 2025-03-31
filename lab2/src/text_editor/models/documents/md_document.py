@@ -4,7 +4,7 @@ from .document import Document
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent, \
     TextDecorator
 from ..theme import Theme
-from ...factories.generic_factory import GenericFactory
+from ...factories.text_component_factory import text_components
 
 
 class MarkdownDocument(Document):
@@ -65,7 +65,8 @@ class MarkdownDocument(Document):
 
         self._components = []
         for component_data in data['components']:
-            component = GenericFactory.create(component_data).from_dict(component_data)
+            type_name = component_data['type']
+            component = text_components[type_name].create_text_component().from_dict(component_data)
             self._components.append(component)
 
         return self

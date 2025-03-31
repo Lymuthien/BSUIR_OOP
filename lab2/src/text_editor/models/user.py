@@ -1,8 +1,7 @@
 from ..interfaces import IUser
-from .registrable import Registrable
 
 
-class User(IUser, Registrable):
+class User(IUser):
     def __init__(self, name='base'):
         self._message: str = ''
         self._name = name

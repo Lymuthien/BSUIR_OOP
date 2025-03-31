@@ -1,10 +1,9 @@
 from abc import abstractmethod
 
-from .registrable import Registrable
 from ..interfaces import ITextComponent
 
 
-class TextComponent(ITextComponent, Registrable):
+class TextComponent(ITextComponent):
     def __init__(self,
                  text: str = ''):
         self.__text: str = text

@@ -1,6 +1,5 @@
 import datetime
 
-from ..registrable import Registrable
 from ..text_component import TextComponent
 from ..theme import Theme
 from ...factories.user_factory import users
@@ -8,7 +7,7 @@ from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
 
 
-class Document(IDocument, Registrable):
+class Document(IDocument):
     def __init__(self):
         self._components: list[ITextComponent] = []
         self._users: dict[str: IUser] = {}
