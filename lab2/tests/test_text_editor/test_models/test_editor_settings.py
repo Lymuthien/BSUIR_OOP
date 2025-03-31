@@ -1,6 +1,6 @@
 import unittest
 
-from text_editor.services import EditorSettings
+from text_editor.models import EditorSettings
 
 
 class TestEditorSettings(unittest.TestCase):
