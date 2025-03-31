@@ -1,8 +1,10 @@
 from .auth_service import AuthService
 from .history_manager import HistoryManager
+from ..factories.document_factory import MDFactory, DocumentFactory
+from ..factories.user_factory import users, AdminUserFactory
 from ..interfaces import ICommand, IFileManager, ISerializer
-from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, Admin, \
-    User, MarkdownDocument, MdToRichTextAdapter, MdToPlainTextAdapter, Theme, EditorSettings
+from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeThemeCommand, MarkdownDocument, \
+    MdToRichTextAdapter, MdToPlainTextAdapter, Theme, EditorSettings
 
 
 class Editor(object):
@@ -16,6 +18,7 @@ class Editor(object):
         self.__doc: MarkdownDocument | None = None
         self.__current_user: str | None = None
         self.__file_manager: IFileManager | None = None
+        self.__document_factory: DocumentFactory = MDFactory()
 
         self.__auth_service = AuthService(self.__users)
         self.__history: HistoryManager = HistoryManager()
@@ -36,8 +39,8 @@ class Editor(object):
         if self.__current_user is None:
             raise Exception('Login please.')
 
-        self.__doc = MarkdownDocument()
-        self.__doc.attach(Admin(self.__current_user))
+        self.__doc = self.__document_factory.create_document()
+        self.__doc.attach(AdminUserFactory().create_user(self.__current_user))
 
     def open_document(self,
                       filename: str) -> None:
@@ -109,8 +112,8 @@ class Editor(object):
             raise PermissionError('User cant change document settings')
 
         try:
-            user_class = User.registry().get(role.lower())
-            self.__doc.set_role(user_class(name))
+            user_class = users[role]
+            self.__doc.set_role(user_class.create_user(name))
         except Exception as e:
             raise print(e)
 
@@ -166,7 +169,6 @@ class Editor(object):
         if self._is_user_can_edit_settings():
             self.__file_manager.delete(filename)
         self.close_document()
-
 
     # надо сделать так, чтобы удалять мог админ, и получать как то путь к файлу
 

@@ -2,7 +2,6 @@ import datetime
 
 from ..text_component import TextComponent
 from ..theme import Theme
-from ...factories.user_factory import users
 from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
 
@@ -81,6 +80,8 @@ class Document(IDocument):
 
     def from_dict(self,
                   data: dict) -> 'Document':
+        from ...factories.user_factory import users
+
         self._components = [TextComponent(component['text']) for component in data['components']]
         self._users = {}
 

@@ -1,7 +1,7 @@
 from xml.etree import ElementTree
 
-from ..documents import PlainTextToMdAdapter, RichTextToMdAdapter
-from ...factories.document_factory import documents
+from ..documents.plaintext_document import PlainTextToMdAdapter
+from ..documents.richtext_document import RichTextToMdAdapter
 from ...interfaces import ISerializer, IDocument
 
 
@@ -67,6 +67,8 @@ class DocumentToXmlSerializerAdapter(XmlSerializer):
 
     def deserialize(self,
                     data: str) -> IDocument:
+        from ...factories.document_factory import documents
+
         deserialized_data = super().deserialize(data)
 
         type_name = deserialized_data['type'].lower()

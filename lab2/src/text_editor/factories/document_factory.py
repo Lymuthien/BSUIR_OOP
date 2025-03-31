@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 
 from ..interfaces import IDocument
-from ..models.documents import MarkdownDocument, PlainTextDocument, RichTextDocument
+from ..models import MarkdownDocument, PlainTextDocument, RichTextDocument
 
 
 class DocumentFactory(ABC):

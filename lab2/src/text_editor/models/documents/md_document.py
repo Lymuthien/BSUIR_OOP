@@ -4,7 +4,6 @@ from .document import Document
 from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent, \
     TextDecorator
 from ..theme import Theme
-from ...factories.text_component_factory import text_components
 
 
 class MarkdownDocument(Document):
@@ -16,6 +15,7 @@ class MarkdownDocument(Document):
                      start: int,
                      end: int,
                      text_decorator: type[TextDecorator]):
+
         text = self.get_text()
         before = TextComponent(text[:start]) if start > 0 else None
         bold_part = text_decorator(TextComponent(text[start:end + 1]))
@@ -61,6 +61,8 @@ class MarkdownDocument(Document):
 
     def from_dict(self,
                   data: dict) -> 'MarkdownDocument':
+        from ...factories.text_component_factory import text_components
+
         super().from_dict(data)
 
         self._components = []

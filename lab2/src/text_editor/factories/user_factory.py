@@ -5,22 +5,22 @@ from ..models.user import IUser, EditorUser, Admin, ReaderUser
 
 class UserFactory(ABC):
     @abstractmethod
-    def create_user(self) -> IUser: ...
+    def create_user(self, name: str = 'base') -> IUser: ...
 
 
 class EditorUserFactory(UserFactory):
-    def create_user(self) -> IUser:
-        return EditorUser()
+    def create_user(self, name: str = 'base') -> IUser:
+        return EditorUser(name)
 
 
 class AdminUserFactory(UserFactory):
-    def create_user(self) -> IUser:
-        return Admin()
+    def create_user(self, name: str = 'base') -> IUser:
+        return Admin(name)
 
 
 class ReaderUserFactory(UserFactory):
-    def create_user(self) -> IUser:
-        return ReaderUser()
+    def create_user(self, name: str = 'base') -> IUser:
+        return ReaderUser(name)
 
 
 users: dict[str, UserFactory] = {

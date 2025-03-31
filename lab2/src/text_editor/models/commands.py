@@ -2,7 +2,6 @@ from typing import final
 
 from .theme import Theme
 from ..interfaces import ICommand, IDocument
-from ..models.documents import MarkdownDocument
 
 
 @final
@@ -51,7 +50,7 @@ class ChangeStyleCommand(ICommand):
     def __init__(self,
                  start: int,
                  end: int,
-                 doc: MarkdownDocument,
+                 doc: IDocument,
                  bold: bool = False,
                  italic: bool = False,
                  strikethrough: bool = False) -> None:
@@ -65,6 +64,9 @@ class ChangeStyleCommand(ICommand):
         self.__new_text = None
 
     def execute(self) -> None:
+        from .documents.md_document import MarkdownDocument
+        assert isinstance(self.__doc, MarkdownDocument), "Invalid document instance"
+
         if self.__bold:
             self.__doc.apply_bold(self.__start, self.__end)
         if self.__italic:
