@@ -26,7 +26,11 @@ class ConsoleMenu(object):
         if cmd[3] not in self._savers:
             raise ValueError('Unknown saver.')
 
-        self._editor.set_file_manager(self._savers[cmd[3]])
+        try:
+            self._editor.set_file_manager(self._savers[cmd[3]])
+        except KeyError:
+            raise Exception('Unknown saver.')
+
         self._editor.save_document(filepath=cmd[0], extension=cmd[1], format_=cmd[2])
 
     def set_role_menu(self) -> None:
@@ -47,7 +51,10 @@ class ConsoleMenu(object):
         os.system('cls')
         cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
-        self._editor.set_file_manager(self._savers[cmd])
+        try:
+            self._editor.set_file_manager(self._savers[cmd])
+        except KeyError:
+            raise Exception('Unknown loader.')
         self._editor.open_document(input('Enter filepath (ex. data\doc.txt): '))
 
     def register_menu(self):
@@ -110,5 +117,8 @@ class ConsoleMenu(object):
         os.system('cls')
         cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
-        self._editor.set_file_manager(self._savers[cmd])
+        try:
+            self._editor.set_file_manager(self._savers[cmd])
+        except KeyError:
+            raise Exception('Unknown loader.')
         self._editor.delete_document(input('Enter filepath (ex. data\doc.txt): '))
