@@ -1,8 +1,7 @@
 import os
-import time
 
-from ..services.editor import Editor
 from ..interfaces import IFileManager
+from ..services.editor import Editor
 
 
 class ConsoleMenu(object):
@@ -20,61 +19,42 @@ class ConsoleMenu(object):
         for item in menu:
             print(item)
 
-        try:
-            cmd = input().strip().lower().split()
-            if len(cmd) != 4:
-                raise ValueError('Invalid input.')
+        cmd = input().strip().lower().split()
+        if len(cmd) != 4:
+            raise ValueError('Invalid input.')
 
-            if cmd[3] not in self._savers:
-                raise ValueError('Unknown saver.')
+        if cmd[3] not in self._savers:
+            raise ValueError('Unknown saver.')
 
-            self._editor.set_file_manager(self._savers[cmd[3]])
-            self._editor.save_document(filepath=cmd[0], extension=cmd[1], format_=cmd[2])
-            return
-        except Exception as e:
-            print(e)
-            time.sleep(1.5)
+        self._editor.set_file_manager(self._savers[cmd[3]])
+        self._editor.save_document(filepath=cmd[0], extension=cmd[1], format_=cmd[2])
 
     def set_role_menu(self) -> None:
         os.system('cls')
         name = input('Enter name: ')
         role = input('Enter role (EditorUser, Admin, ReaderUser): ')
-        try:
-            os.system('cls')
-            self._editor.give_role(name, role)
-        except Exception as e:
-            print(e)
-            time.sleep(1.5)
+
+        os.system('cls')
+        self._editor.give_role(name, role)
 
     def login_menu(self) -> None:
         os.system('cls')
         name = input('Enter name: ').strip()
-        try:
-            self._editor.login(name)
-        except Exception as e:
-            print(e)
-            time.sleep(1.5)
+
+        self._editor.login(name)
 
     def open_menu(self):
         os.system('cls')
         cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
-        try:
-            self._editor.set_file_manager(self._savers[cmd])
-            self._editor.open_document(input('Enter filepath (ex. data\doc.txt): '))
-        except Exception as e:
-            raise
-            time.sleep(1.5)
+        self._editor.set_file_manager(self._savers[cmd])
+        self._editor.open_document(input('Enter filepath (ex. data\doc.txt): '))
 
     def register_menu(self):
         os.system('cls')
         name = input('Enter name: ').strip()
 
-        try:
-            self._editor.register(name)
-        except Exception as e:
-            print(e)
-            time.sleep(1.5)
+        self._editor.register(name)
 
     def main_menu(self, method: callable, height, width) -> None:
         error_msg = ''
@@ -98,10 +78,8 @@ class ConsoleMenu(object):
             try:
                 match cmd:
                     case 'r':
-                        os.system('cls')
                         self.register_menu()
                     case 'l':
-                        os.system('cls')
                         self.login_menu()
                     case 'lo':
                         self._editor.logout()
@@ -132,9 +110,5 @@ class ConsoleMenu(object):
         os.system('cls')
         cmd = input('Enter space ([local], [cloud]): ').strip().lower()
 
-        try:
-            self._editor.set_file_manager(self._savers[cmd])
-            self._editor.delete_document(input('Enter filepath (ex. data\doc.txt): '))
-        except Exception as e:
-            print(e)
-            time.sleep(1.5)
+        self._editor.set_file_manager(self._savers[cmd])
+        self._editor.delete_document(input('Enter filepath (ex. data\doc.txt): '))
