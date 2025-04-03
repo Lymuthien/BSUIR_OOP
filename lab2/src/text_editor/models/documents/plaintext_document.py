@@ -4,7 +4,6 @@ from strip_markdown import strip_markdown
 
 from .document import Document
 from .md_document import MarkdownDocument
-from ..text_component import TextComponent
 
 
 class PlainTextDocument(Document):
@@ -23,7 +22,9 @@ class MdToPlainTextAdapter(PlainTextDocument):
                  md_document: MarkdownDocument = MarkdownDocument()):
         super().__init__()
         self.__md_document = md_document
-        self._components = [TextComponent(self._convert_md_to_plain(md_document.get_text()))]
+        self._components = [
+            self._basic_factory.create_text_component(self._convert_md_to_plain(md_document.get_text()))
+        ]
         self._users = self.__md_document.users()
 
     @staticmethod
@@ -43,7 +44,7 @@ class PlainTextToMdAdapter(MarkdownDocument):
     def __init__(self, plain_text_document: PlainTextDocument | None = None):
         super().__init__()
         if plain_text_document is not None:
-            self._components = [TextComponent(plain_text_document.get_text())]
+            self._components = [self._basic_factory.create_text_component(plain_text_document.get_text())]
             self._users = plain_text_document.users()
 
     def to_dict(self) -> dict:

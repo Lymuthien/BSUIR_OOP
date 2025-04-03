@@ -1,7 +1,7 @@
 import datetime
 
-from ..text_component import TextComponent
 from ..theme import Theme
+from ...factories.text_component_factory import TextComponentFactory, BasicTextComponentFactory
 from ...interfaces import ITextComponent, IUser
 from ...interfaces.idocument import IDocument
 
@@ -10,6 +10,7 @@ class Document(IDocument):
     def __init__(self):
         self._components: list[ITextComponent] = []
         self._users: dict[str: IUser] = {}
+        self._basic_factory: TextComponentFactory = BasicTextComponentFactory()
 
     def set_theme(self,
                   theme: Theme):
@@ -21,7 +22,7 @@ class Document(IDocument):
         current_text = self.get_text()
         new_text = current_text[:position] + text + current_text[position:]
 
-        self._components = [TextComponent(new_text)]
+        self._components = [self._basic_factory.create_text_component(new_text)]
         self.notify()
 
     def replace_text(self,
@@ -31,7 +32,7 @@ class Document(IDocument):
         current_text = self.get_text()
         new_text = current_text[:start] + new_text + current_text[end + 1:]
 
-        self._components = [TextComponent(new_text)]
+        self._components = [self._basic_factory.create_text_component(new_text)]
         self.notify()
 
     def delete_text(self,
@@ -40,7 +41,7 @@ class Document(IDocument):
         current_text = self.get_text()
         new_text = current_text[:start] + current_text[end + 1:]
 
-        self._components = [TextComponent(new_text)]
+        self._components = [self._basic_factory.create_text_component(new_text)]
         self.notify()
 
     def get_text(self) -> str:
@@ -82,7 +83,8 @@ class Document(IDocument):
                   data: dict) -> 'Document':
         from ...factories.user_factory import users
 
-        self._components = [TextComponent(component['text']) for component in data['components']]
+        self._components = [self._basic_factory.create_text_component(component['text'])
+                            for component in data['components']]
         self._users = {}
 
         for user_data in data['users']:

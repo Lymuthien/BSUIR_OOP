@@ -2,7 +2,6 @@ import pypandoc
 
 from .document import Document
 from .md_document import MarkdownDocument
-from ..text_component import TextComponent
 
 
 class RichTextDocument(Document):
@@ -21,17 +20,14 @@ class MdToRichTextAdapter(RichTextDocument):
                  md_document: MarkdownDocument = MarkdownDocument()):
         super().__init__()
         self.__md_document = md_document
-        self._components = [TextComponent(self._convert_md_to_rich(md_document.get_text()))]
+        self._components = [
+            self._basic_factory.create_text_component(self._convert_md_to_rich(md_document.get_text()))
+        ]
         self._users = self.__md_document.users()
 
     @staticmethod
     def _convert_md_to_rich(text: str) -> str:
         rtf_text = pypandoc.convert_text(text, 'rtf', 'md')
-
-        if '{' not in rtf_text:
-            rtf_text = r'{\rtf1}'
-        else:
-            rtf_text = rtf_text[:1] + r'\rtf1 ' + rtf_text[1:]
 
         return rtf_text
 
@@ -46,7 +42,9 @@ class RichTextToMdAdapter(MarkdownDocument):
     def __init__(self, rich_text_document: RichTextDocument | None = None):
         super().__init__()
         if rich_text_document is not None:
-            self._components = [TextComponent(self._convert_rich_to_md(rich_text_document.get_text()))]
+            self._components = [
+                self._basic_factory.create_text_component(self._convert_rich_to_md(rich_text_document.get_text()))
+            ]
             self._users = rich_text_document.users()
 
     @staticmethod

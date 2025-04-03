@@ -112,10 +112,10 @@ class Editor(object):
             raise PermissionError('User cant change document settings')
 
         try:
-            user_class = users[role]
+            user_class = users[role.lower()]
             self.__doc.set_role(user_class.create_user(name))
         except Exception as e:
-            raise print(e)
+            raise print(str(e))
 
     def undo(self):
         try:
@@ -169,8 +169,6 @@ class Editor(object):
         if self._is_user_can_edit_settings():
             self.__file_manager.delete(filename)
         self.close_document()
-
-    # надо сделать так, чтобы удалять мог админ, и получать как то путь к файлу
 
     def read_only(self) -> bool:
         return not self._is_user_can_edit_text()

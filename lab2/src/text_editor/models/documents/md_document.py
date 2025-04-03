@@ -1,27 +1,31 @@
 from strip_markdown import strip_markdown
 
 from .document import Document
-from ..text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent, \
-    TextDecorator
 from ..theme import Theme
+from ...factories.text_component_factory import text_components, BoldTextComponentFactory, ItalicTextComponentFactory, \
+    TextComponentFactory, StrikethroughTextComponentFactory
 
 
 class MarkdownDocument(Document):
     def __init__(self):
         super().__init__()
-        self._components.append(TextComponent(''))
+        self._style_factory: TextComponentFactory = BoldTextComponentFactory()
+        self._components.append(self._basic_factory.create_text_component())
 
     def _apply_style(self,
                      start: int,
                      end: int,
-                     text_decorator: type[TextDecorator]):
+                     factory: type[TextComponentFactory]):
+        self._style_factory = factory()
 
         text = self.get_text()
-        before = TextComponent(text[:start]) if start > 0 else None
-        bold_part = text_decorator(TextComponent(text[start:end + 1]))
-        after = TextComponent(text[end + 1:]) if end + 1 < len(text) else None
+        before = self._basic_factory.create_text_component(text[:start]) if start > 0 else None
+        style_part = self._style_factory.create_text_component(
+            self._basic_factory.create_text_component(text[start:end + 1])
+        )
+        after = self._basic_factory.create_text_component(text[end + 1:]) if end + 1 < len(text) else None
 
-        self._components = [component for component in (before, bold_part, after) if component]
+        self._components = [component for component in (before, style_part, after) if component is not None]
         self.notify()
 
     def set_theme(self,
@@ -31,37 +35,39 @@ class MarkdownDocument(Document):
         font = '#' * theme.font_size
         self._clear_from_style()
 
-        new_text = TextComponent(self.get_text())
+        new_text = self._basic_factory.create_text_component(self.get_text())
         if theme.bold:
-            new_text = BoldTextComponent(new_text)
+            self._style_factory = BoldTextComponentFactory()
+            new_text = self._style_factory.create_text_component(new_text)
         if theme.italic:
-            new_text = ItalicTextComponent(new_text)
+            self._style_factory = ItalicTextComponentFactory()
+            new_text = self._style_factory.create_text_component(new_text)
 
-        self._components = [TextComponent(font + ' ' + new_text.get_text().replace('\n', '\n' + font + ' '))]
+        self._components = [self._basic_factory.create_text_component(
+            font + ' ' + new_text.get_text().replace('\n', '\n' + font + ' ')), ]
         self.notify()
 
     def _clear_from_style(self):
         text_without_style = strip_markdown(self.get_text())
-        self._components = [TextComponent(text_without_style)]
+        self._components = [self._basic_factory.create_text_component(text_without_style)]
 
     def apply_bold(self,
                    start: int,
                    end: int) -> None:
-        self._apply_style(start, end, BoldTextComponent)
+        self._apply_style(start, end, BoldTextComponentFactory)
 
     def apply_italic(self,
                      start: int,
                      end: int) -> None:
-        self._apply_style(start, end, ItalicTextComponent)
+        self._apply_style(start, end, ItalicTextComponentFactory)
 
     def apply_strikethrough(self,
                             start: int,
                             end: int) -> None:
-        self._apply_style(start, end, StrikethroughTextComponent)
+        self._apply_style(start, end, StrikethroughTextComponentFactory)
 
     def from_dict(self,
                   data: dict) -> 'MarkdownDocument':
-        from ...factories.text_component_factory import text_components
 
         super().from_dict(data)
 

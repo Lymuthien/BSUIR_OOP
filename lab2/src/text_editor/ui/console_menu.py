@@ -1,8 +1,8 @@
 import os
 import time
 
-from text_editor.services.editor import Editor
-from text_editor.interfaces import IFileManager
+from ..services.editor import Editor
+from ..interfaces import IFileManager
 
 
 class ConsoleMenu(object):

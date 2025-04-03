@@ -25,9 +25,9 @@ class TextComponent(ITextComponent):
 
 class TextDecorator(ITextComponent):
     def __init__(self,
-                 text_component: TextComponent):
+                 text_component: ITextComponent):
         super().__init__()
-        self._text_component: TextComponent = text_component
+        self._text_component: ITextComponent = text_component
 
     @staticmethod
     def _can_decorate(text: str) -> bool:
@@ -52,7 +52,7 @@ class TextDecorator(ITextComponent):
 
 class BoldTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent()):
+                 text_component: ITextComponent = TextComponent()):
         super().__init__(text_component)
 
     def get_text(self) -> str:
@@ -65,7 +65,7 @@ class BoldTextComponent(TextDecorator):
 
 class ItalicTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent()):
+                 text_component: ITextComponent = TextComponent()):
         super().__init__(text_component)
 
     def get_text(self) -> str:
@@ -78,7 +78,7 @@ class ItalicTextComponent(TextDecorator):
 
 class StrikethroughTextComponent(TextDecorator):
     def __init__(self,
-                 text_component: TextComponent = TextComponent()):
+                 text_component: ITextComponent = TextComponent()):
         super().__init__(text_component)
 
     def get_text(self) -> str:

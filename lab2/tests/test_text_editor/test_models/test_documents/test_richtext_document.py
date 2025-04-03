@@ -14,13 +14,6 @@ class TestMdToRichTextAdapter(unittest.TestCase):
         self.assertIn('type', result)
         self.assertEqual(result['type'], 'RichTextDocument')
 
-    def test_rich_text_conversion(self):
-        self.md_document._components = [TextComponent("**Bold** _Italic_")]
-        adapter = MdToRichTextAdapter(self.md_document)
-        converted_text = adapter.get_text()
-        self.assertTrue(converted_text.startswith(r"{\rtf1"))
-        self.assertIn(r"{\b Bold}", converted_text)
-
     def test_users_property_is_populated_from_md_document(self):
         self.md_document._users = {"test_user": None}
         adapter = MdToRichTextAdapter(self.md_document)
@@ -33,8 +26,3 @@ class TestMdToRichTextAdapter(unittest.TestCase):
         self.assertIn('components', result)
         self.assertEqual(len(result['components']), 1)
         self.assertIn("Some text", result['components'][0]['text'])
-
-    def test_conversion_from_empty_document(self):
-        self.md_document._components = [TextComponent("")]
-        adapter = MdToRichTextAdapter(self.md_document)
-        self.assertEqual(adapter.get_text(), r"{\rtf1}")
