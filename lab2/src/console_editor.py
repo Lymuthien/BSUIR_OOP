@@ -1,5 +1,4 @@
 import os
-import time
 
 import pyperclip
 from prompt_toolkit import Application
@@ -146,7 +145,6 @@ class ConsoleEditor(object):
         def save(event):
             event.app.exit()
             self._console_menu.save_menu()
-            time.sleep(1)
 
     def _on_text_changed(self, new_text: str, cursor_position: int):
         old_text = self.__editor.get_text()

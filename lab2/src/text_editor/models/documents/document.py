@@ -87,6 +87,8 @@ class Document(IDocument):
                             for component in data['components']]
         self._users = {}
 
+        if isinstance(data['users'][0], list):
+            data['users'] = data['users'][0]
         for user_data in data['users']:
             type_name = user_data['type'].lower()
             user = users[type_name].create_user().from_dict(user_data)

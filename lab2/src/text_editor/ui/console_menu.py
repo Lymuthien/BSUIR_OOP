@@ -63,7 +63,7 @@ class ConsoleMenu(object):
             self._editor.set_file_manager(self._savers[cmd])
             self._editor.open_document(input('Enter filepath (ex. data\doc.txt): '))
         except Exception as e:
-            print(e)
+            raise
             time.sleep(1.5)
 
     def register_menu(self):
