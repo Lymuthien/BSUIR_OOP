@@ -62,8 +62,7 @@ If you exit from document, you cant restore history.
 
 ### User Roles & Permissions
 While working with document:
-- ctrl+l - Enter admin password to manage document settings.
-- ctrl+r - Do/undo **read-only** document option. Only admin can manage.
+- ctrl+r - Give role. Only admin can manage.
 
 Notifying dont work if document is changed not from program but from storage.
 

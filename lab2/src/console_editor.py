@@ -17,20 +17,29 @@ from text_editor.ui.console_menu import ConsoleMenu
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(serializers={'xml': DocumentToXmlSerializerAdapter(),
-                                            'json': DocumentToJsonSerializerAdapter(), })
+        self.__editor = Editor(
+            serializers={
+                'xml': DocumentToXmlSerializerAdapter(),
+                'json': DocumentToJsonSerializerAdapter(),
+            })
 
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
-        self._console_menu = ConsoleMenu({'local': LocalFileManager(),
-                                          'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')},
-                                         self.__editor)
+        self._console_menu = ConsoleMenu(
+            savers={
+                'local': LocalFileManager(),
+                'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')
+            },
+            editor=self.__editor)
 
         font_sizes = map(str, self.__editor.settings.font_sizes)
         colors = ('red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white')
+
         self.__styles = Style([*zip(font_sizes, colors)])
+
         self.__kb = KeyBindings()
         self._set_key_bindings(self.__kb)
+
         self._app: Application | None = None
 
     def _update_buffers(self) -> None:
@@ -72,7 +81,7 @@ class ConsoleEditor(object):
             self.__editor.undo()
             self._update_buffers()
 
-        @kb.add('c-w')
+        @kb.add('c-r')
         def set_role(event):
             event.app.exit()
             self._console_menu.set_role_menu()
@@ -156,16 +165,22 @@ class ConsoleEditor(object):
 
     def _run_editor_space(self):
         self.buffer = buffer = Buffer(
-            on_text_changed=lambda buff: self._on_text_changed(buff.text, buffer.cursor_position))
+            on_text_changed=lambda buff: self._on_text_changed(buff.text, buffer.cursor_position)
+        )
         buffer.text = self.__editor.get_text()
         buffer.read_only = self.__editor.read_only
 
         self.notification_buffer = Buffer()
         self.notification_buffer.text = self.__editor.user_message()
 
-        notification_window = Window(content=BufferControl(buffer=self.notification_buffer), height=5)
-        window = Window(content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}',
-                        height=45)
+        notification_window = Window(
+            content=BufferControl(buffer=self.notification_buffer), height=5,
+            style=f'class:{self.__editor.settings.font_size}'
+        )
+        window = Window(
+            content=BufferControl(buffer=buffer), style=f'class:{self.__editor.settings.font_size}',
+            height=45
+        )
 
         self.layout = Layout(HSplit([window, notification_window]))
         self._app = Application(layout=self.layout, key_bindings=self.__kb, full_screen=True, style=self.__styles)
@@ -174,7 +189,6 @@ class ConsoleEditor(object):
 
     def run(self):
         self._console_menu.main_menu(self._run_editor_space, self._height, self._width)
-
 
 
 if __name__ == '__main__':
