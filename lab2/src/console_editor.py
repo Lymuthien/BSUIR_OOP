@@ -16,7 +16,7 @@ from text_editor.ui.console_menu import ConsoleMenu
 
 class ConsoleEditor(object):
     def __init__(self):
-        self.__editor = Editor(
+        self.__editor: Editor = Editor(
             serializers={
                 'xml': DocumentToXmlSerializerAdapter(),
                 'json': DocumentToJsonSerializerAdapter(),
@@ -24,7 +24,7 @@ class ConsoleEditor(object):
 
         self._width = os.get_terminal_size().columns
         self._height = os.get_terminal_size().lines
-        self._console_menu = ConsoleMenu(
+        self._console_menu: ConsoleMenu = ConsoleMenu(
             savers={
                 'local': LocalFileManager(),
                 'cloud': GoogleDriveFileManager('manifest-bit-454816-m5-fd109a3c8c1f.json')

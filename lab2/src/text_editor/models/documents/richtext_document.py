@@ -49,7 +49,7 @@ class RichTextToMdAdapter(MarkdownDocument):
 
     @staticmethod
     def _convert_rich_to_md(rich_text: str) -> str:
-        return pypandoc.convert_text(rich_text, 'md', 'rtf')
+        return pypandoc.convert_text(rich_text, 'md', 'rtf').replace('\r', '')
 
     def to_dict(self) -> dict:
         dict_ = super().to_dict()

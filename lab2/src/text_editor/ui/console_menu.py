@@ -6,8 +6,8 @@ from ..services.editor import Editor
 
 class ConsoleMenu(object):
     def __init__(self, savers: dict[str, IFileManager], editor: Editor):
-        self._savers = savers
-        self._editor = editor
+        self._savers: dict[str, IFileManager] = savers
+        self._editor: Editor = editor
 
     def save_menu(self) -> None:
         menu = ['Docs: md, txt, rtf',
