@@ -1,3 +1,5 @@
+import re
+
 from strip_markdown import strip_markdown
 
 from .document import Document
@@ -44,11 +46,12 @@ class MarkdownDocument(Document):
             new_text = self._style_factory.create_text_component(new_text)
 
         self._components = [self._basic_factory.create_text_component(
-            font + ' ' + new_text.get_text().replace('\n', '\n' + font + ' ')), ]
+            font + ' ' + new_text.get_text().replace('\n', '\n\n' + font + ' ')), ]
         self.notify()
 
     def _clear_from_style(self):
         text_without_style = strip_markdown(self.get_text())
+        text_without_style = re.sub(r'~~(.+?)~~', r'\1', text_without_style)
         self._components = [self._basic_factory.create_text_component(text_without_style)]
 
     def apply_bold(self,

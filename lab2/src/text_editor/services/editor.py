@@ -10,9 +10,7 @@ from ..models import ChangeStyleCommand, WriteCommand, EraseCommand, ChangeTheme
 class Editor(object):
     def __init__(self, serializers: dict[str, ISerializer]):
         self.__users: list[str] = []
-        self.__themes: list[Theme] = [Theme(1, italic=True, bold=True), Theme(2, bold=True),
-                                      Theme(3, italic=True), Theme(4, bold=True),
-                                      Theme(5, italic=True, bold=True), ]
+        self.__themes: list[Theme] = [Theme(1), Theme(2), Theme(3), Theme(4), Theme(5), ]
         self.__serializers: dict[str, ISerializer] = serializers
         self.__settings: EditorSettings = EditorSettings()
         self.__doc: MarkdownDocument | None = None

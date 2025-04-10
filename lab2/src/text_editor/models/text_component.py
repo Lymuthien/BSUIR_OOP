@@ -30,9 +30,7 @@ class TextDecorator(ITextComponent):
         self._text_component: ITextComponent = text_component
 
     def _can_decorate(self, text: str) -> bool:
-        if text and text.count('*') != len(text):
-            return True
-        return False
+        return True if (text and text.count('*') != len(text)) else False
 
     @abstractmethod
     def get_text(self) -> str: ...
@@ -84,9 +82,7 @@ class ItalicTextComponent(TextDecorator):
         if super()._can_decorate(text):
             if len(text) >= 5 and text[:3] == '***' and text[-3:] == '***':
                 return False
-            if len(text) >= 2 and text[:1] == '*' and text[-1:] == '*':
-                return False
-            else:
+            if not (len(text) >= 2 and text[:1] == '*' and text[-1:] == '*'):
                 return True
         return False
 
@@ -102,3 +98,9 @@ class StrikethroughTextComponent(TextDecorator):
         else paragraph, text.split('\n')))
 
         return formatted_text
+
+    def _can_decorate(self, text: str) -> bool:
+        if text and text.count('~') != len(text):
+            if not (len(text) >= 2 and text[:1] == '~' and text[-1:] == '~'):
+                return True
+        return False

@@ -26,7 +26,7 @@ class ItalicTextComponentFactory(TextComponentFactory):
 
 class StrikethroughTextComponentFactory(TextComponentFactory):
     def create_text_component(self, data: ITextComponent = None) -> ITextComponent:
-        return StrikethroughTextComponent() if data else StrikethroughTextComponent()
+        return StrikethroughTextComponent(data) if data else StrikethroughTextComponent()
 
 
 text_components: dict[str, TextComponentFactory] = {
