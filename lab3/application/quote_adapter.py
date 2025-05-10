@@ -1,9 +1,14 @@
+from abc import ABC, abstractmethod
 import requests
-from ..application.dto import QuoteFactory
-from ..domain.abstractions import IQuoteGateway
+from .dto import QuoteFactory
 
 
-class QuoteApiAdapter(IQuoteGateway):
+class IQuoteService(ABC):
+    @abstractmethod
+    def get_random_quote(self): ...
+
+
+class QuoteApiAdapter(IQuoteService):
     def __init__(self):
         self.url = "https://api.quotable.io/random"
 

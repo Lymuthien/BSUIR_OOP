@@ -1,13 +1,12 @@
+from ..dto import StudentDTO
 from ..student_service import StudentService
-from lab3.domain.abstractions.iquote_gateway import IQuoteGateway
+from .icommand import ICommand
 
 
-class AddStudentCommand(object):
-    def __init__(self, student_service: StudentService, quote_adapter: IQuoteGateway):
+class AddStudentCommand(ICommand):
+    def __init__(self, student_service: StudentService, student_dto: StudentDTO):
         self.student_service = student_service
-        self.quote_adapter = quote_adapter
+        self.student_dto = student_dto
 
-    def execute(self, student_dto):
-        self.student_service.add_student(student_dto)
-        quote = self.quote_adapter.get_random_quote()
-        return quote
+    def execute(self):
+        self.student_service.add_student(self.student_dto)

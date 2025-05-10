@@ -13,9 +13,8 @@ class StudentService(object):
         student = self.factory.create_student(student_dto.name, student_dto.grade)
         self.repository.add(student)
 
-    def update_student(self, student_id: int, student_dto: StudentDTO):
+    def update_student(self, student_dto: StudentDTO):
         student = self.mapper.from_dto(student_dto)
-        student.id = student_id
         self.repository.update(student)
 
     def get_all_students(self):

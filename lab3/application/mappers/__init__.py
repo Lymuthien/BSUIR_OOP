@@ -1,4 +1,4 @@
 from .student_mapper import *
 
 
-__all__ = ['StudentMapper']
+__all__ = ["StudentMapper"]

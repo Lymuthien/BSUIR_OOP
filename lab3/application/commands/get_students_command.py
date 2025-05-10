@@ -1,7 +1,8 @@
+from lab3.application.commands import ICommand
 from lab3.application.student_service import StudentService
 
 
-class ViewStudentCommand:
+class GetStudentsCommand(ICommand):
     def __init__(self, student_service: StudentService):
         self.student_service = student_service
 

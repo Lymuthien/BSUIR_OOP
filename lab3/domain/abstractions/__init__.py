@@ -3,4 +3,4 @@ from .istudent import *
 from .istudent_repository import *
 
 
-__all__ = ['IStudent', 'IQuoteGateway', 'IStudentRepository']
+__all__ = ["IStudent", "IQuoteGateway", "IStudentRepository"]
