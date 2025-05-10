@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from ..entity import Entity
+from .entity import Entity
 from typing import TypeVar, Generic
 
 T = TypeVar('T', bound=Entity)
+
 
 class IRepository(Generic[T], ABC):
     @abstractmethod
