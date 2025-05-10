@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .student import IStudent
+from .istudent import IStudent
 
 
 class IStudentRepository(ABC):

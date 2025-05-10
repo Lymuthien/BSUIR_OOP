@@ -1,4 +1,5 @@
-from .student import Student, IStudent
+from .student import Student
+from .abstractions import IStudent
 from abc import ABC, abstractmethod
 
 
