@@ -1,3 +1,4 @@
+from application import StudentService
 from application.commands import (
     AddStudentCommand,
     GetStudentsCommand,
@@ -5,7 +6,6 @@ from application.commands import (
     GetStudentByIdCommand,
 )
 from application.dto import StudentDTO
-from application import StudentService
 from application.quote_adapter import IQuoteService
 
 

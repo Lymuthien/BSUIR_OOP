@@ -12,14 +12,16 @@ class IQuoteService(ABC):
 
 class QuoteApiAdapter(IQuoteService):
     def __init__(self):
-        self.url = "https://api.quotable.io/random"
+        self.url = (
+            "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en"
+        )
 
     def get_random_quote(self):
         try:
             response = requests.get(self.url)
             if response.status_code == 200:
                 data = response.json()
-                return QuoteFactory.create_quote(data["content"], data["author"])
+                return QuoteFactory.create_quote(data["quoteText"], data["quoteAuthor"])
             else:
                 return QuoteFactory.create_quote("No quote available", "Unknown")
         except Exception:
