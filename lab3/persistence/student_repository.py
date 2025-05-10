@@ -1,10 +1,10 @@
 import copy
 import json
 import os
-from ..domain import Student, IRepository
+from ..domain import Student, IStudentRepository
 
 
-class StudentRepository(IRepository):
+class StudentRepository(IStudentRepository):
     def __init__(self, file_path="students.json"):
         self.file_path = file_path
         self.students: list[Student] = []

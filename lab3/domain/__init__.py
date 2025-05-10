@@ -1,6 +1,5 @@
 from .student import *
-from .irepository import *
+from .istudentrepository import *
 from .student_factory import *
-from .entity import *
 
-__all__ = ['Student', 'IRepository', 'Entity', 'StudentFactory', 'IStudentFactory', 'IStudent']
+__all__ = ['Student', 'IStudentRepository', 'StudentFactory', 'IStudentFactory', 'IStudent']

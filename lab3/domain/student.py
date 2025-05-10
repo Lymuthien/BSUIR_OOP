@@ -1,17 +1,51 @@
-from .entity import Entity
+from abc import ABC, abstractmethod
 
 
-class IStudent(Entity):
-    pass
+class IStudent(ABC):
+    @property
+    @abstractmethod
+    def name(self) -> str: ...
+
+    @property
+    @abstractmethod
+    def grade(self) -> int: ...
+
+    @property
+    @abstractmethod
+    def id(self) -> int: ...
 
 
 class Student(IStudent):
-    def __init__(self, id_, name: str, grade: int):
-        self.validate_name(name)
-        self.validate_grade(grade)
+    def __init__(self, id_: int, name: str, grade: int):
         self.name = name
         self.grade = grade
-        super().__init__(id_)
+        self.id = id_
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
+        self.validate_name(name)
+        self._name = name
+
+    @property
+    def grade(self) -> int:
+        return self._grade
+
+    @grade.setter
+    def grade(self, grade: int):
+        self.validate_grade(grade)
+        self._grade = grade
+
+    @property
+    def id(self) -> int:
+        return self.id
+
+    @id.setter
+    def id(self, id_: int):
+        self._id = id_
 
     @staticmethod
     def validate_name(name: str):

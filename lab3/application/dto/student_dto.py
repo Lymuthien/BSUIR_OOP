@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class StudentDTO:
-    id: int
     name: str
     grade: int
+    id_: int = None
 
     def __post_init__(self):
         self.validate_grade()
