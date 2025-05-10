@@ -10,3 +10,10 @@ class Student(IStudent):
         self.name = name
         self.grade = grade
         super().__init__(id_)
+
+    def to_dict(self):
+        return {"id": self.id, "name": self.name, "grade": self.grade}
+
+    @staticmethod
+    def from_dict(data):
+        return Student(data["id"], data["name"], data["grade"])
