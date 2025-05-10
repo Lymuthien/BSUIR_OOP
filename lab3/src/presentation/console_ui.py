@@ -47,10 +47,10 @@ class ConsoleUI(object):
             grade_str = input("Enter grade: ").strip()
             try:
                 grade = int(grade_str)
-                if 1 <= grade <= 10:
+                if 0 <= grade <= 10:
                     break
                 else:
-                    print("Grade must be between 1 and 10")
+                    print("Grade must be between 0 and 10")
             except ValueError:
                 print("Invalid grade")
 
@@ -96,10 +96,10 @@ class ConsoleUI(object):
                 if grade_str:
                     try:
                         grade = int(grade_str)
-                        if 0 < grade <= 10:
+                        if 0 <= grade <= 10:
                             break
                         else:
-                            print("Grade must be between 1 and 10")
+                            print("Grade must be between 0 and 10")
                     except ValueError:
                         print("Invalid grade")
                 else:

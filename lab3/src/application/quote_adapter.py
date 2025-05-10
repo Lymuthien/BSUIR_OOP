@@ -12,13 +12,13 @@ class IQuoteService(ABC):
 
 class QuoteApiAdapter(IQuoteService):
     def __init__(self):
-        self.url = (
+        self._url = (
             "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en"
         )
 
     def get_random_quote(self):
         try:
-            response = requests.get(self.url)
+            response = requests.get(self._url)
             if response.status_code == 200:
                 data = response.json()
                 return QuoteFactory.create_quote(data["quoteText"], data["quoteAuthor"])
