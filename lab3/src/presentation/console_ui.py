@@ -1,12 +1,14 @@
-from application import StudentService
-from application.commands import (
+import os
+
+from ..application import StudentService
+from ..application.commands import (
     AddStudentCommand,
     GetStudentsCommand,
     UpdateStudentCommand,
     GetStudentByIdCommand,
 )
-from application.dto import StudentDTO
-from application.quote_adapter import IQuoteService
+from ..application.dto import StudentDTO
+from ..application.quote_adapter import IQuoteService
 
 
 class ConsoleUI(object):
@@ -25,6 +27,7 @@ class ConsoleUI(object):
             print("\nCommands: add, view, edit, exit")
             command = input("Enter command: ").strip().lower()
             if command in self.commands:
+                os.system("cls")
                 self.commands[command]()
             else:
                 print("Invalid command")

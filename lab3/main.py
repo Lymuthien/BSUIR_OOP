@@ -1,7 +1,7 @@
-from persistence import StudentRepository
-from application import StudentService
-from application import QuoteApiAdapter
-from presentation.console_ui import ConsoleUI
+from src.persistence import StudentRepository
+from src.application import StudentService
+from src.application import QuoteApiAdapter
+from src.presentation.console_ui import ConsoleUI
 
 
 def main():

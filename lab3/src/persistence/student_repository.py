@@ -1,7 +1,7 @@
 import copy
 import json
 import os
-from domain import Student, IStudentRepository
+from ..domain import Student, IStudentRepository
 
 
 class StudentRepository(IStudentRepository):

@@ -1,5 +1,5 @@
-from application.commands import ICommand
-from application.student_service import StudentService
+from .icommand import ICommand
+from ..student_service import StudentService
 
 
 class GetStudentsCommand(ICommand):

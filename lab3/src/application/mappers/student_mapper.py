@@ -1,5 +1,5 @@
 from ..dto.student_dto import StudentDTO
-from domain.student import Student, IStudent
+from ...domain.student import Student, IStudent
 
 
 class StudentMapper(object):
