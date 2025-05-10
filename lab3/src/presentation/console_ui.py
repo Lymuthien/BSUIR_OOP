@@ -6,16 +6,21 @@ from ..application.commands import (
     GetStudentsCommand,
     UpdateStudentCommand,
     GetStudentByIdCommand,
+    ICommand,
 )
 from ..application.dto import StudentDTO
 from ..application.quote_adapter import IQuoteService
 
 
 class ConsoleUI(object):
-    def __init__(self, student_service: StudentService, quote_adapter: IQuoteService):
+    def __init__(
+        self,
+        student_service: StudentService,
+        quote_adapter: IQuoteService,
+    ):
         self.student_service = student_service
         self.quote_adapter = quote_adapter
-        self.commands = {
+        self.input_commands = {
             "add": self.add_student,
             "view": self.view_students,
             "edit": self.edit_student,
@@ -26,9 +31,9 @@ class ConsoleUI(object):
         while True:
             print("\nCommands: add, view, edit, exit")
             command = input("Enter command: ").strip().lower()
-            if command in self.commands:
+            if command in self.input_commands:
                 os.system("cls")
-                self.commands[command]()
+                self.input_commands[command]()
             else:
                 print("Invalid command")
 
@@ -50,7 +55,7 @@ class ConsoleUI(object):
                 print("Invalid grade")
 
         student_dto = StudentDTO(name, grade)
-        AddStudentCommand(self.student_service, student_dto).execute()
+        self.execute_command(AddStudentCommand(self.student_service, student_dto))
         quote = self.quote_adapter.get_random_quote()
         print(
             f"\nStudent added. Here's a motivational quote:\n{quote.content} - {quote.author}"
@@ -58,12 +63,12 @@ class ConsoleUI(object):
 
     def view_students(self):
         view_command = GetStudentsCommand(self.student_service)
-        students = view_command.execute()
+        students = self.execute_command(view_command)
         if students:
-            for student in students:
-                print(
-                    f"ID: {student.id_}, Name: {student.name}, Grade: {student.grade}"
-                )
+            print(
+                f"ID: {student.id_}, Name: {student.name}, Grade: {student.grade}"
+                for student in students
+            )
         else:
             print("No students found")
 
@@ -76,7 +81,8 @@ class ConsoleUI(object):
             except ValueError:
                 print("Invalid ID")
 
-        student = GetStudentByIdCommand(self.student_service, student_id).execute()
+        get_command = GetStudentByIdCommand(self.student_service, student_id)
+        student = self.execute_command(get_command)
         if student:
             print(f"Current name: {student.name}, Current grade: {student.grade}")
             name = input("Enter new name (or press enter to keep current): ").strip()
@@ -101,10 +107,16 @@ class ConsoleUI(object):
                     break
 
             new_student_dto = StudentDTO(name, grade, student_id)
-            UpdateStudentCommand(self.student_service, new_student_dto).execute()
+            self.execute_command(
+                UpdateStudentCommand(self.student_service, new_student_dto)
+            )
             print("Student updated")
         else:
             print("Student not found")
+
+    @staticmethod
+    def execute_command(command: ICommand):
+        return command.execute()
 
     @staticmethod
     def exit():
