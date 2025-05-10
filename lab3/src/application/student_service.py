@@ -1,6 +1,6 @@
 from .dto.student_dto import StudentDTO
 from .mappers import StudentMapper
-from ..domain import StudentFactory, IStudentRepository, IStudentFactory
+from domain import StudentFactory, IStudentRepository, IStudentFactory
 
 
 class StudentService(object):

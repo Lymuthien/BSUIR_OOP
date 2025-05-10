@@ -1,16 +1,16 @@
-from ..application.commands import (
+from application.commands import (
     AddStudentCommand,
     GetStudentsCommand,
     UpdateStudentCommand,
     GetStudentByIdCommand,
 )
-from ..application.dto import StudentDTO
-from ..application.student_service import StudentService
-from ..domain.abstractions import IQuoteGateway
+from application.dto import StudentDTO
+from application import StudentService
+from application.quote_adapter import IQuoteService
 
 
 class ConsoleUI(object):
-    def __init__(self, student_service: StudentService, quote_adapter: IQuoteGateway):
+    def __init__(self, student_service: StudentService, quote_adapter: IQuoteService):
         self.student_service = student_service
         self.quote_adapter = quote_adapter
         self.commands = {
@@ -58,7 +58,9 @@ class ConsoleUI(object):
         students = view_command.execute()
         if students:
             for student in students:
-                print(f"ID: {student.id}, Name: {student.name}, Grade: {student.grade}")
+                print(
+                    f"ID: {student.id_}, Name: {student.name}, Grade: {student.grade}"
+                )
         else:
             print("No students found")
 
@@ -103,5 +105,4 @@ class ConsoleUI(object):
 
     @staticmethod
     def exit():
-        print("Exiting...")
         exit()

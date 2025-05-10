@@ -1,5 +1,5 @@
 from .student import *
-from lab3.domain.abstractions.istudent_repository import *
+from .abstractions import *
 from .student_factory import *
 
 __all__ = [

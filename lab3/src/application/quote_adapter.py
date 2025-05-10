@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 import requests
+
 from .dto import QuoteFactory
 
 

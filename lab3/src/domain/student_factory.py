@@ -1,6 +1,7 @@
-from .student import Student
-from .abstractions import IStudent
 from abc import ABC, abstractmethod
+
+from .abstractions import IStudent
+from .student import Student
 
 
 class IStudentFactory(ABC):

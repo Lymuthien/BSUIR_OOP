@@ -1,5 +1,5 @@
-from lab3.application.dto.student_dto import StudentDTO
-from lab3.domain.student import Student, IStudent
+from ..dto.student_dto import StudentDTO
+from domain.student import Student, IStudent
 
 
 class StudentMapper(object):

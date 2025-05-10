@@ -1,5 +1,5 @@
-from lab3.application.commands import ICommand
-from lab3.application.student_service import StudentService
+from application.commands import ICommand
+from application.student_service import StudentService
 
 
 class GetStudentsCommand(ICommand):

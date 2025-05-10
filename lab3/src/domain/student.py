@@ -27,7 +27,7 @@ class Student(IStudent):
 
     @property
     def id(self) -> int:
-        return self.id
+        return self._id
 
     @id.setter
     def id(self, id_: int):
