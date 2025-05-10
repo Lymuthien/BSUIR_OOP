@@ -65,10 +65,10 @@ class ConsoleUI(object):
         view_command = GetStudentsCommand(self.student_service)
         students = self.execute_command(view_command)
         if students:
-            print(
-                f"ID: {student.id_}, Name: {student.name}, Grade: {student.grade}"
-                for student in students
-            )
+            for student in students:
+                print(
+                    f"ID: {student.id_}, Name: {student.name}, Grade: {student.grade}"
+                )
         else:
             print("No students found")
 
