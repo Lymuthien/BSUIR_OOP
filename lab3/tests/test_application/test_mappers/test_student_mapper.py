@@ -1,7 +1,7 @@
 import unittest
-from src.domain.student import Student
-from src.application.dto.student_dto import StudentDTO
-from src.application.mappers.student_mapper import (
+from lab3.src.domain.student import Student
+from lab3.src.application.dto.student_dto import StudentDTO
+from lab3.src.application.mappers.student_mapper import (
     StudentMapper,
 )
 

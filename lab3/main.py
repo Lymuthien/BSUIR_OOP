@@ -1,6 +1,5 @@
-from src.persistence import StudentRepository
+from src.infrastructure import StudentRepository, QuoteApiAdapter
 from src.application import StudentService
-from src.application import QuoteApiAdapter
 from src.presentation.console_ui import ConsoleUI
 
 
