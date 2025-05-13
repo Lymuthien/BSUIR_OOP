@@ -1,6 +1,6 @@
 import unittest
 
-from src.application.quote_adapter import QuoteApiAdapter
+from src.infrastructure.quote_adapter import QuoteApiAdapter
 
 
 class TestQuoteAdapter(unittest.TestCase):

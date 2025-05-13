@@ -1,13 +1,7 @@
-from abc import ABC, abstractmethod
-
 import requests
 
-from .dto import QuoteFactory
-
-
-class IQuoteService(ABC):
-    @abstractmethod
-    def get_random_quote(self): ...
+from ..application.dto import QuoteFactory
+from ..domain.abstractions import IQuoteService
 
 
 class QuoteApiAdapter(IQuoteService):
