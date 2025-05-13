@@ -57,9 +57,7 @@ class ConsoleUI(object):
         student_dto = StudentDTO(name, grade)
         self.execute_command(AddStudentCommand(self.student_service, student_dto))
         quote = self.quote_adapter.get_random_quote()
-        print(
-            f"\nStudent added. Here's a motivational quote:\n{quote.content} - {quote.author}"
-        )
+        print(f"\nStudent added. Here's a quote:\n{quote.content} - {quote.author}")
 
     def view_students(self):
         view_command = GetStudentsCommand(self.student_service)
