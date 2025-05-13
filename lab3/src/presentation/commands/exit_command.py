@@ -1,4 +1,4 @@
-from presentation.commands.icommand import ICommand
+from .icommand import ICommand
 
 
 class ExitCommand(ICommand):

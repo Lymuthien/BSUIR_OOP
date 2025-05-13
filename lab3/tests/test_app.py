@@ -2,11 +2,9 @@ import os.path
 import unittest
 from unittest.mock import patch
 
-from src.application.commands import AddStudentCommand
-from src.application.quote_adapter import QuoteApiAdapter
-from src.application import StudentService
-from src.persistence import StudentRepository
-from src.application.dto import StudentDTO
+from lab3.src.application import StudentService
+from lab3.src.infrastructure import StudentRepository, QuoteApiAdapter
+from lab3.src.application.dto import StudentDTO
 
 
 class TestApp(unittest.TestCase):
@@ -23,9 +21,7 @@ class TestApp(unittest.TestCase):
         mock_save.return_value = None
 
         student_dto = StudentDTO(name="John Doe", grade=8)
-        command = AddStudentCommand(self.student_service, student_dto)
-
-        command.execute()
+        self.student_service.add_student(student_dto)
 
         students = self.repository.get_all()
         self.assertEqual(len(students), 1)

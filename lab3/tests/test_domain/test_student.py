@@ -1,5 +1,5 @@
 import unittest
-from src.domain.student import Student
+from lab3.src.domain.student import Student
 
 
 class TestStudent(unittest.TestCase):
