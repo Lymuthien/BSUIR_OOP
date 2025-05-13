@@ -10,4 +10,4 @@ quotes after adding a new student.
 
 ## Class diagram
 
-[uml_diagram.pdf](uml_diagram.pdf)
+![uml_diagram.pdf](uml_diagram.pdf)
