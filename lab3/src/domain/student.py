@@ -46,10 +46,3 @@ class Student(IStudent):
             raise ValueError("Student grade must be a integer")
         if grade < 0 or grade > 10:
             raise ValueError("Student grade must be between 0 and 10")
-
-    def to_dict(self):
-        return {"id": self.id, "name": self.name, "grade": self.grade}
-
-    @staticmethod
-    def from_dict(data):
-        return Student(data["id"], data["name"], data["grade"])

@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class StudentDTO:
     name: str
     grade: int
-    id_: int = None
+    id_: int | None = None

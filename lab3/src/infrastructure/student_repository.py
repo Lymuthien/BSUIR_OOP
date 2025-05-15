@@ -1,6 +1,10 @@
 import copy
 import json
 import os
+from dataclasses import asdict
+
+from ..application.dto import StudentDTO
+from ..application.mappers import StudentMapper
 from ..domain import Student, IStudentRepository
 
 
@@ -24,7 +28,9 @@ class StudentRepository(IStudentRepository):
         if os.path.exists(self._file_path):
             with open(self._file_path, "r") as f:
                 data = json.load(f)
-                self._students = [Student.from_dict(item) for item in data]
+                self._students = [
+                    StudentMapper.from_dto(StudentDTO(**item)) for item in data
+                ]
                 if self._students:
                     self._next_id = max(student.id for student in self._students) + 1
         else:
@@ -33,7 +39,9 @@ class StudentRepository(IStudentRepository):
 
     def save(self):
         with open(self._file_path, "w") as f:
-            data = json.dumps([student.to_dict() for student in self._students])
+            data = json.dumps(
+                [asdict(StudentMapper.to_dto(student)) for student in self._students]
+            )
             f.write(data)
 
     def add(self, student: Student):
