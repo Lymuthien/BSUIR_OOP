@@ -1,6 +1,10 @@
 import unittest
 
-from text_editor.factories.user_factory import EditorUserFactory, AdminUserFactory, ReaderUserFactory
+from text_editor.factories.user_factory import (
+    EditorUserFactory,
+    AdminUserFactory,
+    ReaderUserFactory,
+)
 from text_editor.models import EditorUser, Admin, ReaderUser
 
 
@@ -11,7 +15,7 @@ class TestEditorUserFactory(unittest.TestCase):
     def test_create_user_default_name(self):
         user = self.factory.create_user()
         self.assertIsInstance(user, EditorUser)
-        self.assertEqual(user.name, 'base')
+        self.assertEqual(user.name, "base")
 
     def test_create_user_with_name(self):
         user_name = "TestUser"
@@ -35,7 +39,7 @@ class TestAdminUserFactory(unittest.TestCase):
     def test_create_user_default_name(self):
         user = self.factory.create_user()
         self.assertIsInstance(user, Admin)
-        self.assertEqual(user.name, 'base')
+        self.assertEqual(user.name, "base")
 
     def test_create_user_with_name(self):
         user_name = "AdminTestUser"
@@ -59,7 +63,7 @@ class TestReaderUserFactory(unittest.TestCase):
     def test_create_user_default_name(self):
         user = self.factory.create_user()
         self.assertIsInstance(user, ReaderUser)
-        self.assertEqual(user.name, 'base')
+        self.assertEqual(user.name, "base")
 
     def test_create_user_with_name(self):
         user_name = "ReaderTestUser"

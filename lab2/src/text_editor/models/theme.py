@@ -1,8 +1,5 @@
 class Theme(object):
-    def __init__(self,
-                 font_size: int,
-                 italic: bool = False,
-                 bold: bool = False):
+    def __init__(self, font_size: int, italic: bool = False, bold: bool = False):
         self.__font_size = font_size
         self.__italic = italic
         self.__bold = bold

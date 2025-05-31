@@ -1,6 +1,12 @@
 from .commands import *
-from .history_manager import *
 from .file_manager import *
+from .history_manager import *
 
-__all__ = ['AddFigureCommand', 'MoveFigureCommand', 'RemoveFigureCommand', 'ChangeFigureBgCommand', 'HistoryManager',
-           'FileManager']
+__all__ = [
+    "AddFigureCommand",
+    "MoveFigureCommand",
+    "RemoveFigureCommand",
+    "ChangeFigureBgCommand",
+    "HistoryManager",
+    "FileManager",
+]

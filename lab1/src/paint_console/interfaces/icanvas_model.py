@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Generator
+
 from .ifigure import IDrawable, IInformative
 
 
@@ -32,7 +33,14 @@ class IFigureLayout(IInformative):
 
 class ICanvasModel(ABC):
     @abstractmethod
-    def add_figure(self, figure: IDrawable, x: float, y: float, layer: int = 0, figure_id: str = None) -> str:
+    def add_figure(
+        self,
+        figure: IDrawable,
+        x: float,
+        y: float,
+        layer: int = 0,
+        figure_id: str = None,
+    ) -> str:
         pass
 
     @abstractmethod

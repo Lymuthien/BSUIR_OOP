@@ -1,8 +1,16 @@
 from copy import copy, deepcopy
-from uuid import uuid4
 from typing import Generator
-from ..interfaces import ICanvasModel, IFigureLayout, ICanvasView, IRenderer, IDrawable, ISearchingCanvasModel, \
-    INavigator
+from uuid import uuid4
+
+from ..interfaces import (
+    ICanvasModel,
+    IFigureLayout,
+    ICanvasView,
+    IRenderer,
+    IDrawable,
+    ISearchingCanvasModel,
+    INavigator,
+)
 
 
 class FigureLayout(IFigureLayout):
@@ -37,14 +45,14 @@ class FigureLayout(IFigureLayout):
         """Return info about the figure and its environment."""
         return {
             **self.__figure.info,
-            'coordinates': self.coordinates,
-            'layer': self.layer
+            "coordinates": self.coordinates,
+            "layer": self.layer,
         }
 
     @staticmethod
     def _validate_layer(layer: int):
         if layer < 0:
-            raise ValueError('Layer must be non-negative')
+            raise ValueError("Layer must be non-negative")
 
 
 class CanvasModel(ISearchingCanvasModel):
@@ -52,7 +60,14 @@ class CanvasModel(ISearchingCanvasModel):
         self.__figures: dict[str, FigureLayout] = {}
         self.__navigator = navigator
 
-    def add_figure(self, figure: IDrawable, x: float, y: float, layer: int = 0, figure_id: str = None) -> str:
+    def add_figure(
+        self,
+        figure: IDrawable,
+        x: float,
+        y: float,
+        layer: int = 0,
+        figure_id: str = None,
+    ) -> str:
         """
         Add a figure with it environment to the store.
         :return: id of the added figure.
@@ -113,17 +128,25 @@ class CanvasModel(ISearchingCanvasModel):
                 return figure_id
 
     def _filter(self):
-        self.__figures = dict(sorted(self.__figures.items(), key=lambda item: item[1].layer))
+        self.__figures = dict(
+            sorted(self.__figures.items(), key=lambda item: item[1].layer)
+        )
 
 
 class CanvasView(ICanvasView):
-    def __init__(self, model: ICanvasModel, renderer: IRenderer, width: int = 80, height: int = 30):
+    def __init__(
+        self,
+        model: ICanvasModel,
+        renderer: IRenderer,
+        width: int = 80,
+        height: int = 30,
+    ):
         """Visual part of the canvas."""
         self.__model = model
         self.__renderer = renderer
         self.__width = width
         self.__height = height
-        self.__grid = [[' '] * width for _ in range(height)]
+        self.__grid = [[" "] * width for _ in range(height)]
 
     @property
     def width(self) -> int:
@@ -141,13 +164,15 @@ class CanvasView(ICanvasView):
 
     def clear(self) -> None:
         """Clear the canvas."""
-        self.__grid = [[' '] * self.width for _ in range(self.height)]
+        self.__grid = [[" "] * self.width for _ in range(self.height)]
 
     def update(self) -> None:
         """Update the canvas."""
         self.clear()
         for layout in self.__model.get_all_figures_layout():
-            self.draw_figure(layout.figure, layout.coordinates[0], layout.coordinates[1])
+            self.draw_figure(
+                layout.figure, layout.coordinates[0], layout.coordinates[1]
+            )
 
     @property
     def grid(self) -> tuple[tuple[str, ...], ...]:

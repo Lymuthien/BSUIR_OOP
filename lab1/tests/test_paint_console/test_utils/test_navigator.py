@@ -1,4 +1,5 @@
 import unittest
+
 from paint_console.utils import Navigator
 
 
@@ -8,7 +9,7 @@ class TestNavigator(unittest.TestCase):
         self.assertEqual(navigator.current(), 4)
 
     def test_initialization_with_multiple_items_sets_current_to_last(self):
-        navigator = Navigator(5, 8, 'sad', 9.8, True, 1)
+        navigator = Navigator(5, 8, "sad", 9.8, True, 1)
         self.assertEqual(navigator.current(), 1)
 
     def test_append_sets_current_item_to_last_added_item(self):
@@ -94,5 +95,5 @@ class TestNavigator(unittest.TestCase):
         self.assertEqual(navigator.current(), 33)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

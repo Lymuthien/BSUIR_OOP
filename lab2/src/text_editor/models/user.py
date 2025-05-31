@@ -2,8 +2,8 @@ from ..interfaces import IUser
 
 
 class User(IUser):
-    def __init__(self, name='base'):
-        self._message: str = ''
+    def __init__(self, name="base"):
+        self._message: str = ""
         self._name = name
 
     @property
@@ -20,21 +20,19 @@ class User(IUser):
     def can_change_document_settings(self) -> bool:
         raise NotImplementedError()
 
-    def update(self,
-               message: str) -> None:
+    def update(self, message: str) -> None:
         self._message = message
 
     def to_dict(self) -> dict:
         return {
-            'type': self.__class__.__name__,
-            'message': self._message,
-            'name': self.name,
+            "type": self.__class__.__name__,
+            "message": self._message,
+            "name": self.name,
         }
 
-    def from_dict(self,
-                  data: dict) -> IUser:
-        self._name = data['name']
-        self._message = data['message']
+    def from_dict(self, data: dict) -> IUser:
+        self._name = data["name"]
+        self._message = data["message"]
         return self
 
 

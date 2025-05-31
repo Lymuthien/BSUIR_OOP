@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
+
 from paint_console import PaintApp
 
 
@@ -14,10 +15,14 @@ class MyTestCase(unittest.TestCase):
         self.mock_history = MagicMock()
 
         self.patchers = [
-            patch('paint_console.models.CanvasModel', return_value=self.mock_canvas_model),
-            patch('paint_console.models.CanvasView', return_value=self.mock_canvas_view),
-            patch('paint_console.core.HistoryManager', return_value=self.mock_history),
-            patch('paint_console.utils.Navigator', return_value=self.mock_navigator)
+            patch(
+                "paint_console.models.CanvasModel", return_value=self.mock_canvas_model
+            ),
+            patch(
+                "paint_console.models.CanvasView", return_value=self.mock_canvas_view
+            ),
+            patch("paint_console.core.HistoryManager", return_value=self.mock_history),
+            patch("paint_console.utils.Navigator", return_value=self.mock_navigator),
         ]
 
         for patcher in self.patchers:
@@ -30,5 +35,5 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(self.app.canvas_height, 20)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

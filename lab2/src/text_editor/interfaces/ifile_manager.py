@@ -5,16 +5,10 @@ from ..interfaces.iserializer import ISerializer
 
 class IFileManager(ABC):
     @abstractmethod
-    def save(self,
-             data,
-             path: str,
-             serializer: ISerializer) -> None: ...
+    def save(self, data, path: str, serializer: ISerializer) -> None: ...
 
     @abstractmethod
-    def load(self,
-             path: str,
-             serializer: ISerializer): ...
+    def load(self, path: str, serializer: ISerializer): ...
 
     @abstractmethod
-    def delete(self,
-               path: str): ...
+    def delete(self, path: str): ...

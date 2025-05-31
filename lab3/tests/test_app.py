@@ -3,8 +3,8 @@ import unittest
 from unittest.mock import patch
 
 from lab3.src.application import StudentService
-from lab3.src.infrastructure import StudentRepository, QuoteApiAdapter
 from lab3.src.application.dto import StudentDTO
+from lab3.src.infrastructure import StudentRepository, QuoteApiAdapter
 
 
 class TestApp(unittest.TestCase):

@@ -1,10 +1,18 @@
 import unittest
 
-from text_editor.factories.text_component_factory import BasicTextComponentFactory, BoldTextComponentFactory, \
-    ItalicTextComponentFactory, StrikethroughTextComponentFactory
+from text_editor.factories.text_component_factory import (
+    BasicTextComponentFactory,
+    BoldTextComponentFactory,
+    ItalicTextComponentFactory,
+    StrikethroughTextComponentFactory,
+)
 from text_editor.interfaces.itext_component import ITextComponent
-from text_editor.models.text_component import TextComponent, BoldTextComponent, ItalicTextComponent, \
-    StrikethroughTextComponent
+from text_editor.models.text_component import (
+    TextComponent,
+    BoldTextComponent,
+    ItalicTextComponent,
+    StrikethroughTextComponent,
+)
 
 
 class TestBasicTextComponentFactory(unittest.TestCase):
@@ -47,6 +55,7 @@ class TestItalicTextComponentFactory(unittest.TestCase):
         component = self.factory.create_text_component()
         self.assertTrue(callable(component.get_text))
 
+
 class TestStrikethroughTextComponentFactory(unittest.TestCase):
 
     def setUp(self):
@@ -66,5 +75,5 @@ class TestStrikethroughTextComponentFactory(unittest.TestCase):
         self.assertIsInstance(text, str)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

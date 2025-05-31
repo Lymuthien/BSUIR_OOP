@@ -1,5 +1,6 @@
-from ..interfaces import IFigure
 from math import pi, hypot, sqrt
+
+from ..interfaces import IFigure
 
 
 class EllipseMath(IFigure):
@@ -22,7 +23,9 @@ class EllipseMath(IFigure):
     @property
     def perimeter(self) -> float:
         """Return the perimeter of the ellipse."""
-        return 2 * pi * sqrt((self.__vertical_radius ** 2 + self.__horizontal_radius ** 2) / 2)
+        return (
+            2 * pi * sqrt((self.__vertical_radius**2 + self.__horizontal_radius**2) / 2)
+        )
 
     @property
     def vertical_radius(self) -> float:
@@ -36,17 +39,17 @@ class EllipseMath(IFigure):
 
     @property
     def type(self) -> str:
-        return 'ellipse'
+        return "ellipse"
 
     @property
     def info(self) -> dict:
         """Return all info about the ellipse."""
         return {
-            'type': self.type,
-            'vertical_radius': self.vertical_radius,
-            'horizontal_radius': self.horizontal_radius,
-            'area': self.area,
-            'perimeter': self.perimeter,
+            "type": self.type,
+            "vertical_radius": self.vertical_radius,
+            "horizontal_radius": self.horizontal_radius,
+            "area": self.area,
+            "perimeter": self.perimeter,
         }
 
 
@@ -84,22 +87,25 @@ class RectangleMath(IFigure):
 
     @property
     def type(self) -> str:
-        return 'rectangle'
+        return "rectangle"
 
     @property
     def info(self) -> dict:
         """Return all info about the rectangle."""
         return {
-            'type': self.type,
-            'width': self.width,
-            'height': self.height,
-            'area': self.area,
-            'perimeter': self.perimeter,
+            "type": self.type,
+            "width": self.width,
+            "height": self.height,
+            "area": self.area,
+            "perimeter": self.perimeter,
         }
 
 
 class TriangleMath(IFigure):
-    def __init__(self, vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
+    def __init__(
+        self,
+        vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]],
+    ):
         """
         Calculations for triangle
         :param vertices: coordinates of corners of triangle
@@ -108,10 +114,14 @@ class TriangleMath(IFigure):
         self.__vertices = vertices
 
     @staticmethod
-    def _validate_input(vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]]):
+    def _validate_input(
+        vertices: tuple[tuple[float, float], tuple[float, float], tuple[float, float]],
+    ):
         """Check that the given vertices are valid (for every side: a < b + c)."""
-        sides = tuple(hypot(x2 - x1, y2 - y1) for (x1, y1), (x2, y2) in
-                      zip(vertices, vertices[1:] + vertices[:1]))
+        sides = tuple(
+            hypot(x2 - x1, y2 - y1)
+            for (x1, y1), (x2, y2) in zip(vertices, vertices[1:] + vertices[:1])
+        )
         for side in sides:
             if side >= sum(sides) - side:
                 raise ValueError("All sides must be lower to sum of other sides")
@@ -128,26 +138,32 @@ class TriangleMath(IFigure):
         return sum(self.sides)
 
     @property
-    def vertices(self) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
+    def vertices(
+        self,
+    ) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
         """Return all corners of the triangle considering."""
         return self.__vertices
 
     @property
     def sides(self):
         """Return the side's lengths of the triangle."""
-        return tuple(hypot(x2 - x1, y2 - y1) for (x1, y1), (x2, y2) in
-                     zip(self.__vertices, self.__vertices[1:] + self.__vertices[:1]))
+        return tuple(
+            hypot(x2 - x1, y2 - y1)
+            for (x1, y1), (x2, y2) in zip(
+                self.__vertices, self.__vertices[1:] + self.__vertices[:1]
+            )
+        )
 
     @property
     def type(self) -> str:
-        return 'triangle'
+        return "triangle"
 
     @property
     def info(self) -> dict:
         """Return all info about the triangle."""
         return {
-            'type': self.type,
-            'sides': self.sides,
-            'area': self.area,
-            'perimeter': self.perimeter,
+            "type": self.type,
+            "sides": self.sides,
+            "area": self.area,
+            "perimeter": self.perimeter,
         }

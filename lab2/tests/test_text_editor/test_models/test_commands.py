@@ -2,14 +2,20 @@ import unittest
 from unittest.mock import MagicMock
 
 from text_editor.interfaces import IDocument
-from text_editor.models import WriteCommand, EraseCommand, ChangeStyleCommand, Theme, ChangeThemeCommand, \
-    MarkdownDocument
+from text_editor.models import (
+    WriteCommand,
+    EraseCommand,
+    ChangeStyleCommand,
+    Theme,
+    ChangeThemeCommand,
+    MarkdownDocument,
+)
 
 
 class TestWriteCommand(unittest.TestCase):
     def setUp(self):
         self.mock_document = MagicMock(spec=IDocument)
-        self.text = 'text'
+        self.text = "text"
         self.pos = 0
         self.write_command = WriteCommand(self.text, self.pos, self.mock_document)
 
@@ -19,7 +25,9 @@ class TestWriteCommand(unittest.TestCase):
 
     def test_undo(self):
         self.write_command.undo()
-        self.mock_document.delete_text.assert_called_once_with(self.pos, self.pos + len(self.text) - 1)
+        self.mock_document.delete_text.assert_called_once_with(
+            self.pos, self.pos + len(self.text) - 1
+        )
 
 
 class TestEraseCommand(unittest.TestCase):
@@ -44,7 +52,7 @@ class TestChangeStyleCommand(unittest.TestCase):
         self.mock_document.apply_bold = MagicMock()
         self.mock_document.apply_italic = MagicMock()
         self.mock_document.apply_strikethrough = MagicMock()
-        self.mock_document.get_text.return_value = 'text'
+        self.mock_document.get_text.return_value = "text"
 
         self.command = ChangeStyleCommand(0, 1, self.mock_document, True, True, True)
 
@@ -63,7 +71,7 @@ class TestChangeStyleCommand(unittest.TestCase):
 class TestChangeThemeCommand(unittest.TestCase):
     def setUp(self):
         self.mock_document = MagicMock(spec=IDocument)
-        self.mock_document.get_text.return_value = 'text'
+        self.mock_document.get_text.return_value = "text"
         self.mock_theme = MagicMock(spec=Theme)
 
         self.command = ChangeThemeCommand(self.mock_document, self.mock_theme)
@@ -78,5 +86,5 @@ class TestChangeThemeCommand(unittest.TestCase):
         self.mock_document.replace_text.assert_called_once()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

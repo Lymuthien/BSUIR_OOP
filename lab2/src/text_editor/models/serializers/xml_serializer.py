@@ -6,15 +6,13 @@ from ...interfaces import ISerializer, IDocument
 
 
 class XmlSerializer(ISerializer):
-    def serialize(self,
-                  data: dict) -> str:
-        root = ElementTree.Element('root')
+    def serialize(self, data: dict) -> str:
+        root = ElementTree.Element("root")
         self._dict_to_xml(root, data)
 
-        return ElementTree.tostring(root, encoding='unicode')
+        return ElementTree.tostring(root, encoding="unicode")
 
-    def deserialize(self,
-                    data: str) -> dict:
+    def deserialize(self, data: str) -> dict:
         root = ElementTree.fromstring(data)
 
         return self._xml_to_dict(root)
@@ -23,9 +21,7 @@ class XmlSerializer(ISerializer):
     def extension(self) -> str:
         return "xml"
 
-    def _dict_to_xml(self,
-                     parent: ElementTree.Element,
-                     data: dict):
+    def _dict_to_xml(self, parent: ElementTree.Element, data: dict):
         for key, value in data.items():
             elem = ElementTree.SubElement(parent, key)
 
@@ -33,7 +29,7 @@ class XmlSerializer(ISerializer):
                 self._dict_to_xml(elem, value)
             elif isinstance(value, list):
                 for item in value:
-                    sub_elem = ElementTree.SubElement(elem, 'item')
+                    sub_elem = ElementTree.SubElement(elem, "item")
 
                     if isinstance(item, dict):
                         self._dict_to_xml(sub_elem, item)
@@ -42,8 +38,7 @@ class XmlSerializer(ISerializer):
             else:
                 elem.text = str(value)
 
-    def _xml_to_dict(self,
-                     element) -> dict:
+    def _xml_to_dict(self, element) -> dict:
         result = {}
 
         for child in element:
@@ -54,30 +49,31 @@ class XmlSerializer(ISerializer):
                     result[child.tag] = [result[child.tag]]
                 result[child.tag].append(content)
             else:
-                result[child.tag] = list(content.values()) if isinstance(content, dict) and 'item' in content.keys() \
+                result[child.tag] = (
+                    list(content.values())
+                    if isinstance(content, dict) and "item" in content.keys()
                     else content
+                )
 
         return result
 
 
 class DocumentToXmlSerializerAdapter(XmlSerializer):
-    def serialize(self,
-                  data: IDocument = None) -> str:
+    def serialize(self, data: IDocument = None) -> str:
         return super().serialize(data.to_dict())
 
-    def deserialize(self,
-                    data: str) -> IDocument:
+    def deserialize(self, data: str) -> IDocument:
         from ...factories.document_factory import documents
 
         deserialized_data = super().deserialize(data)
 
-        type_name = deserialized_data['type'].lower()
+        type_name = deserialized_data["type"].lower()
         doc = documents[type_name].create_document()
 
         doc = doc.from_dict(deserialized_data)
-        if doc.__class__.__name__ == 'PlainTextDocument':
+        if doc.__class__.__name__ == "PlainTextDocument":
             return PlainTextToMdAdapter(doc)
-        elif doc.__class__.__name__ == 'RichTextDocument':
+        elif doc.__class__.__name__ == "RichTextDocument":
             return RichTextToMdAdapter(doc)
         else:
             return doc

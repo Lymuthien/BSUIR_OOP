@@ -6,5 +6,14 @@ from .iserializer import *
 from .itext_component import *
 from .iuser import *
 
-__all__ = ['ICommand', 'IFileManager', 'ISerializer', 'IObserver', 'IObservable', 'IDictable', 'ITextComponent',
-           'IDocument', 'IUser']
+__all__ = [
+    "ICommand",
+    "IFileManager",
+    "ISerializer",
+    "IObserver",
+    "IObservable",
+    "IDictable",
+    "ITextComponent",
+    "IDocument",
+    "IUser",
+]

@@ -52,5 +52,5 @@ class TestHistoryManager(unittest.TestCase):
         history.undo()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -9,13 +9,12 @@ class AuthService(object):
 
     def register_user(self, name: str) -> str:
         if name in self.__users:
-            raise Exception('User already exists')
+            raise Exception("User already exists")
 
         self.__users.append(name)
         return name
 
     def login(self, name: str) -> str:
         if name not in self.__users:
-            raise Exception('Invalid credentials')
+            raise Exception("Invalid credentials")
         return name
-

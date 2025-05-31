@@ -1,5 +1,5 @@
-from ...application.dto import StudentDTO
 from .icommand import ICommand
+from ...application.dto import StudentDTO
 
 
 class AddStudentCommand(ICommand):

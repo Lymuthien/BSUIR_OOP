@@ -1,12 +1,17 @@
 from abc import abstractmethod, ABC
 
 from ..interfaces import ITextComponent
-from ..models.text_component import TextComponent, BoldTextComponent, ItalicTextComponent, StrikethroughTextComponent
+from ..models.text_component import (
+    TextComponent,
+    BoldTextComponent,
+    ItalicTextComponent,
+    StrikethroughTextComponent,
+)
 
 
 class TextComponentFactory(ABC):
     @abstractmethod
-    def create_text_component(self, data = None) -> ITextComponent: ...
+    def create_text_component(self, data=None) -> ITextComponent: ...
 
 
 class BasicTextComponentFactory(TextComponentFactory):
@@ -26,7 +31,9 @@ class ItalicTextComponentFactory(TextComponentFactory):
 
 class StrikethroughTextComponentFactory(TextComponentFactory):
     def create_text_component(self, data: ITextComponent = None) -> ITextComponent:
-        return StrikethroughTextComponent(data) if data else StrikethroughTextComponent()
+        return (
+            StrikethroughTextComponent(data) if data else StrikethroughTextComponent()
+        )
 
 
 text_components: dict[str, TextComponentFactory] = {

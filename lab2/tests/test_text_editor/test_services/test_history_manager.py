@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from text_editor.services import HistoryManager
 from text_editor.interfaces import ICommand
+from text_editor.services import HistoryManager
 
 
 class TestHistoryManager(unittest.TestCase):
@@ -52,5 +52,5 @@ class TestHistoryManager(unittest.TestCase):
         history.undo()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

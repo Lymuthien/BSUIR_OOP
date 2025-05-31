@@ -1,4 +1,5 @@
 import unittest
+
 from lab3.src.domain.student import Student
 
 

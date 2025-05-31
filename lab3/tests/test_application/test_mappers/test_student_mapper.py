@@ -1,9 +1,10 @@
 import unittest
-from lab3.src.domain.student import Student
+
 from lab3.src.application.dto.student_dto import StudentDTO
 from lab3.src.application.mappers.student_mapper import (
     StudentMapper,
 )
+from lab3.src.domain.student import Student
 
 
 class TestStudentMapper(unittest.TestCase):

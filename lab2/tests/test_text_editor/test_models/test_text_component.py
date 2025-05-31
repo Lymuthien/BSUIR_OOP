@@ -1,12 +1,16 @@
 import unittest
 
-from text_editor.models.text_component import TextComponent, BoldTextComponent, ItalicTextComponent, \
-    StrikethroughTextComponent
+from text_editor.models.text_component import (
+    TextComponent,
+    BoldTextComponent,
+    ItalicTextComponent,
+    StrikethroughTextComponent,
+)
 
 
 class TestTextComponent(unittest.TestCase):
     def setUp(self):
-        self.text = 'some text'
+        self.text = "some text"
         self.text_component = TextComponent(self.text)
 
     def test_get_text(self):
@@ -76,37 +80,40 @@ class TestBoldTextComponent(unittest.TestCase):
 
 class TestItalicTextComponent(unittest.TestCase):
     def setUp(self):
-        self.text = 'some text'
+        self.text = "some text"
         self.text_component = TextComponent(self.text)
         self.italic_component = ItalicTextComponent(self.text_component)
 
     def text_get_text(self):
-        self.assertEqual(self.italic_component.get_text(),
-                         f'*{self.text_component.get_text()}*')
+        self.assertEqual(
+            self.italic_component.get_text(), f"*{self.text_component.get_text()}*"
+        )
 
     def test_get_text_not_bold_empty(self):
-        text_component = TextComponent('')
+        text_component = TextComponent("")
         italic_component = ItalicTextComponent(text_component)
 
-        self.assertEqual(italic_component.get_text(), '')
+        self.assertEqual(italic_component.get_text(), "")
 
 
 class TestStrikethroughTextComponent(unittest.TestCase):
     def setUp(self):
-        self.text = 'some text'
+        self.text = "some text"
         self.text_component = TextComponent(self.text)
         self.strikethrough_component = StrikethroughTextComponent(self.text_component)
 
     def text_get_text(self):
-        self.assertEqual(self.strikethrough_component.get_text(),
-                         f'~{self.text_component.get_text()}~')
+        self.assertEqual(
+            self.strikethrough_component.get_text(),
+            f"~{self.text_component.get_text()}~",
+        )
 
     def test_get_text_not_bold_empty(self):
-        text_component = TextComponent('')
+        text_component = TextComponent("")
         strikethrough_component = StrikethroughTextComponent(text_component)
 
-        self.assertEqual(strikethrough_component.get_text(), '')
+        self.assertEqual(strikethrough_component.get_text(), "")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

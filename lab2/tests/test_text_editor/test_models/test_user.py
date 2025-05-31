@@ -20,19 +20,11 @@ class TestUser(unittest.TestCase):
     def test_to_dict(self):
         self.user.update("Test message")
         user_dict = self.user.to_dict()
-        expected_dict = {
-            "type": "User",
-            "message": "Test message",
-            "name": "test_user"
-        }
+        expected_dict = {"type": "User", "message": "Test message", "name": "test_user"}
         self.assertEqual(user_dict, expected_dict)
 
     def test_from_dict(self):
-        user_dict = {
-            "type": "User",
-            "message": "Loaded message",
-            "name": "loaded_user"
-        }
+        user_dict = {"type": "User", "message": "Loaded message", "name": "loaded_user"}
         self.user.from_dict(user_dict)
         self.assertEqual(self.user.name, "loaded_user")
         self.assertEqual(self.user.message, "Loaded message")

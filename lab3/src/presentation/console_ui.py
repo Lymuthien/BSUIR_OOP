@@ -1,7 +1,5 @@
 import os
 
-from ..domain.abstractions import IQuoteService
-from ..application import StudentService
 from .commands import (
     ExitCommand,
     EditStudentCommand,
@@ -9,6 +7,8 @@ from .commands import (
     AddStudentCommand,
     ICommand,
 )
+from ..application import StudentService
+from ..domain.abstractions import IQuoteService
 
 
 class ConsoleUI(object):

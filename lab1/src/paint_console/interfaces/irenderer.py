@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
-from .ifigure import IFigure, IDrawable
+
+from .ifigure import IDrawable
 
 
 class IRenderer(ABC):
     @staticmethod
     @abstractmethod
-    def render(figure: IDrawable, x: int, y: int, grid: list[list[str]]) -> list[list[str]]:
+    def render(
+        figure: IDrawable, x: int, y: int, grid: list[list[str]]
+    ) -> list[list[str]]:
         pass
 
 

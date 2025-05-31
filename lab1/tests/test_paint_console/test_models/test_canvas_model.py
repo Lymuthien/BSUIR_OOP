@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from paint_console.models import FigureLayout, CanvasModel, CanvasView
 from paint_console.interfaces import IDrawable, ICanvasModel, IRenderer, INavigator
+from paint_console.models import FigureLayout, CanvasModel, CanvasView
 
 
 class TestFigureLayout(unittest.TestCase):
@@ -31,16 +31,13 @@ class TestFigureLayout(unittest.TestCase):
     def test_info_returns_matching_dict(self):
         figure_layout = FigureLayout(self.mock_figure, (0, 0), 0)
 
-        self.mock_figure.info = {
-            'type': 'rectangle',
-            'background': '+'
-        }
+        self.mock_figure.info = {"type": "rectangle", "background": "+"}
 
         expected_result = {
-            'type': 'rectangle',
-            'background': '+',
-            'coordinates': (0, 0),
-            'layer': 0
+            "type": "rectangle",
+            "background": "+",
+            "coordinates": (0, 0),
+            "layer": 0,
         }
 
         result = figure_layout.info
@@ -61,7 +58,7 @@ class TestCanvasModel(unittest.TestCase):
         self.assertIn(figure_id, self.model.get_data)
 
     def test_add_figure_with_id_returns_id(self):
-        figure_id = self.model.add_figure(self.mock_figure, 0, 0, figure_id='custom_id')
+        figure_id = self.model.add_figure(self.mock_figure, 0, 0, figure_id="custom_id")
         self.assertIsInstance(figure_id, str)
         self.assertIn(figure_id, self.model.get_data)
 
@@ -71,7 +68,7 @@ class TestCanvasModel(unittest.TestCase):
 
     def test_remove_figure_with_non_existing_figure_id_raises_exception(self):
         with self.assertRaises(KeyError):
-            self.model.remove_figure('random_id')
+            self.model.remove_figure("random_id")
 
     def test_remove_figure_figure_not_in_store(self):
         figure_id = self.model.add_figure(self.mock_figure, 0, 0)
@@ -94,22 +91,22 @@ class TestCanvasModel(unittest.TestCase):
         self.assertEqual(self.model.new_layer(), 11)
 
     def test_load_data(self):
-        test_data = {'test_id': self.layout}
+        test_data = {"test_id": self.layout}
 
         self.model.load_data(test_data)
         self.mock_navigator.append.assert_called_with(self.mock_figure)
         self.assertEqual(self.model.get_data, test_data)
 
     def test_get_figure_layout(self):
-        test_data = {'test_id': self.layout}
+        test_data = {"test_id": self.layout}
 
         self.model.load_data(test_data)
-        self.assertEqual(self.model.get_figure_layout('test_id'), self.layout)
+        self.assertEqual(self.model.get_figure_layout("test_id"), self.layout)
 
     def test_get_figure_layout_with_non_existing_index_raises_error(self):
         self.model.load_data({})
         with self.assertRaises(KeyError):
-            self.model.get_figure_layout('example_id')
+            self.model.get_figure_layout("example_id")
 
     def test_search_success_return_id(self):
         self.model.load_data({})
@@ -137,38 +134,45 @@ class TestCanvasModel(unittest.TestCase):
         self.assertEqual(self.model.search(self.mock_figure), None)
 
 
-
 class TestCanvasView(unittest.TestCase):
     def setUp(self):
         self.mock_model = MagicMock(spec=ICanvasModel)
         self.mock_renderer = MagicMock(spec=IRenderer)
         self.width = 10
         self.height = 3
-        self.mock_renderer.render.return_value = [['*'] * self.width for _ in range(self.height)]
+        self.mock_renderer.render.return_value = [
+            ["*"] * self.width for _ in range(self.height)
+        ]
 
-        self.canvas = CanvasView(self.mock_model, self.mock_renderer, width=self.width, height=self.height)
+        self.canvas = CanvasView(
+            self.mock_model, self.mock_renderer, width=self.width, height=self.height
+        )
 
     def test_init_all_properties_match(self):
         self.assertEqual(self.canvas.width, self.width)
         self.assertEqual(self.canvas.height, self.height)
         self.assertEqual(len(self.canvas.grid), self.height)
         self.assertEqual(len(self.canvas.grid[0]), self.width)
-        self.assertTrue(all(cell == ' ' for row in self.canvas.grid for cell in row))
+        self.assertTrue(all(cell == " " for row in self.canvas.grid for cell in row))
 
     def test_draw_figure_changes_grid(self):
         mock_figure = MagicMock(spec=IDrawable)
         self.canvas.draw_figure(mock_figure, 10, 5)
 
-        self.assertTupleEqual(self.canvas.grid, tuple(tuple('*') * self.width for _ in range(self.height)))
+        self.assertTupleEqual(
+            self.canvas.grid, tuple(tuple("*") * self.width for _ in range(self.height))
+        )
 
     def test_clear_resets_grid(self):
-        self.canvas = CanvasView(self.mock_model, self.mock_renderer, width=self.width, height=self.height)
+        self.canvas = CanvasView(
+            self.mock_model, self.mock_renderer, width=self.width, height=self.height
+        )
         mock_figure = MagicMock(spec=IDrawable)
         self.canvas.draw_figure(mock_figure, 10, 5)
         self.canvas.clear()
 
-        self.assertTrue(all(cell == ' ' for row in self.canvas.grid for cell in row))
+        self.assertTrue(all(cell == " " for row in self.canvas.grid for cell in row))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

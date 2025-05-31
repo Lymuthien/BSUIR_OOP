@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from .iserializer import IDictable
 from .iobservable import IObserver
+from .iserializer import IDictable
 
 
 class IUser(IObserver, IDictable):

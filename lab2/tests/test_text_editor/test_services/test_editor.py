@@ -18,7 +18,7 @@ class TestEditor(unittest.TestCase):
     def test_create_document_without_login(self):
         with self.assertRaises(Exception) as context:
             self.editor.create_document()
-        self.assertEqual(str(context.exception), 'Login please.')
+        self.assertEqual(str(context.exception), "Login please.")
 
     def test_create_document_with_login(self):
         self.editor.register("test_user")
@@ -59,7 +59,6 @@ class TestEditor(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             self.editor.give_role("test_user", "admin")
         self.assertEqual(str(context.exception), "Login please")
-
 
     def test_undo_with_no_commands(self):
         try:

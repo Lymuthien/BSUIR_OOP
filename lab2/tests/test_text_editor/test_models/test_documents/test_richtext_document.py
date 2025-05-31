@@ -11,8 +11,8 @@ class TestMdToRichTextAdapter(unittest.TestCase):
 
     def test_to_dict_includes_correct_type(self):
         result = self.adapter.to_dict()
-        self.assertIn('type', result)
-        self.assertEqual(result['type'], 'RichTextDocument')
+        self.assertIn("type", result)
+        self.assertEqual(result["type"], "RichTextDocument")
 
     def test_users_property_is_populated_from_md_document(self):
         self.md_document._users = {"test_user": None}
@@ -23,6 +23,6 @@ class TestMdToRichTextAdapter(unittest.TestCase):
         self.md_document._components = [TextComponent("Some text")]
         adapter = MdToRichTextAdapter(self.md_document)
         result = adapter.to_dict()
-        self.assertIn('components', result)
-        self.assertEqual(len(result['components']), 1)
-        self.assertIn("Some text", result['components'][0]['text'])
+        self.assertIn("components", result)
+        self.assertEqual(len(result["components"]), 1)
+        self.assertIn("Some text", result["components"][0]["text"])

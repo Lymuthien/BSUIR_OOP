@@ -83,6 +83,5 @@ class TestDocument(unittest.TestCase):
         self.assertEqual(result["components"][0]["text"], "Sample text")
 
 
-
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,10 @@
 import unittest
 
-from text_editor.factories.document_factory import MDFactory, RichTextFactory, PlainTextFactory
+from text_editor.factories.document_factory import (
+    MDFactory,
+    RichTextFactory,
+    PlainTextFactory,
+)
 from text_editor.models import RichTextDocument, PlainTextDocument, MarkdownDocument
 
 

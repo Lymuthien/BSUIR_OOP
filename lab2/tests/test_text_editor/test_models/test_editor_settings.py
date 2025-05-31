@@ -23,5 +23,5 @@ class TestEditorSettings(unittest.TestCase):
         self.assertEqual(self.other_settings.font_size, 13)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

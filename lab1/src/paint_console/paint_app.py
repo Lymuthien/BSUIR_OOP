@@ -1,7 +1,20 @@
 import os
-from .core import AddFigureCommand, RemoveFigureCommand, MoveFigureCommand, ChangeFigureBgCommand, FileManager, \
-    HistoryManager
-from .models import CanvasModel, CanvasView, DrawableRectangle, DrawableEllipse, DrawableTriangle
+
+from .core import (
+    AddFigureCommand,
+    RemoveFigureCommand,
+    MoveFigureCommand,
+    ChangeFigureBgCommand,
+    FileManager,
+    HistoryManager,
+)
+from .models import (
+    CanvasModel,
+    CanvasView,
+    DrawableRectangle,
+    DrawableEllipse,
+    DrawableTriangle,
+)
 from .utils import BasicRenderer, ConsoleCanvasRenderer, Navigator
 
 
@@ -9,14 +22,19 @@ class PaintApp(object):
     def __init__(self):
         width, height = self._get_terminal_size()
         self.__canvas_model = CanvasModel(Navigator())
-        self.__canvas_view = CanvasView(self.__canvas_model, BasicRenderer(), width=width, height=height - 8)
+        self.__canvas_view = CanvasView(
+            self.__canvas_model, BasicRenderer(), width=width, height=height - 8
+        )
         self.__history_manager = HistoryManager()
         self.__renderer = ConsoleCanvasRenderer()
 
     @staticmethod
     def _get_terminal_size() -> tuple:
         try:
-            width, height = int(os.get_terminal_size().columns / 2), os.get_terminal_size().lines
+            width, height = (
+                int(os.get_terminal_size().columns / 2),
+                os.get_terminal_size().lines,
+            )
         except Exception:
             width, height = 50, 28
 
@@ -55,24 +73,47 @@ class PaintApp(object):
     def draw_rectangle(self, x: int, y: int, width: int, height: int):
         """Draw rectangle with given coordinates"""
         self.__history_manager.add_command(
-            AddFigureCommand(self.__canvas_model, self.__canvas_view,
-                             DrawableRectangle(width, height, 'r'), x, y))
+            AddFigureCommand(
+                self.__canvas_model,
+                self.__canvas_view,
+                DrawableRectangle(width, height, "r"),
+                x,
+                y,
+            )
+        )
 
     def draw_triangle(self, x0: int, y0: int, x1: int, y1: int, x2: int, y2: int):
         """Draw triangle with given coordinates"""
         x_min = min(x0, x1, x2)
         y_min = min(y0, y1, y2)
         self.__history_manager.add_command(
-            AddFigureCommand(self.__canvas_model, self.__canvas_view,
-                             DrawableTriangle(
-                                 ((x0 - x_min, y0 - y_min), (x1 - x_min, y1 - y_min), (x2 - x_min, y2 - y_min)), 't'),
-                             x_min, y_min))
+            AddFigureCommand(
+                self.__canvas_model,
+                self.__canvas_view,
+                DrawableTriangle(
+                    (
+                        (x0 - x_min, y0 - y_min),
+                        (x1 - x_min, y1 - y_min),
+                        (x2 - x_min, y2 - y_min),
+                    ),
+                    "t",
+                ),
+                x_min,
+                y_min,
+            )
+        )
 
     def draw_ellipse(self, x: int, y: int, vertical_r: int, horizontal_r: int):
         """Draw ellipse with given coordinates"""
         self.__history_manager.add_command(
-            AddFigureCommand(self.__canvas_model, self.__canvas_view,
-                             DrawableEllipse(vertical_r, horizontal_r, 'e'), x, y))
+            AddFigureCommand(
+                self.__canvas_model,
+                self.__canvas_view,
+                DrawableEllipse(vertical_r, horizontal_r, "e"),
+                x,
+                y,
+            )
+        )
 
     def select_previous(self):
         """Select previous figure"""
@@ -86,19 +127,22 @@ class PaintApp(object):
         """Remove current figure"""
         figure = self.__canvas_model.navigator.current()
         self.__history_manager.add_command(
-            RemoveFigureCommand(self.__canvas_model, self.__canvas_view, figure))
+            RemoveFigureCommand(self.__canvas_model, self.__canvas_view, figure)
+        )
 
     def move_figure(self, x: int, y: int):
         """Move current figure by given coordinates"""
         figure = self.__canvas_model.navigator.current()
         self.__history_manager.add_command(
-            MoveFigureCommand(self.__canvas_model, self.__canvas_view, figure, x, y))
+            MoveFigureCommand(self.__canvas_model, self.__canvas_view, figure, x, y)
+        )
 
     def change_figure_bg(self, bg: str):
         """Change current figure's background color"""
         figure = self.__canvas_model.navigator.current()
         self.__history_manager.add_command(
-            ChangeFigureBgCommand(self.__canvas_model, self.__canvas_view, figure, bg))
+            ChangeFigureBgCommand(self.__canvas_model, self.__canvas_view, figure, bg)
+        )
 
     def get_figure_info(self) -> dict:
         """Give current figure info"""

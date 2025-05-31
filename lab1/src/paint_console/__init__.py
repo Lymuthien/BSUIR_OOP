@@ -1,3 +1,3 @@
 from .paint_app import *
 
-__all__ = ['PaintApp']
+__all__ = ["PaintApp"]

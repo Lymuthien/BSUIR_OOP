@@ -34,5 +34,5 @@ class TestFileManager(unittest.TestCase):
         os.remove(tmp_file.name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
